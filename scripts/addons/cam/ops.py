@@ -62,7 +62,7 @@ class CAMPositionObject(bpy.types.Operator):
     def execute(self, context):
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
-        if operation.object_source in bpy.data.objects:
+        if operation.object_source.name in bpy.data.objects:
             utils.positionObject(operation)
         else:
             print('no object assigned')
