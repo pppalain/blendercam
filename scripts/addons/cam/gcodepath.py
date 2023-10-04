@@ -203,8 +203,8 @@ def exportGcodePath(filename, vertslist, operations):
             lines = o.gcode_header.split(';')
             for aline in lines:
                 c.write(aline + '\n')
-
-        free_height = o.movement.free_height  # o.max.z+
+        
+        free_height = o.movement.free_height + o.maxz  # o.max.z+
         if o.movement.useG64:
             c.set_path_control_mode(2, round(o.movement.G64 * 1000, 5), 0)
 

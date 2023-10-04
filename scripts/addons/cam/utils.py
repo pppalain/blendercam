@@ -856,7 +856,7 @@ def extendChunks5axis(chunks, o):
     s = bpy.context.scene
     m = s.cam_machine
     s = bpy.context.scene
-    free_height = o.movement.free_height  # o.max.z +
+    free_height = o.movement.free_height + o.maxz # o.max.z +
     if m.use_position_definitions:  # dhull
         cutterstart = Vector((m.starting_position.x, m.starting_position.y,
                               max(o.max.z, m.starting_position.z)))  # start point for casting

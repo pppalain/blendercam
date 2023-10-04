@@ -791,7 +791,7 @@ def chunksToMesh(chunks, o):
     m = s.cam_machine
     verts = []
 
-    free_height = o.movement.free_height  # o.max.z +
+    free_height = o.movement.free_height + o.maxz # o.max.z +
 
     if o.machine_axes == '3':
         if m.use_position_definitions:
