@@ -80,4 +80,5 @@ jobs:
         artifacts: "scripts/addons/blendercam.zip"
         tag: ${{ env.VERSION_TAG }}
         allowUpdates: true
+        body: "Download blendercam.zip, don't unpack it, and use 'preferences, add-ons, install from file' in blender to install it."
 
