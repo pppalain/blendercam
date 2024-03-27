@@ -18,6 +18,28 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ***** END GPL LICENCE BLOCK ****
+import numpy
+import os
+import pickle
+import shutil
+import subprocess
+import sys
+import threading
+import time
+
+from pathlib import Path
+
+try:
+    import shapely
+except ImportError:
+    # pip install required python stuff
+    subprocess.check_call([sys.executable, "-m", "ensurepip"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", " pip"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install",
+                           "shapely", "Equation", "opencamlib"])
+    # install numba if available for this platform, ignore failure
+    subprocess.run([sys.executable, "-m", "pip", "install", "numba"])
+    
 from .ui import *
 from .version import __version__
 from . import (
@@ -73,27 +95,6 @@ from bpy_extras.object_utils import object_data_add
 import bpy.ops
 import math
 from mathutils import *
-import numpy
-import os
-import pickle
-import shutil
-import subprocess
-import sys
-import threading
-import time
-
-from pathlib import Path
-
-try:
-    import shapely
-except ImportError:
-    # pip install required python stuff
-    subprocess.check_call([sys.executable, "-m", "ensurepip"])
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", " pip"])
-    subprocess.check_call([sys.executable, "-m", "pip", "install",
-                           "shapely", "Equation", "opencamlib"])
-    # install numba if available for this platform, ignore failure
-    subprocess.run([sys.executable, "-m", "pip", "install", "numba"])
 
 from shapely import geometry as sgeometry  # noqa
 
