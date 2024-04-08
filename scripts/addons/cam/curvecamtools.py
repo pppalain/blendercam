@@ -592,7 +592,7 @@ class CamCurveOvercutsB(Operator):
 
 
 class CamCurveRemoveDoubles(Operator):
-    """curve remove doubles - warning, removes beziers!"""
+    """curve remove doubles!"""
     bl_idname = "object.curve_remove_doubles"
     bl_label = "C-Remove doubles"
     bl_options = {'REGISTER', 'UNDO'}
@@ -603,16 +603,7 @@ class CamCurveRemoveDoubles(Operator):
 
     def execute(self, context):
         obs = bpy.context.selected_objects
-        for ob in obs:
-            bpy.context.view_layer.objects.active = ob
-            if bpy.context.mode == 'OBJECT':
-                bpy.ops.object.editmode_toggle()
-            mode = True
-            bpy.ops.curve.select_all()
-            bpy.ops.curve.remove_double()
-            if mode:
-                bpy.ops.object.editmode_toggle()
-
+        bpy.ops.curve.remove_double()
         return {'FINISHED'}
 
 
