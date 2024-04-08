@@ -605,18 +605,11 @@ class CamCurveRemoveDoubles(Operator):
         obs = bpy.context.selected_objects
         for ob in obs:
             bpy.context.view_layer.objects.active = ob
-
-            mode = False
-            if bpy.context.mode == 'EDIT_CURVE':
+            if bpy.context.mode == 'OBJECT':
                 bpy.ops.object.editmode_toggle()
-                mode = True
-            bpy.ops.object.convert(target='MESH')
-            bpy.ops.object.editmode_toggle()
-            bpy.ops.mesh.select_all(action='TOGGLE')
-            bpy.ops.mesh.remove_doubles()
-            bpy.ops.object.editmode_toggle()
-            bpy.ops.object.convert(target='CURVE')
-
+            mode = True
+            bpy.ops.curve.select_all()
+            bpy.ops.curve.remove_double()
             if mode:
                 bpy.ops.object.editmode_toggle()
 
