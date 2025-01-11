@@ -136,7 +136,7 @@ class CamCurveHatch(Operator):
     bl_options = {"REGISTER", "UNDO", "PRESET"}
 
     angle: FloatProperty(default=0, min=-pi / 2, max=pi / 2, precision=4, subtype="ANGLE")
-    distance: FloatProperty(default=0.003, min=0, max=3.0, precision=4, unit="LENGTH")
+    distance: FloatProperty(default=0.003, min=0.0001, max=3.0, precision=4, unit="LENGTH")
     offset: FloatProperty(default=0, min=-1.0, max=3.0, precision=4, unit="LENGTH")
     pocket_shape: EnumProperty(
         name="Pocket Shape",
@@ -253,7 +253,7 @@ class CamCurvePlate(Operator):
     radius: FloatProperty(
         name="Corner Radius",
         default=0.025,
-        min=0,
+        min=0.0001,
         max=0.1,
         precision=4,
         unit="LENGTH",
@@ -261,7 +261,7 @@ class CamCurvePlate(Operator):
     width: FloatProperty(
         name="Width of Plate",
         default=0.3048,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -269,7 +269,7 @@ class CamCurvePlate(Operator):
     height: FloatProperty(
         name="Height of Plate",
         default=0.457,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -277,7 +277,7 @@ class CamCurvePlate(Operator):
     hole_diameter: FloatProperty(
         name="Hole Diameter",
         default=0.01,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -285,7 +285,7 @@ class CamCurvePlate(Operator):
     hole_tolerance: FloatProperty(
         name="Hole V Tolerance",
         default=0.005,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -293,7 +293,7 @@ class CamCurvePlate(Operator):
     hole_vdist: FloatProperty(
         name="Hole Vert Distance",
         default=0.400,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -301,7 +301,7 @@ class CamCurvePlate(Operator):
     hole_hdist: FloatProperty(
         name="Hole Horiz Distance",
         default=0,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -309,7 +309,7 @@ class CamCurvePlate(Operator):
     hole_hamount: IntProperty(
         name="Hole Horiz Amount",
         default=1,
-        min=0,
+        min=0.0001,
         max=50,
     )
     resolution: IntProperty(
@@ -654,7 +654,7 @@ class CamCurveFlatCone(Operator):
     small_d: FloatProperty(
         name="Small Diameter",
         default=0.025,
-        min=0,
+        min=0.0001,
         max=0.1,
         precision=4,
         unit="LENGTH",
@@ -662,7 +662,7 @@ class CamCurveFlatCone(Operator):
     large_d: FloatProperty(
         name="Large Diameter",
         default=0.3048,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -670,7 +670,7 @@ class CamCurveFlatCone(Operator):
     height: FloatProperty(
         name="Height of Cone",
         default=0.457,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -678,7 +678,7 @@ class CamCurveFlatCone(Operator):
     tab: FloatProperty(
         name="Tab Witdh",
         default=0.01,
-        min=0,
+        min=0.0001,
         max=0.100,
         precision=4,
         unit="LENGTH",
@@ -686,7 +686,7 @@ class CamCurveFlatCone(Operator):
     intake: FloatProperty(
         name="Intake Diameter",
         default=0,
-        min=0,
+        min=0.0001,
         max=0.200,
         precision=4,
         unit="LENGTH",
@@ -812,7 +812,7 @@ class CamCurveMortise(Operator):
     finger_tolerance: FloatProperty(
         name="Finger Play Room",
         default=0.000045,
-        min=0,
+        min=0.0001,
         max=0.003,
         precision=4,
         unit="LENGTH",
@@ -834,7 +834,7 @@ class CamCurveMortise(Operator):
     flex_pocket: FloatProperty(
         name="Flex Pocket",
         default=0.004,
-        min=0.000,
+        min=0.0001,
         max=1.0,
         unit="LENGTH",
     )
@@ -849,7 +849,7 @@ class CamCurveMortise(Operator):
     adaptive: FloatProperty(
         name="Adaptive Angle Threshold",
         default=0.0,
-        min=0.000,
+        min=0.0001,
         max=2,
         subtype="ANGLE",
         unit="ROTATION",
@@ -992,7 +992,7 @@ class CamCurveInterlock(Operator):
     finger_tolerance: FloatProperty(
         name="Finger Play Room",
         default=0.000045,
-        min=0,
+        min=0.0001,
         max=0.003,
         precision=4,
         unit="LENGTH",
@@ -1027,7 +1027,7 @@ class CamCurveInterlock(Operator):
     tangent_angle: FloatProperty(
         name="Tangent Deviation",
         default=0.0,
-        min=0.000,
+        min=0.0001,
         max=2,
         subtype="ANGLE",
         unit="ROTATION",
@@ -1035,7 +1035,7 @@ class CamCurveInterlock(Operator):
     fixed_angle: FloatProperty(
         name="Fixed Angle",
         default=0.0,
-        min=0.000,
+        min=0.0001,
         max=2,
         subtype="ANGLE",
         unit="ROTATION",
@@ -1139,7 +1139,7 @@ class CamCurveDrawer(Operator):
     depth: FloatProperty(
         name="Drawer Depth",
         default=0.2,
-        min=0,
+        min=0.0001,
         max=1.0,
         precision=4,
         unit="LENGTH",
@@ -1147,7 +1147,7 @@ class CamCurveDrawer(Operator):
     width: FloatProperty(
         name="Drawer Width",
         default=0.125,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -1155,7 +1155,7 @@ class CamCurveDrawer(Operator):
     height: FloatProperty(
         name="Drawer Height",
         default=0.07,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -1171,7 +1171,7 @@ class CamCurveDrawer(Operator):
     finger_tolerance: FloatProperty(
         name="Finger Play Room",
         default=0.000045,
-        min=0,
+        min=0.0001,
         max=0.003,
         precision=4,
         unit="LENGTH",
@@ -1179,7 +1179,7 @@ class CamCurveDrawer(Operator):
     finger_inset: FloatProperty(
         name="Finger Inset",
         default=0.0,
-        min=0.0,
+        min=0.0001,
         max=0.01,
         precision=4,
         unit="LENGTH",
@@ -1281,11 +1281,17 @@ class CamCurveDrawer(Operator):
         bpy.context.scene.cursor.location = (0, 0, 0)
 
         joinery.vertical_finger(
-            height_finger, self.drawer_plate_thickness, self.finger_tolerance, height_finger_amt
+            height_finger,
+            self.drawer_plate_thickness,
+            self.finger_tolerance,
+            height_finger_amt,
         )
 
         joinery.horizontal_finger(
-            width_finger, self.drawer_plate_thickness, self.finger_tolerance, width_finger_amt * 2
+            width_finger,
+            self.drawer_plate_thickness,
+            self.finger_tolerance,
+            width_finger_amt * 2,
         )
         make_active("_wfb")
 
@@ -1405,7 +1411,7 @@ class CamCurvePuzzle(Operator):
     finger_tolerance: FloatProperty(
         name="Finger Play Room",
         default=0.00005,
-        min=0,
+        min=0.0001,
         max=0.003,
         precision=4,
         unit="LENGTH",
@@ -1413,7 +1419,7 @@ class CamCurvePuzzle(Operator):
     finger_amount: IntProperty(
         name="Finger Amount",
         default=1,
-        min=0,
+        min=0.0001,
         max=100,
     )
     stem_size: IntProperty(
@@ -1592,7 +1598,7 @@ class CamCurvePuzzle(Operator):
     interlock_amount: IntProperty(
         name="Interlock Amount on Curve",
         default=2,
-        min=0,
+        min=0.0001,
         max=200,
     )
     overcut: BoolProperty(
@@ -1953,13 +1959,13 @@ class CamCurveGear(Operator):
     spoke_amount: IntProperty(
         name="Amount of Spokes",
         default=4,
-        min=0,
+        min=0.0001,
     )
 
     hole_diameter: FloatProperty(
         name="Hole Diameter",
         default=0.003175,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -1967,7 +1973,7 @@ class CamCurveGear(Operator):
     rim_size: FloatProperty(
         name="Rim Size",
         default=0.003175,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -1975,7 +1981,7 @@ class CamCurveGear(Operator):
     hub_diameter: FloatProperty(
         name="Hub Diameter",
         default=0.005,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -1992,7 +1998,7 @@ class CamCurveGear(Operator):
     clearance: FloatProperty(
         name="Clearance",
         default=0.00,
-        min=0,
+        min=0.0001,
         max=0.1,
         precision=4,
         unit="LENGTH",

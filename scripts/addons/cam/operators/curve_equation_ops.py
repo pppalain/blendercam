@@ -52,7 +52,7 @@ class CamSineCurve(Operator):
     amplitude: FloatProperty(
         name="Amplitude",
         default=0.01,
-        min=0,
+        min=0.0001,
         max=10,
         precision=4,
         unit="LENGTH",
@@ -151,7 +151,7 @@ class CamSineCurve(Operator):
 
         # build triangle wave from fourier series
         elif self.wave == "triangle":
-            zstring = f"{round(offset, 6) + triangle(80, period, amp)}"
+            zstring = f"{round(offset, 6)} + {triangle(80, period, amp)}"
             if self.beat_period != 0:
                 zstring += f"+ {triangle(80, period+beatperiod, amp)}"
 
@@ -204,7 +204,7 @@ class CamLissajousCurve(Operator):
     amplitude_a: FloatProperty(
         name="Amplitude A",
         default=0.1,
-        min=0,
+        min=0.0001,
         max=100,
         precision=4,
         unit="LENGTH",
@@ -218,7 +218,7 @@ class CamLissajousCurve(Operator):
     amplitude_b: FloatProperty(
         name="Amplitude B",
         default=0.1,
-        min=0,
+        min=0.0001,
         max=100,
         precision=4,
         unit="LENGTH",
@@ -255,7 +255,7 @@ class CamLissajousCurve(Operator):
     amplitude_z: FloatProperty(
         name="Amplitude Z",
         default=0.0,
-        min=0,
+        min=0.0001,
         max=100,
         precision=4,
         unit="LENGTH",
@@ -365,7 +365,7 @@ class CamHypotrochoidCurve(Operator):
     d: FloatProperty(
         name="Distance from Center of Interior Circle",
         default=0.050,
-        min=0,
+        min=0.0001,
         max=100,
         precision=4,
         unit="LENGTH",
@@ -422,7 +422,7 @@ class CamHypotrochoidCurve(Operator):
             print("limiting calculations to 10000 points")
             iter = 10000
         parametric.create_parametric_curve(
-            f, offset=0.0, min=0, max=maxangle, use_cubic=True, iterations=iter
+            f, offset=0.0, min=0.0001, max=maxangle, use_cubic=True, iterations=iter
         )
 
         return {"FINISHED"}
@@ -495,7 +495,12 @@ class CamCustomCurve(Operator):
             return c
 
         parametric.create_parametric_curve(
-            f, offset=0.0, min=self.min_t, max=self.max_t, use_cubic=True, iterations=self.iteration
+            f,
+            offset=0.0,
+            min=self.min_t,
+            max=self.max_t,
+            use_cubic=True,
+            iterations=self.iteration,
         )
 
         return {"FINISHED"}

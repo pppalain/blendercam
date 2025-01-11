@@ -345,7 +345,14 @@ def bar(
         )
 
     twist_female(
-        "receptacle", thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep
+        "receptacle",
+        thick,
+        diameter,
+        tolerance,
+        twist,
+        tneck,
+        tthick,
+        twist_keep=twist_keep,
     )
     rename("receptacle", "_tmpreceptacle")
     if which == "FF" or which == "F" or which == "MF":

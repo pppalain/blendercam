@@ -97,7 +97,7 @@ class CamCurveIntarsion(Operator):
     diameter: FloatProperty(
         name="Cutter Diameter",
         default=0.001,
-        min=0,
+        min=0.0001,
         max=0.025,
         precision=4,
         unit="LENGTH",
@@ -105,7 +105,7 @@ class CamCurveIntarsion(Operator):
     tolerance: FloatProperty(
         name="Cutout Tolerance",
         default=0.0001,
-        min=0,
+        min=0.0001,
         max=0.005,
         precision=4,
         unit="LENGTH",
@@ -113,7 +113,7 @@ class CamCurveIntarsion(Operator):
     backlight: FloatProperty(
         name="Backlight Seat",
         default=0.000,
-        min=0,
+        min=0.0001,
         max=0.010,
         precision=4,
         unit="LENGTH",
@@ -121,7 +121,7 @@ class CamCurveIntarsion(Operator):
     perimeter_cut: FloatProperty(
         name="Perimeter Cut Offset",
         default=0.000,
-        min=0,
+        min=0.0001,
         max=0.100,
         precision=4,
         unit="LENGTH",
@@ -129,7 +129,7 @@ class CamCurveIntarsion(Operator):
     base_thickness: FloatProperty(
         name="Base Material Thickness",
         default=0.000,
-        min=0,
+        min=0.0001,
         max=0.100,
         precision=4,
         unit="LENGTH",
@@ -137,7 +137,7 @@ class CamCurveIntarsion(Operator):
     intarsion_thickness: FloatProperty(
         name="Intarsion Material Thickness",
         default=0.000,
-        min=0,
+        min=0.0001,
         max=0.100,
         precision=4,
         unit="LENGTH",
@@ -145,7 +145,7 @@ class CamCurveIntarsion(Operator):
     backlight_depth_from_top: FloatProperty(
         name="Backlight Well Depth",
         default=0.000,
-        min=0,
+        min=0.0001,
         max=0.100,
         precision=4,
         unit="LENGTH",
@@ -225,7 +225,7 @@ class CamCurveSimpleOvercuts(Operator):
     diameter: FloatProperty(
         name="Diameter",
         default=0.003175,
-        min=0,
+        min=0.0001,
         max=100,
         precision=4,
         unit="LENGTH",
@@ -339,7 +339,7 @@ class CamCurveBoneFilletOvercuts(Operator):
         name="Tool Diameter",
         default=0.003175,
         description="Tool bit diameter used in cut operation",
-        min=0,
+        min=0.0001,
         max=100,
         precision=4,
         unit="LENGTH",
@@ -603,7 +603,7 @@ class CamCurveRemoveDoubles(Operator):
     merge_distance: FloatProperty(
         name="Merge distance",
         default=0.0001,
-        min=0,
+        min=0.0001,
         max=0.01,
     )
 
@@ -667,7 +667,7 @@ class CamMeshGetPockets(Operator):
         description="How horizontal the surface must be for a pocket: "
         "1.0 perfectly flat, 0.0 is any orientation",
         default=0.99,
-        min=0,
+        min=0.0001,
         max=1.0,
         precision=4,
     )
@@ -810,11 +810,7 @@ class CamOffsetSilhouete(Operator):
 
     @classmethod
     def poll(cls, context):
-        return context.active_object is not None and (
-            context.active_object.type == "CURVE"
-            or context.active_object.type == "FONT"
-            or context.active_object.type == "MESH"
-        )
+        return context.active_object.type in ["CURVE", "FONT", "MESH"] and context.mode == "OBJECT"
 
     def is_straight(self, geom):
         assert geom.geom_type == "LineString", geom.geom_type
