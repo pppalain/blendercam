@@ -44,8 +44,8 @@ class CAM_OPTIMISATION_Panel(CAMParentPanel, Panel):
             ]
 
             # Exact Mode
-            if not self.op.geometry_source == "OBJECT" or self.op.geometry_source == "COLLECTION":
-                self.exact_possible = False
+            # if self.op.geometry_source == "OBJECT" or self.op.geometry_source == "COLLECTION":
+            #     self.exact_possible = False
 
             if not self.exact_possible or not self.op.optimisation.use_exact:
                 col = layout.column(align=True)

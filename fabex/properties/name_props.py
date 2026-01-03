@@ -257,6 +257,23 @@ def update_name_link(self, context):
         active_chain.link_chain_file_names = self.link_names
 
 
+def update_names(self, context):
+    scene = context.scene
+    if len(scene.cam_operations) > 0:
+        active_op = scene.cam_operations[scene.cam_active_operation]
+        object_name = active_op.object_name
+        strategy = active_op.strategy.title()
+        op_name = active_op.name
+        operation_index = scene.cam_active_operation + 1
+        chain_index = scene.cam_active_chain
+    else:
+        active_op = ""
+        object_name = "OBJECT"
+        strategy = "STRATEGY"
+        op_name = "OP_NAME"
+        operation_index = chain_index = ""
+
+
 class CAM_NAME_Properties(PropertyGroup):
 
     default_export_location: StringProperty(
@@ -313,6 +330,7 @@ class CAM_NAME_Properties(PropertyGroup):
     path_name_full: StringProperty(
         name="Path Name (full)",
         get=get_path_name,
+        update=update_names,
     )
 
     # Operation
@@ -348,6 +366,7 @@ class CAM_NAME_Properties(PropertyGroup):
     operation_name_full: StringProperty(
         name="Operation Name (full)",
         get=get_operation_name,
+        update=update_names,
     )
 
     # Chain
@@ -383,6 +402,7 @@ class CAM_NAME_Properties(PropertyGroup):
     chain_name_full: StringProperty(
         name="Chain Name (full)",
         get=get_chain_name,
+        update=update_names,
     )
 
     # Simulation
@@ -418,6 +438,7 @@ class CAM_NAME_Properties(PropertyGroup):
     simulation_name_full: StringProperty(
         name="Simulation Name (full)",
         get=get_simulation_name,
+        update=update_names,
     )
 
     # File
@@ -453,4 +474,5 @@ class CAM_NAME_Properties(PropertyGroup):
     file_name_full: StringProperty(
         name="File Name (full)",
         get=get_file_name,
+        update=update_names,
     )
