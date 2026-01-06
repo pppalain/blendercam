@@ -26,6 +26,7 @@ except ImportError:
     pass
 
 
+from .addon_utils import add_collections
 from .async_utils import progress_async
 from ..chunk_builder import (
     CamPathChunk,
