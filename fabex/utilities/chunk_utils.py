@@ -26,6 +26,7 @@ except ImportError:
     pass
 
 
+from .addon_utils import add_collections
 from .async_utils import progress_async
 from ..chunk_builder import (
     CamPathChunk,
@@ -230,7 +231,7 @@ def extend_chunks_5_axis(chunks, o):
         # start point for casting
         cutterstart = Vector((0, 0, max(o.max.z, free_height)))
     cutterend = Vector((0, 0, o.min.z))
-    oriname = o.name + " orientation"
+    oriname = f"{o.name}_Orientation"
     ori = s.objects[oriname]
     # rotationaxes = rotTo2axes(ori.rotation_euler,'CA')#warning-here it allready is reset to 0!!
     log.info(f"rot {o.rotationaxes}")

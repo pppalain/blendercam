@@ -87,28 +87,31 @@ class PathsBackground(Operator):
         o = s.cam_operations[s.cam_active_operation]
         self.operation = o
         o.computing = True
-
         bpath = bpy.app.binary_path
         fpath = bpy.data.filepath
 
         for p in bpy.utils.script_paths():
             scriptpath = p + os.sep + "addons" + os.sep + "cam" + os.sep + "backgroundop.py"
+
             log.info(scriptpath)
+
             if os.path.isfile(scriptpath):
                 break
+
         proc = subprocess.Popen(
             [bpath, "-b", fpath, "-P", scriptpath, "--", "-o=" + str(s.cam_active_operation)],
             bufsize=1,
             stdout=subprocess.PIPE,
             stdin=subprocess.PIPE,
         )
-
         tcom = threadCom(o, proc)
         readthread = threading.Thread(target=thread_read, args=([tcom]), daemon=True)
         readthread.start()
         # self.__class__.cam_processes=[]
+
         if not hasattr(bpy.ops.object.calculate_cam_paths_background.__class__, "cam_processes"):
             bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes = []
+
         bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes.append(
             [readthread, tcom]
         )
@@ -145,8 +148,10 @@ class KillPathsBackground(Operator):
 
         if hasattr(bpy.ops.object.calculate_cam_paths_background.__class__, "cam_processes"):
             processes = bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes
+
             for p in processes:
                 tcom = p[1]
+
                 if tcom.opname == o.name:
                     processes.remove(p)
                     tcom.proc.kill()
@@ -180,31 +185,35 @@ async def _calc_path(operator, context):
 
     s = bpy.context.scene
     o = s.cam_operations[s.cam_active_operation]
+
     if o.geometry_source == "OBJECT":
         ob = bpy.data.objects[o.object_name]
         ob.hide_set(False)
+
     if o.geometry_source == "COLLECTION":
         obc = bpy.data.collections[o.collection_name]
         for ob in obc.objects:
             ob.hide_set(False)
+
     if o.strategy == "CARVE":
         curvob = bpy.data.objects[o.curve_source]
         curvob.hide_set(False)
-    """if o.strategy == 'WATERLINE':
-        ob = bpy.data.objects[o.object_name]
-        ob.select_set(True)
-        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)"""
+
+    # if o.strategy == 'WATERLINE':
+    #     ob = bpy.data.objects[o.object_name]
+    #     ob.select_set(True)
+    #     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+
     path_name = s.cam_names.path_name_full
     mesh = bpy.data.meshes.get(path_name)
+
     if mesh:
         bpy.data.meshes.remove(mesh)
 
     text = "Operation can't be performed, see Warnings for info"
+
     if not o.valid:
-        operator.report(
-            {"ERROR_INVALID_INPUT"},
-            text,
-        )
+        operator.report({"ERROR_INVALID_INPUT"}, text)
         progress_async(text)
         return {"FINISHED", False}
 
@@ -224,24 +233,30 @@ async def _calc_path(operator, context):
 
     if o.use_layers:
         o.movement.parallel_step_back = False
+
     try:
         await get_path(context, o)
         log.info("Got Path Okay")
+
     except CamException as e:
         log.error(e)
         traceback.print_tb(e.__traceback__)
         error_str = "\n".join(textwrap.wrap(str(e), width=80))
         operator.report({"ERROR"}, error_str)
         return {"FINISHED", False}
+
     except AsyncCancelledException as e:
         log.warning(e)
         return {"CANCELLED", False}
+
     except Exception as e:
         log.error(f"FAIL {e}")
         traceback.print_tb(e.__traceback__)
         operator.report({"ERROR"}, str(e))
         return {"FINISHED", False}
+
     coll = bpy.data.collections.get("RigidBodyWorld")
+
     if coll:
         bpy.data.collections.remove(coll)
 
@@ -278,6 +293,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
 
         s = context.scene
         o = s.cam_operations[s.cam_active_operation] if len(s.cam_operations) > 0 else None
+
         if o is not None:
             if source_valid(o, context):
                 return True
@@ -346,6 +362,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
 
             with context.temp_override(space=text_editor):
                 text_editor.text = bpy.data.texts[f"{name}{extension}"]
+
         except IndexError:
             pass
 
@@ -466,13 +483,16 @@ class PathsChain(Operator, AsyncOperatorMixin):
         chain = s.cam_chains[s.cam_active_chain]
         chainops = get_chain_operations(chain)
         meshes = []
+
         try:
             for i in range(0, len(chainops)):
                 s.cam_active_operation = s.cam_operations.find(chainops[i].name)
                 self.report({"INFO"}, f"Calculating Path: {chainops[i].name}")
                 result, success = await _calc_path(self, context)
+
                 if not success and "FINISHED" in result:
                     self.report({"ERROR"}, f"Couldn't Calculate Path: {chainops[i].name}")
+
         except Exception as e:
             log.error(f"FAIL {e}")
             traceback.print_tb(e.__traceback__)
@@ -482,6 +502,7 @@ class PathsChain(Operator, AsyncOperatorMixin):
         for o in chainops:
             path_prefix = bpy.context.scene.cam_names.path_prefix
             meshes.append(bpy.data.objects[f"{path_prefix}_{o.name}"].data)
+
         export_gcode_path(chain.filename, meshes, chainops)
         return {"FINISHED"}
 
@@ -531,16 +552,14 @@ class PathExportChain(Operator):
         """
 
         s = bpy.context.scene
-
         chain = s.cam_chains[s.cam_active_chain]
         chainops = get_chain_operations(chain)
         meshes = []
 
-        # if len(chainops)<4:
-
         for o in chainops:
             path_prefix = bpy.context.scene.cam_names.path_prefix
             meshes.append(bpy.data.objects[f"{path_prefix}_{o.name}"].data)
+
         export_gcode_path(chain.filename, meshes, chainops)
         return {"FINISHED"}
 
@@ -572,16 +591,11 @@ class PathExport(Operator):
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
         path_name = s.cam_names.path_name_full
-
         name_raw = operation.name if operation.link_operation_file_names else operation.filename
         name = safe_filename(name_raw)
 
         log.info(f"EXPORTING {name} {bpy.data.objects[path_name].data} {operation}")
 
-        export_gcode_path(
-            name,
-            [bpy.data.objects[path_name].data],
-            [operation],
-        )
+        export_gcode_path(name, [bpy.data.objects[path_name].data], [operation])
 
         return {"FINISHED"}

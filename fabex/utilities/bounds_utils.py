@@ -46,75 +46,75 @@ def get_bounds_worldspace(obs, use_modifiers=False):
     maxx = maxy = maxz = -10000000
     minx = miny = minz = 10000000
     for ob in obs:
-        # bb=ob.bound_box
-        mw = ob.matrix_world
-        if ob.type == "MESH":
-            if use_modifiers:
-                depsgraph = bpy.context.evaluated_depsgraph_get()
-                mesh_owner = ob.evaluated_get(depsgraph)
-                mesh = mesh_owner.to_mesh()
+        if not ob.type in ["LIGHT", "CAMERA"]:
+            mw = ob.matrix_world
+            if ob.type == "MESH":
+                if use_modifiers:
+                    depsgraph = bpy.context.evaluated_depsgraph_get()
+                    mesh_owner = ob.evaluated_get(depsgraph)
+                    mesh = mesh_owner.to_mesh()
+                else:
+                    mesh = ob.data
+
+                for c in mesh.vertices:
+                    coord = c.co
+                    worldCoord = mw @ Vector((coord[0], coord[1], coord[2]))
+                    minx = min(minx, worldCoord.x)
+                    miny = min(miny, worldCoord.y)
+                    minz = min(minz, worldCoord.z)
+                    maxx = max(maxx, worldCoord.x)
+                    maxy = max(maxy, worldCoord.y)
+                    maxz = max(maxz, worldCoord.z)
+
+                if use_modifiers:
+                    mesh_owner.to_mesh_clear()
+
+            elif ob.type == "FONT":
+                activate(ob)
+                bpy.ops.object.duplicate()
+                co = bpy.context.active_object
+                bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM")
+                bpy.ops.object.convert(target="MESH", keep_original=False)
+                mesh = co.data
+                for c in mesh.vertices:
+                    coord = c.co
+                    worldCoord = mw @ Vector((coord[0], coord[1], coord[2]))
+                    minx = min(minx, worldCoord.x)
+                    miny = min(miny, worldCoord.y)
+                    minz = min(minz, worldCoord.z)
+                    maxx = max(maxx, worldCoord.x)
+                    maxy = max(maxy, worldCoord.y)
+                    maxz = max(maxz, worldCoord.z)
+                bpy.ops.object.delete()
+                bpy.ops.outliner.orphans_purge()
             else:
-                mesh = ob.data
-
-            for c in mesh.vertices:
-                coord = c.co
-                worldCoord = mw @ Vector((coord[0], coord[1], coord[2]))
-                minx = min(minx, worldCoord.x)
-                miny = min(miny, worldCoord.y)
-                minz = min(minz, worldCoord.z)
-                maxx = max(maxx, worldCoord.x)
-                maxy = max(maxy, worldCoord.y)
-                maxz = max(maxz, worldCoord.z)
-
-            if use_modifiers:
-                mesh_owner.to_mesh_clear()
-
-        elif ob.type == "FONT":
-            activate(ob)
-            bpy.ops.object.duplicate()
-            co = bpy.context.active_object
-            bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM")
-            bpy.ops.object.convert(target="MESH", keep_original=False)
-            mesh = co.data
-            for c in mesh.vertices:
-                coord = c.co
-                worldCoord = mw @ Vector((coord[0], coord[1], coord[2]))
-                minx = min(minx, worldCoord.x)
-                miny = min(miny, worldCoord.y)
-                minz = min(minz, worldCoord.z)
-                maxx = max(maxx, worldCoord.x)
-                maxy = max(maxy, worldCoord.y)
-                maxz = max(maxz, worldCoord.z)
-            bpy.ops.object.delete()
-            bpy.ops.outliner.orphans_purge()
-        else:
-            if not hasattr(ob.data, "splines"):
-                raise CamException("Can't do CAM operation on the selected object type")
-            # for coord in bb:
-            for c in ob.data.splines:
-                for p in c.bezier_points:
-                    coord = p.co
-                    # this can work badly with some imported curves, don't know why...
-                    # worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))
-                    worldCoord = mw @ Vector((coord[0], coord[1], coord[2]))
-                    minx = min(minx, worldCoord.x)
-                    miny = min(miny, worldCoord.y)
-                    minz = min(minz, worldCoord.z)
-                    maxx = max(maxx, worldCoord.x)
-                    maxy = max(maxy, worldCoord.y)
-                    maxz = max(maxz, worldCoord.z)
-                for p in c.points:
-                    coord = p.co
-                    # this can work badly with some imported curves, don't know why...
-                    # worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))
-                    worldCoord = mw @ Vector((coord[0], coord[1], coord[2]))
-                    minx = min(minx, worldCoord.x)
-                    miny = min(miny, worldCoord.y)
-                    minz = min(minz, worldCoord.z)
-                    maxx = max(maxx, worldCoord.x)
-                    maxy = max(maxy, worldCoord.y)
-                    maxz = max(maxz, worldCoord.z)
-    # progress(time.time()-t)
+                if not hasattr(ob.data, "splines"):
+                    raise CamException("Can't do CAM operation on the selected object type")
+                # for coord in bb:
+                for c in ob.data.splines:
+                    for p in c.bezier_points:
+                        coord = p.co
+                        # this can work badly with some imported curves, don't know why...
+                        # worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))
+                        worldCoord = mw @ Vector((coord[0], coord[1], coord[2]))
+                        minx = min(minx, worldCoord.x)
+                        miny = min(miny, worldCoord.y)
+                        minz = min(minz, worldCoord.z)
+                        maxx = max(maxx, worldCoord.x)
+                        maxy = max(maxy, worldCoord.y)
+                        maxz = max(maxz, worldCoord.z)
+                    for p in c.points:
+                        coord = p.co
+                        # this can work badly with some imported curves, don't know why...
+                        # worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))
+                        worldCoord = mw @ Vector((coord[0], coord[1], coord[2]))
+                        minx = min(minx, worldCoord.x)
+                        miny = min(miny, worldCoord.y)
+                        minz = min(minz, worldCoord.z)
+                        maxx = max(maxx, worldCoord.x)
+                        maxy = max(maxy, worldCoord.y)
+                        maxz = max(maxz, worldCoord.z)
+        # progress(time.time()-t)
     return minx, miny, minz, maxx, maxy, maxz
 
 
@@ -257,6 +257,7 @@ def get_bounds(o):
         o.max.y = o.source_image_offset.y + ey * o.optimisation.pixsize
         o.min.z = o.source_image_offset.z + o.min_z
         o.max.z = o.source_image_offset.z
+
     s = bpy.context.scene
     m = s.cam_machine
 

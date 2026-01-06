@@ -210,6 +210,10 @@ async def generate_simulation_image(operations, limits):
     for op_count, o in enumerate(operations):
         path_prefix = bpy.context.scene.cam_names.path_prefix
         ob = bpy.data.objects[f"{path_prefix}_{o.name}"]
+
+        log.debug(f"ob = {path_prefix}_{o.name}")
+        log.debug(f"path_name = {bpy.context.scene.cam_names.path_name_full}")
+
         m = ob.data
         verts = m.vertices
 
