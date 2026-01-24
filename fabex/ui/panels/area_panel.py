@@ -121,7 +121,7 @@ class CAM_AREA_Panel(CAMParentPanel, Panel):
                     panel.enabled = self.op.use_limit_curve
                     col = panel.column(align=True)
                     col.use_property_split = True
-                    col.prop_search(self.op, "limit_curve", bpy.data, "objects", text="Curve")
+                    col.prop_search(self.op, "limit_curve", bpy.data, "curves", text="Curve")
 
         # Use Layers
         main.use_property_split = False
