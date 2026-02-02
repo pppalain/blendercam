@@ -651,9 +651,9 @@ def get_ambient(o):
             )
 
         if o.use_limit_curve:
-            if o.limit_curve != "":
-                limit_curve = bpy.data.objects[o.limit_curve]
-                polys = curve_to_shapely(limit_curve)
+            if o.limit_curve is not None:  #!= "":
+                limit_curve = o.limit_curve  # bpy.data.objects[o.limit_curve]
+                polys = curve_to_shapely(limit_curve.name)
                 o.limit_poly = unary_union(polys)
 
                 if o.ambient_cutter_restrict:

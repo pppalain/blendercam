@@ -38,10 +38,18 @@ def parent_child_poly(parents, children, o):
     for parent in parents:
         if parent.poly is None:
             parent.update_poly()
+
         for child in children:
             if child.poly is None:
                 child.update_poly()
+
             if child != parent:
-                if parent.poly.contains(Point(child.poly.boundary.coords[0])):
-                    parent.children.append(child)
-                    child.parents.append(parent)
+                parent_x = parent.poly.bounds[0]
+                parent_z = parent.poly.bounds[2]
+                child_x = child.poly.bounds[0]
+                child_z = child.poly.bounds[2]
+
+                if parent_x <= child_x and parent_z >= child_z:
+                    if parent.poly.contains(child.poly.representative_point()):
+                        parent.children.append(child)
+                        child.parents.append(parent)

@@ -17,7 +17,7 @@ from bpy.props import (
     PointerProperty,
     StringProperty,
 )
-from bpy.types import PropertyGroup
+from bpy.types import Curve, PropertyGroup
 from ..constants import PRECISION
 from ..utilities.strategy_utils import (
     get_strategy_list,
@@ -861,10 +861,12 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=True,
         update=update_rest,
     )  # restricts cutter inside ambient only
-    limit_curve: StringProperty(
+    limit_curve: PointerProperty(
+        type=Curve,
         name="Limit Curve",
         description="Curve used to limit the area of the operation",
         update=update_rest,
+        # poll=lambda self, object: object.type == "CURVE",
     )
 
     #########
