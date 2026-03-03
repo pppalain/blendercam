@@ -186,6 +186,162 @@ async def _calc_path(operator, context):
     s = bpy.context.scene
     o = s.cam_operations[s.cam_active_operation]
 
+    # Log operation settings at start for debugging
+    log.info("=" * 60)
+    log.info(f"Operation Start: {o.name}")
+    log.info("=" * 60)
+
+    log.info("[Operation Setup]")
+    if o.geometry_source == "OBJECT":
+        log.info(f"Object = {o.object_name}")
+    elif o.geometry_source == "COLLECTION":
+        log.info(f"Collection = {o.collection_name}")
+    else:
+        log.info(f"Image = {o.source_image_name}")
+    log.info(f"Axis Count = {o.machine_axes} axis")
+    if o.machine_axes == "4":
+        log.info(f"Strategy = {o.strategy_4_axis}")
+        log.info(f"Rotary Axis 1 = {o.rotary_axis_1}")
+    elif o.machine_axes == "5":
+        log.info(f"Strategy = {o.strategy_5_axis}")
+        log.info(f"Rotary Axis 1 = {o.rotary_axis_1}")
+        log.info(f"Rotary Axis 2 = {o.rotary_axis_2}")
+    else:
+        log.info(f"Strategy = {o.strategy}")
+    if o.strategy == "CUTOUT":
+        log.info(f"Cut Type = {o.cut_type}")
+        log.info(f"Outlines Count = {o.outlines_count}")
+        log.info(f"Overshoot = {o.straight}")
+        log.info(f"Lead In = {o.lead_in * 1000:.3f} mm")
+        log.info(f"Lead Out = {o.lead_out * 1000:.3f} mm")
+        log.info(f"Skin = {o.skin * 1000:.3f} mm")
+        log.info(f"Stepover = {o.distance_between_paths * 1000:.3f} mm")
+    elif o.strategy == "WATERLINE":
+        log.info(f"Skin = {o.skin * 1000:.3f} mm")
+        log.info(f"Waterline Fill = {o.waterline_fill}")
+        log.info(f"Waterline Project = {o.waterline_project}")
+        log.info(f"Stepover = {o.distance_between_paths * 1000:.3f} mm")
+    elif o.strategy == "CARVE":
+        log.info(f"Carve Depth = {o.carve_depth * 1000:.3f} mm")
+        log.info(f"Skin = {o.skin * 1000:.3f} mm")
+        log.info(f"Detail = {o.distance_along_paths * 1000:.3f} mm")
+    elif o.strategy == "MEDIAL_AXIS":
+        log.info(f"Threshold = {o.medial_axis_threshold * 1000:.3f} mm")
+        log.info(f"Detail Size = {o.medial_axis_subdivision * 1000:.3f} mm")
+        log.info(f"Add Pocket = {o.add_pocket_for_medial}")
+        log.info(f"Add Medial Mesh = {o.add_mesh_for_medial}")
+    elif o.strategy == "DRILL":
+        log.info(f"Drill Type = {o.drill_type}")
+    elif o.strategy == "POCKET":
+        log.info(f"Pocket Type = {o.pocket_type}")
+        log.info(f"Pocket Start = {o.pocket_option}")
+        log.info(f"Skin = {o.skin * 1000:.3f} mm")
+        log.info(f"Pocket to Curve = {o.pocket_to_curve}")
+        log.info(f"Stepover = {o.distance_between_paths * 1000:.3f} mm")
+    else:
+        log.info(f"Inverse Milling = {o.inverse}")
+        log.info(f"Skin = {o.skin * 1000:.3f} mm")
+        if o.strategy in ["PARALLEL", "CROSS"]:
+            log.info(f"Parallel Angle = {o.parallel_angle * 180 / pi:.1f} deg")
+        log.info(f"Stepover = {o.distance_between_paths * 1000:.3f} mm")
+        log.info(f"Detail = {o.distance_along_paths * 1000:.3f} mm")
+
+    log.info("[A & B Axes]")
+    if o.enable_a_axis:
+        log.info(
+            f"A Axis = Enabled, Angle = {o.rotation_a * 180 / pi:.1f} deg, A Along X = {o.a_along_x}"
+        )
+    else:
+        log.info("A Axis = Disabled")
+    if o.enable_b_axis:
+        log.info(f"B Axis = Enabled, Angle = {o.rotation_b * 180 / pi:.1f} deg")
+    else:
+        log.info("B Axis = Disabled")
+
+    log.info("[Array]")
+    if o.array:
+        log.info(
+            f"Array = Enabled, X: {o.array_x_count} x {o.array_x_distance * 1000:.3f} mm, Y: {o.array_y_count} x {o.array_y_distance * 1000:.3f} mm"
+        )
+    else:
+        log.info("Array = Disabled")
+
+    log.info("[Bridges]")
+    if o.use_bridges:
+        log.info(
+            f"Bridges = Enabled, Width = {o.bridges_width * 1000:.3f} mm, Height = {o.bridges_height * 1000:.3f} mm"
+        )
+        log.info(f"Bridge Collection = {o.bridges_collection_name or 'None'}")
+        log.info(f"Use Bridge Modifiers = {o.use_bridge_modifiers}")
+    else:
+        log.info("Bridges = Disabled")
+
+    log.info("[Optimisation]")
+    log.info(f"Exact Mode = {o.optimisation.use_exact}")
+    if o.optimisation.use_exact:
+        log.info(f"Sim Detail = {o.optimisation.simulation_detail * 1000:.4f} mm")
+        log.info(f"Offset Detail = {o.optimisation.circle_detail}")
+        log.info(f"Use OpenCamLib = {o.optimisation.use_opencamlib}")
+    else:
+        log.info(f"Detail Size = {o.optimisation.pixsize * 1000:.4f} mm")
+    log.info(f"Simplify G-Code = {o.remove_redundant_points}")
+    log.info(f"Use Mesh Modifiers = {o.use_modifiers}")
+    log.info(f"Hide All Others = {o.hide_all_others}")
+    log.info(f"Parent Path to Object = {o.parent_path_to_object}")
+    log.info(
+        f"Reduce Path Points = {o.optimisation.optimize}, Threshold = {o.optimisation.optimize_threshold:.2f} μm"
+    )
+
+    log.info("[Operation Area]")
+    log.info(f"Safe Height = {o.movement.free_height * 1000:.3f} mm")
+    log.info(f"Depth Start = {o.max_z * 1000:.3f} mm")
+    log.info(f"Depth Max = {o.min_z_from}")
+    if o.min_z_from == "CUSTOM":
+        log.info(f"Depth End = {o.min_z * 1000:.3f} mm")
+    if o.strategy in ["BLOCK", "SPIRAL", "CIRCLES", "PARALLEL", "CROSS"]:
+        log.info(f"Surfaces = {o.ambient_behaviour}")
+        if o.ambient_behaviour == "AROUND":
+            log.info(f"Ambient Radius = {o.ambient_radius * 1000:.3f} mm")
+        log.info(f"Cutter stays in Ambient Limits = {o.ambient_cutter_restrict}")
+    if o.strategy in ["BLOCK", "SPIRAL", "CIRCLES", "PARALLEL", "CROSS", "WATERLINE"]:
+        limit_name = o.limit_curve.name if o.limit_curve else "None"
+        log.info(f"Limit Curve = {o.use_limit_curve}, Curve = {limit_name}")
+    log.info(f"Layers = {o.use_layers}, Layer Height = {o.stepdown * 1000:.3f} mm")
+
+    log.info("[Movement]")
+    log.info(f"Milling Type = {o.movement.type}")
+    log.info(f"Cutter Spin = {o.movement.spindle_rotation}")
+    log.info(f"Stay Low = {o.movement.stay_low}")
+    if o.strategy in ["PARALLEL", "CROSS"]:
+        log.info(f"Parallel Step Back = {o.movement.parallel_step_back}")
+    log.info(f"G64 Geometry = {o.movement.useG64}")
+    if o.movement.useG64:
+        log.info(f"G64 Tolerance = {o.movement.G64 * 1000:.3f} mm")
+    log.info(
+        f"Protect Vertical = {o.movement.protect_vertical}, Angle Limit = {o.movement.protect_vertical_limit * 180 / pi:.1f} deg"
+    )
+
+    log.info("[Feedrate]")
+    log.info(f"Feedrate = {o.feedrate * 1000:.1f} mm/min")
+    log.info(f"Spindle RPM = {o.spindle_rpm:.0f}")
+    log.info(f"Plunge Speed = {o.plunge_feedrate:.1f}%")
+    log.info(f"Plunge Angle = {o.plunge_angle * 180 / pi:.1f} deg")
+
+    log.info("[Cutter]")
+    log.info(f"Type = {o.cutter_type}")
+    log.info(f"Diameter = {o.cutter_diameter * 1000:.3f} mm")
+    if o.cutter_type == "BALLCONE":
+        log.info(f"Ball Radius = {o.ball_radius * 1000:.3f} mm")
+    if o.cutter_type == "BULLNOSE":
+        log.info(f"Bull Corner Radius = {o.bull_corner_radius * 1000:.3f} mm")
+    if o.cutter_type == "CYLCONE":
+        log.info(f"Cyl Bottom Diameter = {o.cylcone_diameter * 1000:.3f} mm")
+    if o.cutter_type in ["VCARVE", "BALLCONE", "BULLNOSE", "CYLCONE"]:
+        log.info(f"Tip Angle = {o.cutter_tip_angle:.1f} deg")
+    log.info(f"Flutes = {o.cutter_flutes}")
+    log.info(f"Tool Number = {o.cutter_id}")
+    log.info("-" * 60)
+
     # Guard: prevent using a generated CAM path object as geometry source
     if o.geometry_source == "OBJECT":
         path_prefix = s.cam_names.path_prefix
@@ -374,7 +530,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
             Any: The result of the path calculation.
         """
 
-        (retval, success) = await _calc_path(self, context)
+        retval, success = await _calc_path(self, context)
         log.info(f"CALCULATED PATH (success={success},retval={retval})")
 
         # Import the Gcode file to Blender's Text Editor for inspection
