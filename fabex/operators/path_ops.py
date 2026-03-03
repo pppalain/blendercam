@@ -238,6 +238,15 @@ async def _calc_path(operator, context):
         await get_path(context, o)
         log.info("Got Path Okay")
 
+        # Restore source mesh as active object so that adding a new operation
+        # auto-picks the source mesh rather than the generated CAM path
+        if o.geometry_source == "OBJECT" and o.object_name in bpy.data.objects:
+            source_ob = bpy.data.objects[o.object_name]
+            bpy.ops.object.select_all(action="DESELECT")
+            source_ob.select_set(True)
+            bpy.context.view_layer.objects.active = source_ob
+            log.info(f"Restored active object to source mesh: {o.object_name}")
+
     except CamException as e:
         log.error(e)
         traceback.print_tb(e.__traceback__)
@@ -349,9 +358,13 @@ class CalculatePath(Operator, AsyncOperatorMixin):
 
         name_raw = operation.name if operation.link_operation_file_names else operation.filename
         name = safe_filename(name_raw)
-        basefilename = (
-            bpy.data.filepath[: -len(bpy.path.basename(bpy.data.filepath))] + name + extension
-        )
+        export_location = context.scene.cam_names.default_export_location
+        if export_location:
+            basefilename = export_location + name + extension
+        else:
+            basefilename = (
+                bpy.data.filepath[: -len(bpy.path.basename(bpy.data.filepath))] + name + extension
+            )
 
         log.info(basefilename)
         bpy.ops.text.open(filepath=basefilename)

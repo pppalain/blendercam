@@ -62,6 +62,29 @@ class CamOperationAdd(Operator):
             self.report({"ERROR_INVALID_INPUT"}, "Please Add an Object to Base the Operation on.")
             return {"CANCELLED"}
 
+        # If the active object is a generated CAM path, find the original source mesh
+        # so the new operation name and properties are based on the real geometry
+        path_prefix = s.cam_names.path_prefix
+        if ob.name.startswith(path_prefix):
+            source_ob = None
+            for existing_op in s.cam_operations:
+                if existing_op.path_object_name == ob.name:
+                    if existing_op.object_name and existing_op.object_name in bpy.data.objects:
+                        source_ob = bpy.data.objects[existing_op.object_name]
+                        break
+            if source_ob:
+                log.warning(
+                    f"Active object '{ob.name}' is a CAM path - "
+                    f"using source mesh '{source_ob.name}' instead."
+                )
+                ob = source_ob
+                bpy.context.view_layer.objects.active = ob
+            else:
+                log.warning(
+                    f"Active object '{ob.name}' appears to be a CAM path object. "
+                    "Could not find the original source mesh."
+                )
+
         minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace([ob])
         s.cam_operations.add()
         o = s.cam_operations[-1]
