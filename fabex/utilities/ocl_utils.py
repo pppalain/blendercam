@@ -336,6 +336,7 @@ def get_oclSTL(operation):
     oclSTL = ocl.STLSurf()
 
     found_mesh = False
+    triangle_count = 0
 
     for collision_object in operation.objects:
 
@@ -350,33 +351,44 @@ def get_oclSTL(operation):
 
             found_mesh = True
 
-            global_matrix = mathutils.Matrix.Identity(4)
+            needs_cleanup = False
+            if operation.use_modifiers or collision_object.type != "MESH":
+                depsgraph = bpy.context.evaluated_depsgraph_get()
+                eval_obj = collision_object.evaluated_get(depsgraph)
+                m = eval_obj.to_mesh()
+                needs_cleanup = True
+            else:
+                m = collision_object.data
 
-            faces = blender_utils.faces_from_mesh(
-                collision_object, global_matrix, operation.use_modifiers
-            )
+            mw = collision_object.matrix_world
+            m.calc_loop_triangles()
 
-            for face in faces:
+            for tri in m.loop_triangles:
+                verts = [mw @ m.vertices[vi].co for vi in tri.vertices]
 
                 t = ocl.Triangle(
                     ocl.Point(
-                        face[0][0] * OCL_SCALE,
-                        face[0][1] * OCL_SCALE,
-                        (face[0][2] + operation.skin) * OCL_SCALE,
+                        verts[0][0] * OCL_SCALE,
+                        verts[0][1] * OCL_SCALE,
+                        (verts[0][2] + operation.skin) * OCL_SCALE,
                     ),
                     ocl.Point(
-                        face[1][0] * OCL_SCALE,
-                        face[1][1] * OCL_SCALE,
-                        (face[1][2] + operation.skin) * OCL_SCALE,
+                        verts[1][0] * OCL_SCALE,
+                        verts[1][1] * OCL_SCALE,
+                        (verts[1][2] + operation.skin) * OCL_SCALE,
                     ),
                     ocl.Point(
-                        face[2][0] * OCL_SCALE,
-                        face[2][1] * OCL_SCALE,
-                        (face[2][2] + operation.skin) * OCL_SCALE,
+                        verts[2][0] * OCL_SCALE,
+                        verts[2][1] * OCL_SCALE,
+                        (verts[2][2] + operation.skin) * OCL_SCALE,
                     ),
                 )
 
                 oclSTL.addTriangle(t)
+                triangle_count += 1
+
+            if needs_cleanup:
+                eval_obj.to_mesh_clear()
 
         # FIXME needs to work with collections
 
@@ -384,6 +396,14 @@ def get_oclSTL(operation):
 
         raise CamException(
             "This Operation Requires a Mesh or Curve Object or Equivalent (e.g. Text, Volume)."
+        )
+
+    if triangle_count == 0:
+
+        raise CamException(
+            "OpenCAMLib requires a mesh with polygons. "
+            "The selected object has no triangulated faces - "
+            "make sure it has geometry (not just vertices or edges)."
         )
 
     return oclSTL
