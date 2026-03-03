@@ -90,6 +90,7 @@ class CamOperationAdd(Operator):
         o = s.cam_operations[-1]
         o.object_name = ob.name
         o.min_z = minz
+        o.spindle_rpm = s.cam_machine.spindle_default
 
         s.cam_active_operation = len(s.cam_operations) - 1
 

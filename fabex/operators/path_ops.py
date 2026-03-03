@@ -186,6 +186,57 @@ async def _calc_path(operator, context):
     s = bpy.context.scene
     o = s.cam_operations[s.cam_active_operation]
 
+    # Guard: prevent using a generated CAM path object as geometry source
+    if o.geometry_source == "OBJECT":
+        path_prefix = s.cam_names.path_prefix
+        if o.object_name.startswith(path_prefix):
+            selected_name = o.object_name
+
+            # Try to auto-correct by finding which operation generated this path object
+            correct_object_name = None
+            for other_op in s.cam_operations:
+                if other_op.path_object_name == selected_name:
+                    if other_op.object_name and other_op.object_name in bpy.data.objects:
+                        correct_object_name = other_op.object_name
+                        break
+
+            if correct_object_name:
+                log.warning(
+                    f"Auto-correcting object source: '{selected_name}' → '{correct_object_name}'"
+                )
+                o.object_name = correct_object_name
+                operator.report(
+                    {"WARNING"},
+                    f"Object auto-corrected from '{selected_name}' to '{correct_object_name}'",
+                )
+            else:
+                # Cannot recover - show error popup and cancel
+                msg = (
+                    f"Wrong object selected: '{selected_name}' is a CAM path object. "
+                    "Delete this operation and create a new one with the correct source mesh selected."
+                )
+                log.error(msg)
+
+                def draw_cam_object_error(self_menu, context):
+                    layout = self_menu.layout
+                    col = layout.column(align=True)
+                    col.label(text="Wrong object selected!", icon="ERROR")
+                    col.separator()
+                    col.label(text=f"'{selected_name}' is a CAM path object.")
+                    col.label(text="You may not use a CAM path as geometry source.")
+                    col.separator()
+                    col.label(text="The object name is stored in the operation.", icon="INFO")
+                    col.label(text="Delete this operation and create a new one")
+                    col.label(text="with the correct source mesh selected.")
+
+                bpy.context.window_manager.popup_menu(
+                    draw_cam_object_error,
+                    title="CAM Object Selected - Operation Cancelled",
+                    icon="ERROR",
+                )
+                operator.report({"ERROR"}, msg)
+                return {"FINISHED", False}
+
     if o.geometry_source == "OBJECT":
         ob = bpy.data.objects[o.object_name]
         ob.hide_set(False)
