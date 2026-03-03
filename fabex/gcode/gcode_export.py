@@ -163,6 +163,8 @@ def export_gcode_path(filename, vertslist, operations):
         c.program_begin(0, filename)
         c.flush_nc()
         c.comment("G-code Generated with Fabex and NC library")
+        frf = round(m.feedrate_rapid * unitcorr, 2)
+        c.comment(f"Rapids: {frf}/min")
         # absolute coordinates
         c.absolute()
         # work-plane, by now always xy,
@@ -222,7 +224,17 @@ def export_gcode_path(filename, vertslist, operations):
         c.flush_nc()
         last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
 
+        fmh = round(free_height * unitcorr, 2)
+
         if o.cutter_type not in ["LASER", "PLASMA"]:
+            frf = round(m.feedrate_rapid * unitcorr, 2)
+
+            # Raise Z to job start height BEFORE spindle starts,
+            # so the cutter clears toolsetters and fixtures
+            if m.use_job_start_height:
+                jsh = round(m.job_start_height * unitcorr, 2)
+                c.write(f"G00 Z{jsh} F{frf}\n")
+
             if o.enable_hold:
                 c.write("(Hold Down)\n")
                 lines = o.gcode_start_hold_cmd.split(";")
@@ -254,11 +266,10 @@ def export_gcode_path(filename, vertslist, operations):
         if m.spindle_start_time > 0:
             c.dwell(m.spindle_start_time)
 
-        # raise the spindle to safe height
-        fmh = round(free_height * unitcorr, 2)
-
-        if o.cutter_type not in ["LASER", "PLASMA"]:
-            c.write("G00 Z" + str(fmh) + "\n")
+        # Raise to free height. When job start height is active the first path
+        # vertex already positions X, Y and Z, so this move is redundant.
+        if o.cutter_type not in ["LASER", "PLASMA"] and not m.use_job_start_height:
+            c.write(f"G00 Z{fmh} F{frf}\n")
 
         if o.enable_a_axis:
             if o.rotation_a == 0:
@@ -304,6 +315,10 @@ def export_gcode_path(filename, vertslist, operations):
         online = 0
         cut = True  # active cut variable for laser or plasma
         shapes = 0
+        # When job start height is active the origin vertex (X0 Y0) is skipped;
+        # instead the first rapid is split into XY-then-Z so the machine moves
+        # to the actual cut position at full clearance before descending.
+        job_start_pending = m.use_job_start_height and o.cutter_type not in ["LASER", "PLASMA"]
 
         for vi, vert in enumerate(verts):
             # skip the first vertex if this is a chained operation
@@ -312,6 +327,11 @@ def export_gcode_path(filename, vertslist, operations):
             shapes += 1  # Count amount of shapes
 
             if i > 0 and vi == 0:
+                continue
+
+            # Skip origin vertex when job start height is active — the machine is
+            # already at clearance height and the next vertex carries the real XY.
+            if job_start_pending and vi == 0:
                 continue
             v = vert.co
             # redundant point on line detection
@@ -400,7 +420,14 @@ def export_gcode_path(filename, vertslist, operations):
                             cut = False
                         c.rapid(x=vx, y=vy)
                     else:
-                        c.rapid(x=vx, y=vy, z=vz)
+                        if job_start_pending:
+                            # First rapid after job start height: move XY at clearance
+                            # height first, then descend to free height separately.
+                            c.rapid(x=vx, y=vy)
+                            c.rapid(z=vz)
+                            job_start_pending = False
+                        else:
+                            c.rapid(x=vx, y=vy, z=vz)
                         #  this is to evaluate operation time and adds a feedrate for fast moves
                         if vz is not None:
                             # compensate for multiple fast move accelerations
