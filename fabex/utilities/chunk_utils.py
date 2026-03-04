@@ -1099,6 +1099,7 @@ async def sort_chunks(chunks, o, last_pos=None):
     last_progress_time = time.time()
     total = len(chunks)
     i = len(chunks)
+    stall_count = 0
     pos = (0, 0, 0) if last_pos is None else last_pos
 
     while len(chunks) > 0:
@@ -1127,6 +1128,15 @@ async def sort_chunks(chunks, o, last_pos=None):
             sortedchunks.append(ch)
             lastch = ch
             pos = lastch.get_point(-1)
+            stall_count = 0
+        else:
+            stall_count += 1
+            if stall_count >= len(chunks):  # full pass with no progress — avoid infinite loop
+                log.warning(
+                    f"sort_chunks: {len(chunks)} chunks could not be sorted, appending as-is"
+                )
+                sortedchunks.extend(chunks)
+                break
 
         i -= 1
 
