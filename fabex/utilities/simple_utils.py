@@ -946,7 +946,8 @@ def subdivide_long_edges(ob, threshold):
     subdivides = []
     n = 1
     iter = 0
-    while n > 0:
+    max_iters = 100  # guard against infinite loop if triangulation creates new long edges
+    while n > 0 and iter < max_iters:
         n = 0
         for i, e in enumerate(m.edges):
             v1 = m.vertices[e.vertices[0]].co
