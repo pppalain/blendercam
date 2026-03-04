@@ -74,6 +74,8 @@ from ..exception import CamException
 
 def chunks_refine(chunks, o):
     """Add Extra Points in Between for Chunks"""
+    if o.distance_along_paths <= 0:
+        raise CamException("distance_along_paths must be greater than zero")
     for ch in chunks:
         # print('before',len(ch))
         newchunk = []
@@ -656,6 +658,8 @@ def sample_path_low(o, ch1, ch2, dosample):
         CamPathChunk: An object representing the generated path points.
     """
 
+    if o.distance_along_paths <= 0:
+        raise CamException("distance_along_paths must be greater than zero")
     v1 = Vector(ch1.get_point(-1))
     v2 = Vector(ch2.get_point(0))
     v = v2 - v1
@@ -1095,6 +1099,7 @@ async def sort_chunks(chunks, o, last_pos=None):
     last_progress_time = time.time()
     total = len(chunks)
     i = len(chunks)
+    stall_count = 0
     pos = (0, 0, 0) if last_pos is None else last_pos
 
     while len(chunks) > 0:
@@ -1123,6 +1128,15 @@ async def sort_chunks(chunks, o, last_pos=None):
             sortedchunks.append(ch)
             lastch = ch
             pos = lastch.get_point(-1)
+            stall_count = 0
+        else:
+            stall_count += 1
+            if stall_count >= len(chunks):  # full pass with no progress — avoid infinite loop
+                log.warning(
+                    f"sort_chunks: {len(chunks)} chunks could not be sorted, appending as-is"
+                )
+                sortedchunks.extend(chunks)
+                break
 
         i -= 1
 

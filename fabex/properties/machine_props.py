@@ -178,6 +178,24 @@ class CAM_MACHINE_Properties(PropertyGroup):
         subtype="XYZ",
         update=update_machine,
     )
+    use_job_start_height: BoolProperty(
+        name="Use Job Start Height",
+        description="Raise Z to a safe height before any XY move at job start, "
+        "guaranteeing clearance over toolsetters and fixtures",
+        default=False,
+        update=update_machine,
+    )
+    job_start_height: FloatProperty(
+        name="Job Start Height",
+        description="Z height the spindle retracts to before moving to the XY start position. "
+        "Must be high enough to clear all fixtures and toolsetters",
+        default=0.05,
+        min=0.0,
+        max=10.0,
+        precision=PRECISION,
+        unit="LENGTH",
+        update=update_machine,
+    )
     working_area: FloatVectorProperty(
         name="Work Area",
         default=(0.500, 0.500, 0.100),
@@ -205,6 +223,16 @@ class CAM_MACHINE_Properties(PropertyGroup):
     feedrate_default: FloatProperty(
         name="Feedrate Default /min",
         default=1.5,
+        min=0.00001,
+        max=320000,
+        precision=PRECISION,
+        unit="LENGTH",
+    )
+    feedrate_rapid: FloatProperty(
+        name="Rapids /min",
+        description="Rapid traverse speed. Output as a comment in the G-code header and "
+        "as an F word on G00 moves",
+        default=5.0,
         min=0.00001,
         max=320000,
         precision=PRECISION,

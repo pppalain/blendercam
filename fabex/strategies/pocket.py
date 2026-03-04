@@ -292,10 +292,13 @@ async def pocket(o):
                     vector_2 = Vector(chunk.get_point(i))
                     vector = vector_1 - vector_2
 
-                    while vector.length == 0:
-                        i = i - 1
+                    while vector.length == 0 and abs(i) < len(chunk.points):
+                        i -= 1
                         vector_2 = Vector(chunk.get_point(i))
                         vector = vector_1 - vector_2
+
+                    if vector.length == 0:
+                        continue  # all points identical — cannot compute entry helix direction
 
                     vector.normalize()
                     rotate_angle = Vector((vector.x, vector.y)).angle_signed(Vector((1, 0)))
