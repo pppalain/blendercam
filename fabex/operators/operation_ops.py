@@ -223,8 +223,8 @@ class CamOperationRemove(Operator):
             active_op_object = bpy.data.objects[active_op.name]
             scene.objects.active = active_op_object
             bpy.ops.object.delete(True)
-        except:
-            pass
+        except (AttributeError, KeyError, RuntimeError) as e:
+            log.warning(f"Could not delete operation object: {e}")
 
         ao = scene.cam_operations[scene.cam_active_operation]
         log.info(was_hidden_dict)

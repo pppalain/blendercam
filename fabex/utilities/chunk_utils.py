@@ -74,6 +74,8 @@ from ..exception import CamException
 
 def chunks_refine(chunks, o):
     """Add Extra Points in Between for Chunks"""
+    if o.distance_along_paths <= 0:
+        raise CamException("distance_along_paths must be greater than zero")
     for ch in chunks:
         # print('before',len(ch))
         newchunk = []
@@ -656,6 +658,8 @@ def sample_path_low(o, ch1, ch2, dosample):
         CamPathChunk: An object representing the generated path points.
     """
 
+    if o.distance_along_paths <= 0:
+        raise CamException("distance_along_paths must be greater than zero")
     v1 = Vector(ch1.get_point(-1))
     v2 = Vector(ch2.get_point(0))
     v = v2 - v1

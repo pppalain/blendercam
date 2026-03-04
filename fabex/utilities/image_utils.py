@@ -352,6 +352,7 @@ def get_resolution(o):
     resolution_x = ceil(size_x / pixel_size) + 2 * border_width
     resolution_y = ceil(size_y / pixel_size) + 2 * border_width
     resolution = resolution_x * resolution_y
+    return resolution_x, resolution_y, resolution
 
 
 def _backup_render_settings(pairs):
@@ -1098,7 +1099,7 @@ def image_to_chunks(o, image, with_border=False):
                 if len(d) > 0:
                     newch = False
 
-                    while not newch:
+                    while not newch and len(d) > 0:
                         v1 = d.popitem()
 
                         if len(v1[1]) > 0:

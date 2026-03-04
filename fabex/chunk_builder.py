@@ -351,10 +351,9 @@ class CamPathChunk:
 
     def clip_points(self, minx, maxx, miny, maxy):
         """Remove Any Points Outside This Range"""
-        in_range_x = (self.points[:, 0] >= minx) and (self.points[:, 0] <= maxx)
-        in_range_y = (self.points[:, 1] >= maxy) and (self.points[:, 1] <= maxy)
-        included_values = in_range_x and in_range_y
-        self.points = self.points[included_values]
+        in_range_x = (self.points[:, 0] >= minx) & (self.points[:, 0] <= maxx)
+        in_range_y = (self.points[:, 1] >= miny) & (self.points[:, 1] <= maxy)
+        self.points = self.points[in_range_x & in_range_y]
 
     def ramp_contour(self, zstart, zend, o):
         stepdown = zstart - zend
@@ -366,6 +365,7 @@ class CamPathChunk:
         endpoint = None
         i = 0
         znew = 10
+        z = zstart  # initialize before loop to avoid NameError on first ramp step
         rounds = 0  # for counting if ramping makes more layers
 
         while endpoint is None and not (znew == zend and i == 0):

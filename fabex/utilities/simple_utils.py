@@ -1013,7 +1013,7 @@ def dilate_array(ar, cycles):
 
 def rotate_point_by_point(originp, p, ang):  # rotate point around another point with angle
     ox, oy, oz = originp
-    px, py, oz = p
+    px, py, pz = p
 
     if ang == abs(pi / 2):
         d = ang / abs(ang)
