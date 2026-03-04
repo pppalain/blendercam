@@ -16,9 +16,7 @@ try:
     import ocl
 
 except ImportError:
-
     try:
-
         import opencamlib as ocl
 
     except ImportError:
@@ -29,7 +27,6 @@ import bpy
 
 
 try:
-
     from bl_ext.blender_org.stl_format_legacy import blender_utils
 
 except ImportError:
@@ -77,7 +74,6 @@ def pointSamplesFromOCL(points, samples):
     """
 
     for index, point in enumerate(points):
-
         point[2] = samples[index].z / OCL_SCALE
 
 
@@ -109,7 +105,6 @@ def chunkPointSamplesFromOCL(chunks, samples):
     s_index = 0
 
     for ch in chunks:
-
         ch_points = ch.count()
 
         z_vals = np.array([p.z for p in samples[s_index : s_index + ch_points]])
@@ -149,7 +144,6 @@ def chunkPointsResampleFromOCL(chunks, samples):
     s_index = 0
 
     for ch in chunks:
-
         ch_points = ch.count()
 
         z_vals = np.array([p.z for p in samples[s_index : s_index + ch_points]])
@@ -188,7 +182,6 @@ def exportModelsToSTL(operation):
     file_number = 0
 
     for collision_object in operation.objects:
-
         activate(collision_object)
 
         bpy.ops.object.duplicate(linked=False)
@@ -339,7 +332,6 @@ def get_oclSTL(operation):
     triangle_count = 0
 
     for collision_object in operation.objects:
-
         activate(collision_object)
 
         if (
@@ -348,7 +340,6 @@ def get_oclSTL(operation):
             or collision_object.type == "FONT"
             or collision_object.type == "SURFACE"
         ):
-
             found_mesh = True
 
             needs_cleanup = False
@@ -393,13 +384,11 @@ def get_oclSTL(operation):
         # FIXME needs to work with collections
 
     if not found_mesh:
-
         raise CamException(
             "This Operation Requires a Mesh or Curve Object or Equivalent (e.g. Text, Volume)."
         )
 
     if triangle_count == 0:
-
         raise CamException(
             "OpenCAMLib requires a mesh with polygons. "
             "The selected object has no triangulated faces - "
@@ -457,31 +446,25 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
     op_cutter_tip_angle = radians(operation.cutter_tip_angle) / 2
 
     if op_cutter_type == "VCARVE":
-
         cutter_length = (op_cutter_diameter / tan(op_cutter_tip_angle)) / 2
 
     else:
-
         cutter_length = 10
 
     cutter = None
 
     if op_cutter_type == "END":
-
         cutter = ocl.CylCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
 
     elif op_cutter_type == "BALLNOSE":
-
         cutter = ocl.BallCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
 
     elif op_cutter_type == "VCARVE":
-
         cutter = ocl.ConeCutter(
             (op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle, cutter_length
         )
 
     elif op_cutter_type == "CYLCONE":
-
         cutter = ocl.CylConeCutter(
             (operation.cylcone_diameter / 2 + operation.skin) * 2000,
             (op_cutter_diameter + operation.skin * 2) * 1000,
@@ -489,7 +472,6 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
         )
 
     elif op_cutter_type == "BALLCONE":
-
         cutter = ocl.BallConeCutter(
             (operation.ball_radius + operation.skin) * 2000,
             (op_cutter_diameter + operation.skin * 2) * 1000,
@@ -497,7 +479,6 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
         )
 
     elif op_cutter_type == "BULLNOSE":
-
         cutter = ocl.BullCutter(
             (op_cutter_diameter + operation.skin * 2) * 1000,
             operation.bull_corner_radius * 1000,
@@ -505,7 +486,6 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
         )
 
     else:
-
         log.info(f"Cutter Unsupported: {op_cutter_type}\n")
 
         quit()
@@ -513,11 +493,9 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
     bdc = ocl.BatchDropCutter()
 
     if use_cached_mesh and _PREVIOUS_OCL_MESH is not None:
-
         oclSTL = _PREVIOUS_OCL_MESH
 
     else:
-
         oclSTL = get_oclSTL(operation)
 
         _PREVIOUS_OCL_MESH = oclSTL
@@ -527,9 +505,7 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
     bdc.setCutter(cutter)
 
     for chunk in chunks:
-
         for coord in chunk.get_points_np():
-
             bdc.appendPoint(ocl.CLPoint(coord[0] * 1000, coord[1] * 1000, op_minz * 1000))
 
     await progress_async("OpenCAMLib Sampling")
@@ -586,7 +562,6 @@ async def oclResampleChunks(operation, chunks_to_resample, use_cached_mesh):
     tmp_chunks.append(CamPathChunk(inpoints=[]))
 
     for chunk, i_start, i_length in chunks_to_resample:
-
         tmp_chunks[0].extend(chunk.get_points_np()[i_start : i_start + i_length])
 
         log.info(f"{i_start}, {i_length}, {len(tmp_chunks[0].points)}")
@@ -596,7 +571,6 @@ async def oclResampleChunks(operation, chunks_to_resample, use_cached_mesh):
     sample_index = 0
 
     for chunk, i_start, i_length in chunks_to_resample:
-
         z = np.array([p.z for p in samples[sample_index : sample_index + i_length]]) / OCL_SCALE
 
         pts = chunk.get_points_np()
