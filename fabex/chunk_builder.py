@@ -434,7 +434,9 @@ class CamPathChunk:
         ):
             z = zend
 
-            while z < o.max_z:
+            max_ramp_out_iters = len(self.points) * 20
+            ramp_out_iters = 0
+            while z < o.max_z and ramp_out_iters < max_ramp_out_iters:
                 if i == len(self.points):
                     i = 0
                 s1 = self.points[i]
@@ -444,6 +446,12 @@ class CamPathChunk:
                     i2 = len(self.points) - 1
                 s2 = self.points[i2]
                 l = distance_2d(s1, s2)
+
+                if l < 1e-9:  # skip zero-length segment to avoid infinite loop
+                    i += 1
+                    ramp_out_iters += 1
+                    continue
+
                 znew = z + tan(o.movement.ramp_out_angle) * l
 
                 if znew > o.max_z:
@@ -457,6 +465,7 @@ class CamPathChunk:
                     chunk_points.append((s1[0], s1[1], znew))
                 z = znew
                 i += 1
+                ramp_out_iters += 1
 
         # TODO: convert to numpy properly
         self.points = np.array(chunk_points)
