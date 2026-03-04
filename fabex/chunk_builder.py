@@ -367,8 +367,9 @@ class CamPathChunk:
         znew = 10
         z = zstart  # initialize before loop to avoid NameError on first ramp step
         rounds = 0  # for counting if ramping makes more layers
+        max_rounds = 200  # safety cap against float == never becoming True
 
-        while endpoint is None and not (znew == zend and i == 0):
+        while endpoint is None and not (abs(znew - zend) < 1e-9 and i == 0) and rounds < max_rounds:
             s = self.points[i]
 
             s2 = self.points[i - 1] if i > 0 else self.points[-1] if rounds > 0 and i == 0 else None
