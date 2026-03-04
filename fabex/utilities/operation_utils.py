@@ -299,12 +299,10 @@ def chain_valid(chain, context):
     s = context.scene
     if len(chain.operations) == 0:
         return (False, "")
+    ops_by_name = {so.name: so for so in s.cam_operations}
     for cho in chain.operations:
-        found_op = None
-        for so in s.cam_operations:
-            if so.name == cho.name:
-                found_op = so
-        if found_op == None:
+        found_op = ops_by_name.get(cho.name)
+        if found_op is None:
             return (False, f"Couldn't Find Operation {cho.name}")
         if source_valid(found_op, context) is False:
             return (False, f"Operation {found_op.name} Is Not Valid")
