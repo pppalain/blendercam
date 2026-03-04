@@ -601,6 +601,18 @@ def check_memory_limit(o):
 
         log.info("Changing Sampling Resolution to %f" % o.optimisation.pixsize)
 
+    # Also check simulation_detail — governed by a separate array in simulation.py
+    sim_res = (sx / o.optimisation.simulation_detail) * (sy / o.optimisation.simulation_detail)
+    if sim_res > limit:
+        ratio = sim_res / limit
+        o.optimisation.simulation_detail = o.optimisation.simulation_detail * sqrt(ratio)
+
+        log.warning("Simulation resolution too high — increasing Simulation Detail")
+        log.warning(f"Simulation Detail increased to {round(o.optimisation.simulation_detail, 5)}")
+
+        o.info.warnings += "Simulation Detail increased to avoid memory error.\n"
+        o.info.warnings += f"New value: {round(o.optimisation.simulation_detail, 5)}\n"
+
 
 def get_move_and_spin(o):
     move_type = o.movement.type
