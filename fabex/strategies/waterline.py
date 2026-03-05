@@ -1,6 +1,7 @@
 from math import (
     ceil,
     floor,
+    sqrt,
 )
 
 from shapely.geometry import Polygon
@@ -117,8 +118,13 @@ async def waterline(o):
                     )
                     fillz = z
                     i = 0
+                    max_fill_iters = max(
+                        100, int(sqrt(max(restpoly.area, 0)) / o.distance_between_paths) + 500
+                    )
 
-                    while not restpoly.is_empty:
+                    while not restpoly.is_empty and i < max_fill_iters:
+                        if i % 50 == 0:
+                            await progress_async("Waterline Fill", i)
                         nchunks = shapely_to_chunks(restpoly, fillz + o.skin)
                         # project paths TODO: path projection during waterline is not working
                         if o.waterline_project:
@@ -158,8 +164,13 @@ async def waterline(o):
                         resolution=o.optimisation.circle_detail,
                     )
                     i = 0
+                    max_fill_iters = max(
+                        100, int(sqrt(max(restpoly.area, 0)) / o.distance_between_paths) + 500
+                    )
 
-                    while not restpoly.is_empty:
+                    while not restpoly.is_empty and i < max_fill_iters:
+                        if i % 50 == 0:
+                            await progress_async("Waterline Fill", i)
                         nchunks = shapely_to_chunks(restpoly, fillz + o.skin)
                         #########################
                         nchunks = limit_chunks(nchunks, o, force=True)

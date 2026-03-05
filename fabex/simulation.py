@@ -18,6 +18,7 @@ from mathutils import Vector
 
 from . import __package__ as base_package
 
+from .exception import CamException
 from .utilities.async_utils import progress_async
 from .utilities.bounds_utils import get_bounds_multiple
 from .utilities.image_utils import numpy_save
@@ -201,6 +202,13 @@ async def generate_simulation_image(operations, limits):
     borderwidth = first_op.borderwidth
     resx = math.ceil(sx / simulation_detail) + 2 * borderwidth
     resy = math.ceil(sy / simulation_detail) + 2 * borderwidth
+
+    max_sim_pixels = 4000 * 4000  # ~128 MB limit for the simulation array
+    if resx * resy > max_sim_pixels:
+        raise CamException(
+            f"Simulation resolution {resx}×{resy} ({resx * resy / 1e6:.1f}M pixels) exceeds limit.\n"
+            f"Increase Simulation Detail or reduce the work area."
+        )
 
     # create array in which simulation happens, similar to an image to be painted in.
     si = np.full(shape=(resx, resy), fill_value=maxz, dtype=float)
