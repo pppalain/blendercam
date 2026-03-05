@@ -177,16 +177,16 @@ def update_operation(self, context):
                 other_obj = bpy.data.objects[_ao.path_object_name]
                 current_obj = bpy.data.objects[ao.path_object_name]
                 if other_obj != current_obj:
-                    other_obj.hide = True
-                    other_obj.select = False
+                    other_obj.hide_set(True)
+                    other_obj.select_set(False)
     else:
         for path_obj_name in was_hidden_dict:
             log.info(was_hidden_dict)
             if was_hidden_dict[path_obj_name]:
                 # Find object and make it hidde, then reset 'hidden' flag
                 obj = bpy.data.objects[path_obj_name]
-                obj.hide = True
-                obj.select = False
+                obj.hide_set(True)
+                obj.select_set(False)
                 was_hidden_dict[path_obj_name] = False
 
     # try highlighting the object in the 3d view and make it active
@@ -196,10 +196,10 @@ def update_operation(self, context):
         ob = bpy.data.objects[ao.path_object_name]
         ob.select_set(state=True, view_layer=None)
         # Show object if, it's was hidden
-        if ob.hide:
-            ob.hide = False
+        if ob.hide_get():
+            ob.hide_set(False)
             was_hidden_dict[ao.path_object_name] = True
-        bpy.context.scene.objects.active = ob
+        bpy.context.view_layer.objects.active = ob
     except Exception as e:
         log.error(e)
 
@@ -299,12 +299,10 @@ def chain_valid(chain, context):
     s = context.scene
     if len(chain.operations) == 0:
         return (False, "")
+    ops_by_name = {so.name: so for so in s.cam_operations}
     for cho in chain.operations:
-        found_op = None
-        for so in s.cam_operations:
-            if so.name == cho.name:
-                found_op = so
-        if found_op == None:
+        found_op = ops_by_name.get(cho.name)
+        if found_op is None:
             return (False, f"Couldn't Find Operation {cho.name}")
         if source_valid(found_op, context) is False:
             return (False, f"Operation {found_op.name} Is Not Valid")
@@ -601,6 +599,18 @@ def check_memory_limit(o):
 
         log.info("Changing Sampling Resolution to %f" % o.optimisation.pixsize)
 
+    # Also check simulation_detail — governed by a separate array in simulation.py
+    sim_res = (sx / o.optimisation.simulation_detail) * (sy / o.optimisation.simulation_detail)
+    if sim_res > limit:
+        ratio = sim_res / limit
+        o.optimisation.simulation_detail = o.optimisation.simulation_detail * sqrt(ratio)
+
+        log.warning("Simulation resolution too high — increasing Simulation Detail")
+        log.warning(f"Simulation Detail increased to {round(o.optimisation.simulation_detail, 5)}")
+
+        o.info.warnings += "Simulation Detail increased to avoid memory error.\n"
+        o.info.warnings += f"New value: {round(o.optimisation.simulation_detail, 5)}\n"
+
 
 def get_move_and_spin(o):
     move_type = o.movement.type
@@ -640,6 +650,7 @@ def get_ambient(o):
             r = o.ambient_radius - m
             # in this method we need ambient from silhouette
             from .silhouette_utils import get_object_outline
+
             o.ambient = get_object_outline(r, o, True)
         else:
             o.ambient = Polygon(

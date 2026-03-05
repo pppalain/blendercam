@@ -351,10 +351,9 @@ class CamPathChunk:
 
     def clip_points(self, minx, maxx, miny, maxy):
         """Remove Any Points Outside This Range"""
-        in_range_x = (self.points[:, 0] >= minx) and (self.points[:, 0] <= maxx)
-        in_range_y = (self.points[:, 1] >= maxy) and (self.points[:, 1] <= maxy)
-        included_values = in_range_x and in_range_y
-        self.points = self.points[included_values]
+        in_range_x = (self.points[:, 0] >= minx) & (self.points[:, 0] <= maxx)
+        in_range_y = (self.points[:, 1] >= miny) & (self.points[:, 1] <= maxy)
+        self.points = self.points[in_range_x & in_range_y]
 
     def ramp_contour(self, zstart, zend, o):
         stepdown = zstart - zend
@@ -366,9 +365,11 @@ class CamPathChunk:
         endpoint = None
         i = 0
         znew = 10
+        z = zstart  # initialize before loop to avoid NameError on first ramp step
         rounds = 0  # for counting if ramping makes more layers
+        max_rounds = 200  # safety cap against float == never becoming True
 
-        while endpoint is None and not (znew == zend and i == 0):
+        while endpoint is None and not (abs(znew - zend) < 1e-9 and i == 0) and rounds < max_rounds:
             s = self.points[i]
 
             s2 = self.points[i - 1] if i > 0 else self.points[-1] if rounds > 0 and i == 0 else None
@@ -434,7 +435,9 @@ class CamPathChunk:
         ):
             z = zend
 
-            while z < o.max_z:
+            max_ramp_out_iters = len(self.points) * 20
+            ramp_out_iters = 0
+            while z < o.max_z and ramp_out_iters < max_ramp_out_iters:
                 if i == len(self.points):
                     i = 0
                 s1 = self.points[i]
@@ -444,6 +447,12 @@ class CamPathChunk:
                     i2 = len(self.points) - 1
                 s2 = self.points[i2]
                 l = distance_2d(s1, s2)
+
+                if l < 1e-9:  # skip zero-length segment to avoid infinite loop
+                    i += 1
+                    ramp_out_iters += 1
+                    continue
+
                 znew = z + tan(o.movement.ramp_out_angle) * l
 
                 if znew > o.max_z:
@@ -457,6 +466,7 @@ class CamPathChunk:
                     chunk_points.append((s1[0], s1[1], znew))
                 z = znew
                 i += 1
+                ramp_out_iters += 1
 
         # TODO: convert to numpy properly
         self.points = np.array(chunk_points)

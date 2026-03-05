@@ -95,7 +95,7 @@ def get_container():
         container = bpy.context.active_object
         container.name = "CAM_OBJECTS"
         container.location = [0, 0, 0]
-        container.hide = True
+        container.hide_set(True)
     else:
         container = s.objects["CAM_OBJECTS"]
 

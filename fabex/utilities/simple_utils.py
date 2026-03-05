@@ -946,7 +946,8 @@ def subdivide_long_edges(ob, threshold):
     subdivides = []
     n = 1
     iter = 0
-    while n > 0:
+    max_iters = 100  # guard against infinite loop if triangulation creates new long edges
+    while n > 0 and iter < max_iters:
         n = 0
         for i, e in enumerate(m.edges):
             v1 = m.vertices[e.vertices[0]].co
@@ -1013,7 +1014,7 @@ def dilate_array(ar, cycles):
 
 def rotate_point_by_point(originp, p, ang):  # rotate point around another point with angle
     ox, oy, oz = originp
-    px, py, oz = p
+    px, py, pz = p
 
     if ang == abs(pi / 2):
         d = ang / abs(ang)
