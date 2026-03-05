@@ -65,6 +65,8 @@ wheels = [
   "./wheels/opencamlib-2026.3.3.dev27-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
   "./wheels/opencamlib-2026.3.3.dev27-cp313-cp313-win_amd64.whl",
   "./wheels/opencamlib-2026.3.3.dev27-cp313-cp313-win32.whl",
+  "./wheels/opencamlib-2026.3.5.dev92-cp313-cp313-macosx_15_0_arm64.whl",
+  "./wheels/opencamlib-2026.3.5.dev118-cp313-cp313-macosx_14_0_x86_64.whl",
 
   # shapely
   # 3.11
