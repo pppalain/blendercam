@@ -639,6 +639,7 @@ def get_ambient(o):
         if o.ambient_behaviour == "AROUND":
             r = o.ambient_radius - m
             # in this method we need ambient from silhouette
+            from .silhouette_utils import get_object_outline
             o.ambient = get_object_outline(r, o, True)
         else:
             o.ambient = Polygon(
@@ -660,7 +661,7 @@ def get_ambient(o):
                     o.limit_poly = o.limit_poly.buffer(
                         o.cutter_diameter / 2, resolution=o.optimisation.circle_detail
                     )
-            o.ambient = o.ambient.intersection(o.limit_poly)
+                o.ambient = o.ambient.intersection(o.limit_poly)
     o.update_ambient_tag = False
 
 
