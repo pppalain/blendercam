@@ -80,7 +80,7 @@ jobs:
       id: build
       shell: bash
       run: |
-        blender --command extension build --source-dir=./fabex --split-platforms
+        ${{ env.BLENDER_BIN_PATH }} --command extension build --source-dir=./fabex --split-platforms
 
     # Upload the built Extension files for download
     - uses: actions/upload-artifact@v4
