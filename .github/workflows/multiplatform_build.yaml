@@ -119,4 +119,4 @@ jobs:
       if: always()
       with:
         name: fabex-${{ env.VERSION_TAG }}-${{ env.OS }}_${{env.ARCH}}.zip
-        path: ./fabex-${{ env.VERSION_TAG }}-${{ env.os }}_${{env.ARCH}}.zip
+        path: ./fabex-${{ env.VERSION_TAG }}-${{ env.OS }}_${{env.ARCH}}.zip
