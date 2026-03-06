@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest','windows-latest']
+        os: ['ubuntu-latest'] # ,'windows-latest']
         blender_version: ['5.0.0']
         # include:
         #   - os: 'macos-latest'
@@ -89,4 +89,4 @@ jobs:
       if: always()
       with:
         name: fabex-${{ env.VERSION_TAG }}-${{ runner.os }}_${{runner.arch}}.zip
-        path: ./
+        path: ./fabex-${{ env.VERSION_TAG }}-${{ runner.os }}_${{runner.arch}}.zip
