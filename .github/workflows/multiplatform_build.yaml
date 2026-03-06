@@ -113,29 +113,33 @@ jobs:
 
         print(f"New version: {major}.{minor}.{patch}")
 
-    # Upload the built Extension files for download
-    - uses: actions/upload-artifact@v4
+    # Upload the Linux Extension file for download
+    - name: Upload Linux Build
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: fabex-${{ env.VERSION_TAG }}-${{ env.OS }}_${{env.ARCH}}
         path: ./fabex-${{ env.VERSION_TAG }}-${{ env.OS }}_${{env.ARCH}}.zip
 
-    # Upload the built Extension files for download
-    - uses: actions/upload-artifact@v4
+    # Upload the Windows Extension file for download
+    - name: Upload Windows Build
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: fabex-${{ env.VERSION_TAG }}-windows_x64
         path: ./fabex-${{ env.VERSION_TAG }}-windows_x64.zip
 
-    # Upload the built Extension files for download
-    - uses: actions/upload-artifact@v4
+    # Upload the Mac x64 Extension file for download
+    - name: Upload Mac x86 Build
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: fabex-${{ env.VERSION_TAG }}-macos_x64
         path: ./fabex-${{ env.VERSION_TAG }}-macos_x64.zip
 
-    # Upload the built Extension files for download
-    - uses: actions/upload-artifact@v4
+    # Upload the Mac ARM Extension file for download
+    - name: Upload Mac ARM Build
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: fabex-${{ env.VERSION_TAG }}-macos_arm64
