@@ -14,6 +14,7 @@ jobs:
         #     blender_version: '4.2.1'
     runs-on: ${{ matrix.os }}
     steps:
+
     - name: Checkout repository
       uses: actions/checkout@v4.1.1
     # - name: Install bash 4(macOS)
@@ -22,6 +23,7 @@ jobs:
     # - name: Install blender (macOS)
     #   if: runner.os == 'macOS'
     #   run: brew install --cask blender
+
     - name: Cache blender
       id: cache-blender
       if: runner.os != 'macOS'
@@ -29,6 +31,7 @@ jobs:
       with:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
+
     - name: Download blender
       id: download
       if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
@@ -48,6 +51,7 @@ jobs:
         echo Archive name: $BLENDER_ARCHIVE
         curl -O -L https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
         echo "BLENDER_ARCHIVE=${BLENDER_ARCHIVE}" >> "$GITHUB_OUTPUT"
+
     - name: Extract blender
       if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
       run: |
@@ -56,12 +60,14 @@ jobs:
         os.makedirs("blender",exist_ok=True)
         shutil.unpack_archive("${{ steps.download.outputs.BLENDER_ARCHIVE }}","blender")
       shell: python
+
     - name: Save blender
       uses:  actions/cache/save@v4
       if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
       with:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
+
     - name: Make addon zip
       uses: thedoctor0/zip-release@0.7.5
       if: always()
@@ -71,6 +77,7 @@ jobs:
         directory: './'
         path: 'fabex'
         exclusions: '/*docs/* /*tests/*'
+
     - name: Run tests
       shell: bash
       run: |
@@ -82,6 +89,7 @@ jobs:
         cd tests
         python install_addon.py ${ADDON_PATH}
         python test_suite.py -vvv
+
     - uses: actions/upload-artifact@v4
       if: always()
       with:

@@ -80,6 +80,8 @@ jobs:
       id: build
       shell: bash
       run: |
+        export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
+        export PATH=$PATH:${BLENDER_BIN_PATH}
         ${{ env.BLENDER_BIN_PATH }} --command extension build --source-dir=./fabex --split-platforms
 
     # Upload the built Extension files for download
