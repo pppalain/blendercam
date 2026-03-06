@@ -8,7 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest'] # ,'windows-latest']
-        blender_version: ['5.1.0-beta']
+        blender_version: ['5.1.0-beta+v51.748b1754d82a'] # 5.1.0-beta+v51.748b1754d82a
         # include:
         #   - os: 'macos-latest'
         #     blender_version: '4.2.1'
