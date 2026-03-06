@@ -144,3 +144,11 @@ jobs:
       with:
         name: fabex-${{ env.VERSION_TAG }}-macos_arm64
         path: ./fabex-${{ env.VERSION_TAG }}-macos_arm64.zip
+
+    - name: make release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "fabex-*.zip"
+        tag: ${{ env.VERSION_TAG }}
+        allowUpdates: true
+        bodyFile: './docs/RELEASE.md'
