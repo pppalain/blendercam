@@ -14,6 +14,8 @@ jobs:
         #     blender_version: '4.2.1'
     runs-on: ${{ matrix.os }}
     steps:
+
+    # Check out the Fabex repo
     - name: Checkout repository
       uses: actions/checkout@v4.1.1
     # - name: Install bash 4(macOS)
@@ -22,6 +24,9 @@ jobs:
     # - name: Install blender (macOS)
     #   if: runner.os == 'macOS'
     #   run: brew install --cask blender
+
+    # Check for a cached version of Blender
+    # Skips Download and Install if the Blender version is unchanged
     - name: Cache blender
       id: cache-blender
       if: runner.os != 'macOS'
@@ -29,6 +34,9 @@ jobs:
       with:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
+
+    # Download Blender for initial run, or when Blender version
+    # is updated
     - name: Download blender
       id: download
       if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
@@ -48,6 +56,8 @@ jobs:
         echo Archive name: $BLENDER_ARCHIVE
         curl -O -L https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
         echo "BLENDER_ARCHIVE=${BLENDER_ARCHIVE}" >> "$GITHUB_OUTPUT"
+
+    # Extract the downloaded Blender archive
     - name: Extract blender
       if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
       run: |
@@ -56,6 +66,8 @@ jobs:
         os.makedirs("blender",exist_ok=True)
         shutil.unpack_archive("${{ steps.download.outputs.BLENDER_ARCHIVE }}","blender")
       shell: python
+
+    # Save this Blender version to the cache for re-use
     - name: Save blender
       uses:  actions/cache/save@v4
       if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
@@ -63,13 +75,14 @@ jobs:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
 
+    # Build the Extension using Blender
     - name: Build Extension
       id: build
-      if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
       shell: bash
       run: |
         blender --command extension build --source-dir=./fabex --split-platforms
 
+    # Upload the built Extension files for download
     - uses: actions/upload-artifact@v4
       if: always()
       with:
