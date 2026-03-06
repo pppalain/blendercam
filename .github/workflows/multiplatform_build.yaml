@@ -101,6 +101,9 @@ jobs:
         # Write the version number to an env file for the 'make release' action
         env_file = Path(os.getenv('GITHUB_ENV'))  
         env_file.write_text(f"VERSION_TAG={major}.{minor}.{patch}")
+        env_file.write_text(f"OS=${{runner.os}}.lower()")
+        env_file.write_text(f"ARCH=${{runner.arch}}.lower()")
+
 
         print(f"New version: {major}.{minor}.{patch}")
 
@@ -108,5 +111,5 @@ jobs:
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: fabex-${{ env.VERSION_TAG }}-${{ runner.os }}_${{runner.arch}}.zip
-        path: ./fabex-${{ env.VERSION_TAG }}-${{ runner.os }}_${{runner.arch}}.zip
+        name: fabex-${{ env.VERSION_TAG }}-${{ env.OS }}_${{env.arch}}.zip
+        path: ./fabex-${{ env.VERSION_TAG }}-${{ env.os }}_${{env.arch}}.zip
