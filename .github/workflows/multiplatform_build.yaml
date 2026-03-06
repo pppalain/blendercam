@@ -84,9 +84,29 @@ jobs:
         export PATH=$PATH:${BLENDER_BIN_PATH}
         blender --command extension build --source-dir=./fabex --split-platforms
 
+    - name: Get Version Tag
+      shell: python
+      run: |
+        from pathlib import Path
+        import re
+        import os
+
+        # Path to the file with the version number
+        v_file=Path("fabex","version.py")
+        version_txt=v_file.read_text()
+
+        # Separate each number in the version into its own variable
+        major,minor,patch = re.match(r".*\(\s*(\d+),(\s*\d+),(\s*\d+)\)",version_txt).groups()
+
+        # Write the version number to an env file for the 'make release' action
+        env_file = Path(os.getenv('GITHUB_ENV'))  
+        env_file.write_text(f"VERSION_TAG={major}.{minor}.{patch}")
+
+        print(f"New version: {major}.{minor}.{patch}")
+
     # Upload the built Extension files for download
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: fabex-${{ VERSION_TAG }}-${{ runner.os }}_${{runner.arch}}.zip
+        name: fabex-${{ env.VERSION_TAG }}-${{ runner.os }}_${{runner.arch}}.zip
         path: ./fabex-${{ env.VERSION_TAG }}-${{ runner.os }}_${{runner.arch}}.zip
