@@ -111,13 +111,11 @@ jobs:
         ARCH={runner_arch}
         """)
 
-
-
         print(f"New version: {major}.{minor}.{patch}")
 
     # Upload the built Extension files for download
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: fabex-${{ env.VERSION_TAG }}-${{ env.OS }}_${{env.ARCH}}.zip
+        name: fabex-${{ env.VERSION_TAG }}-${{ env.OS }}_${{env.ARCH}}
         path: ./fabex-${{ env.VERSION_TAG }}-${{ env.OS }}_${{env.ARCH}}.zip
