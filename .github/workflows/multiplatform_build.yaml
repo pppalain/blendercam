@@ -1,6 +1,6 @@
-name: Run tests on push / PR
+name: Build Split Platform Extension
 on:
-  # push:
+  push:
   pull_request:
 jobs:
   build_and_test:
@@ -62,28 +62,16 @@ jobs:
       with:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
-    - name: Make addon zip
-      uses: thedoctor0/zip-release@0.7.5
-      if: always()
-      with:
-        type: 'zip'
-        filename: 'blendercam.zip'
-        directory: './'
-        path: 'fabex'
-        exclusions: '/*docs/* /*tests/*'
-    - name: Run tests
+
+    - name: Build Extension
+      id: build
+      if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
       shell: bash
       run: |
-        if [ "${{ runner.os }}" != "macOS" ]; then
-          export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
-          export PATH=$PATH:${BLENDER_BIN_PATH}
-        fi
-        export ADDON_PATH=${PWD}/blendercam.zip
-        cd tests
-        python install_addon.py ${ADDON_PATH}
-        python test_suite.py -vvv
+        blender --command extension build --source-dir=./fabex --split-platforms
+
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: blendercam-${{ matrix.os }}-${{ matrix.blender_version }}
+        name: fabex*.zip # fabex-${{ env.VERSION_TAG }}-${{ matrix.os }}
         path: ./fabex
