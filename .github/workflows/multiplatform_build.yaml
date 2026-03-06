@@ -1,6 +1,6 @@
 name: Build Split Platform Extension
 on:
-  push:
+  # push:
   pull_request:
 jobs:
   build_and_test:
