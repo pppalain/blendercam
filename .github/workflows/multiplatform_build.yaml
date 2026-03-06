@@ -1,6 +1,6 @@
 name: Build Split Platform Extension
 on:
-  # push:
+  push:
   pull_request:
 jobs:
   build_and_test:
@@ -8,7 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest'] # ,'windows-latest']
-        blender_version: ['5.0.0']
+        blender_version: ['5.1.0']
         # include:
         #   - os: 'macos-latest'
         #     blender_version: '4.2.1'
