@@ -73,5 +73,5 @@ jobs:
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: fabex*.zip # fabex-${{ env.VERSION_TAG }}-${{ matrix.os }}
+        name: fabex-${{ env.VERSION_TAG }}-${{ matrix.os }}.zip
         path: ./fabex
