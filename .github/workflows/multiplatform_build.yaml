@@ -119,3 +119,24 @@ jobs:
       with:
         name: fabex-${{ env.VERSION_TAG }}-${{ env.OS }}_${{env.ARCH}}
         path: ./fabex-${{ env.VERSION_TAG }}-${{ env.OS }}_${{env.ARCH}}.zip
+
+    # Upload the built Extension files for download
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: fabex-${{ env.VERSION_TAG }}-windows_x64
+        path: ./fabex-${{ env.VERSION_TAG }}-windows_x64.zip
+
+    # Upload the built Extension files for download
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: fabex-${{ env.VERSION_TAG }}-macos_x64
+        path: ./fabex-${{ env.VERSION_TAG }}-macos_x64.zip
+
+    # Upload the built Extension files for download
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: fabex-${{ env.VERSION_TAG }}-macos_arm64
+        path: ./fabex-${{ env.VERSION_TAG }}-macos_arm64.zip
