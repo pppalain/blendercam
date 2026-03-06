@@ -100,12 +100,13 @@ jobs:
 
         # Write the version number to an env file for the 'make release' action
 
+        version_tag = f"{major}.{minor}.{patch}".replace(' ','')
         runner_os = "${{runner.os}}".lower()
         runner_arch = "${{runner.arch}}".lower()
 
         env_file = Path(os.getenv('GITHUB_ENV'))
         env_file.write_text(
-        f"""VERSION_TAG={major}.{minor}.{patch}
+        f"""VERSION_TAG={version_tag}
         OS={runner_os}
         ARCH={runner_arch}
         """)
