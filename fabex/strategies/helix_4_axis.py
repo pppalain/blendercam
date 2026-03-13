@@ -102,8 +102,8 @@ async def helix_four_axis(o):
             cutterstart.rotate(e)
             cutterend.rotate(e)
 
-        chunk = chunk.to_chunk()
-        chunk.depth = radiusend - radius
+    chunk = chunk.to_chunk()
+    chunk.depth = radiusend - radius
 
     pathchunks.append(chunk)
     path_samples = pathchunks
