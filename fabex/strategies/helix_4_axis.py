@@ -69,7 +69,9 @@ async def helix_four_axis(o):
     # generalized rotation
     e = Euler((0, 0, 0))
 
-    if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CW") or (o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CCW"):
+    if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CW") or (
+        o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CCW"
+    ):
         direction = -1
     else:
         direction = 1
