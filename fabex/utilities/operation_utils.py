@@ -710,7 +710,8 @@ def get_cutter_array(operation, pixsize):
                 v.y = (b + 0.5 - m) * ps
 
                 if v.length <= r:
-                    car.itemset((a, b), 0)
+                    car[[a, b]] = 0
+                    # car.itemset((a, b), 0)
 
     elif cutter_type in ["BALL", "BALLNOSE"]:
         for a in range(0, res):
@@ -721,7 +722,8 @@ def get_cutter_array(operation, pixsize):
 
                 if v.length <= r:
                     z = sin(acos(v.length / r)) * r - r
-                    car.itemset((a, b), z)  # [a,b]=z
+                    car[[a, b]] = z
+                    # car.itemset((a, b), z)  # [a,b]=z
 
     elif cutter_type == "VCARVE":
         angle = operation.cutter_tip_angle
@@ -735,7 +737,8 @@ def get_cutter_array(operation, pixsize):
 
                 if v.length <= r:
                     z = -v.length * s
-                    car.itemset((a, b), z)
+                    car[[a, b]] = z
+                    # car.itemset((a, b), z)
 
     elif cutter_type == "CYLCONE":
         angle = operation.cutter_tip_angle
@@ -754,7 +757,8 @@ def get_cutter_array(operation, pixsize):
                     if v.length <= cyl_r:
                         z = 0
 
-                    car.itemset((a, b), z)
+                    car[[a, b]] = z
+                    # car.itemset((a, b), z)
 
     elif cutter_type == "BALLCONE":
         angle = radians(operation.cutter_tip_angle) / 2
@@ -777,7 +781,8 @@ def get_cutter_array(operation, pixsize):
                     if v.length <= ball_r:
                         z = sin(acos(v.length / Ball_R)) * Ball_R - Ball_R
 
-                    car.itemset((a, b), z)
+                    car[[a, b]] = z
+                    # car.itemset((a, b), z)
 
     elif cutter_type == "CUSTOM":
         cutob = bpy.data.objects[operation.cutter_object_name]
@@ -804,7 +809,8 @@ def get_cutter_array(operation, pixsize):
                         if z > maxz:
                             maxz = z
 
-                        car.itemset((a, b), z)
+                        car[[a, b]] = z
+                        # car.itemset((a, b), z)
 
         car -= maxz
 
