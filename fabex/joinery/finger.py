@@ -287,7 +287,7 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
     old_mortise_angle = 0
     distance = finger_size / 2
     j = 0
-    log.info(f"Joinery Loop Length {round(loop_length * 1000)}mm")
+    log.info(f"Joinery Loop Length: {round(loop_length * 1000)}mm")
     for i, p in enumerate(coords):
         if i == 0:
             p_start = p
@@ -364,7 +364,7 @@ def variable_finger(
     oldfinger_sz = min_finger
     hpos = []  # hpos is the horizontal positions of the middle of the mortise
     # slope_array(loop)
-    log.info(f"Joinery Loop Length {round(loop_length * 1000)}mm")
+    log.info(f"Joinery Loop Length: {round(loop_length * 1000)}mm")
     for i, p in enumerate(coords):
         if i == 0:
             p_start = p
@@ -441,7 +441,7 @@ def variable_finger(
         join_multiple("_base")
         active_name("base")
     else:
-        log.info("Placeholder")
+        log.info("Object: Placeholder")
         join_multiple("_mort")
         active_name("variable_mortise")
     return hpos

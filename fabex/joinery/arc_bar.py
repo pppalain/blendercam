@@ -206,7 +206,7 @@ def arc(
         "receptacle", thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep
     )
     twist_female("testing", thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep)
-    log.info("Generating Arc")
+    log.info("Status: Generating Arc")
     # generate arc
     bpy.ops.curve.simple(
         align="WORLD",

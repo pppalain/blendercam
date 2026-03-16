@@ -1,5 +1,4 @@
-"""Fabex 'material_utils.py' © 2012 Vilem Novak
-"""
+"""Fabex 'material_utils.py' © 2012 Vilem Novak"""
 
 import bpy
 
@@ -107,5 +106,5 @@ def update_material(self, context):
         context: The context in which the material update is performed.
     """
 
-    log.info("Update Material")
+    log.info("Status: Updated Material")
     add_material_area_object()

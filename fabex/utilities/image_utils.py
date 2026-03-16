@@ -471,7 +471,9 @@ def render_sample_image(o):
                 image_size_y = i.size[1]
 
                 if image_size_x != resolution_x or image_size_y != resolution_y:
-                    log.info(f"Z Buffer Size Changed: {i.size} {resolution_x} {resolution_y}")
+                    log.info(heading(f"Z Buffer Size Changed"))
+                    log.info(f"Image Size: {i.size}")
+                    log.info(f"Resolution: {resolution_x}x{resolution_y}")
                     o.update_z_buffer_image_tag = True
             except:
                 o.update_z_buffer_image_tag = True
@@ -610,10 +612,10 @@ def render_sample_image(o):
                 if backup_settings is not None:
                     _restore_render_settings(SETTINGS_TO_BACKUP, backup_settings)
                 else:
-                    log.info("Failed to Backup Scene Settings")
+                    log.info("Status: Failed to Backup Scene Settings")
 
             i = bpy.data.images.load(image_name)
-            print(f"Image load: {image_name}")
+            log.info(f"Image load: {image_name}")
             bpy.context.scene.render.engine = "FABEX_RENDER"
 
         ####################################################################
@@ -821,11 +823,14 @@ def image_edge_search_on_line(o, ar, zimage):
                 ar[xs, ys] = False
 
                 if 0:
-                    log.info("Success")
-                    log.info(f"{xs}, {ys}, {testlength}, {testangle}")
-                    log.info(lastvect)
-                    log.info(testvect)
-                    log.info(itests)
+                    log.info("Status: Success")
+                    log.info(f"X: {xs}")
+                    log.info(f"Y: {ys}")
+                    log.info(f"Length: {testlength}")
+                    log.info(f"Angle: {testangle}")
+                    log.info(f"Last Vector: {lastvect}")
+                    log.info(f"Test Vector: {testvect}")
+                    log.info(f"Test Count: {itests}")
             else:
                 test_direction = last_direction
 
@@ -876,10 +881,12 @@ def image_edge_search_on_line(o, ar, zimage):
                 test_direction = directions[dindexmod]
 
                 if 0:
-                    log.info(
-                        f"{xs}, {ys}, {test_direction}, {last_direction}, {testangulardistance}"
-                    )
-                    log.info(totpix)
+                    log.info(f"X: {xs}")
+                    log.info(f"Y: {ys}")
+                    log.info(f"Test Direction: {test_direction}")
+                    log.info(f"Last Direction: {last_direction}")
+                    log.info(f"Angular DIstance: {testangulardistance}")
+                    log.info(f"Pixel Count: {totpix}")
             itests += 1
             totaltests += 1
 
@@ -936,7 +943,7 @@ def get_offset_image_cavities(o, i):  # for pencil operation mainly
         chunks = image_edge_search_on_line(o, ar, i)
         iname = get_cache_path(o) + "_pencilthres_comp.exr"
 
-        log.info("New Pencil Strategy")
+        log.info("Status: New Pencil Strategy")
 
     # crop pixels that are on outer borders
     for chi in range(len(chunks) - 1, -1, -1):
@@ -1107,8 +1114,8 @@ def image_to_chunks(o, image, with_border=False):
             i += 1
 
             if i % 10000 == 0:
-                log.info(len(ch))
-                log.info(i)
+                log.info(f"Chunk Count: {len(ch)}")
+                log.info(f"Iterations: {i}")
 
         vecchunks = []
 

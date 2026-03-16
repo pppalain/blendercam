@@ -60,7 +60,7 @@ class WM_OT_gcode_import(Operator, ImportHelper):
     )
 
     def execute(self, context):
-        log.info(self.filepath)
+        log.info(f"Filepath: {self.filepath}")
         context.scene.gcode_output_type = self.output
         return import_gcode(
             self,

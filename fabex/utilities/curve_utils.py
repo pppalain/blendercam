@@ -112,8 +112,7 @@ def mesh_from_curve_to_chunk(object):
     vtotal = len(mesh.vertices)
     perc = 0
 
-    log.info("-")
-    progress(f"Processing Curve - START")
+    progress(f"Processing Curve: Start")
     log.info(f"Vertices: {vtotal}")
 
     for vi in range(0, len(mesh.vertices) - 1):
@@ -142,7 +141,7 @@ def mesh_from_curve_to_chunk(object):
 
             chunk = CamPathChunkBuilder()
 
-    progress("Processing Curve - FINISHED")
+    progress("Processing Curve: Finished")
 
     vi = len(mesh.vertices) - 1
     chunk.points.append(

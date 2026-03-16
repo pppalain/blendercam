@@ -145,12 +145,12 @@ async def medial_axis(o):
         duplicate_point_count, z_colinear_point_count = unique(vertices)
         vertex_count = len(vertices)
 
-        log.info("~ Exclude Points ~")
+        log.info(heading("Exclude Points"))
         log.info(f"Duplicate: {duplicate_point_count}")
         log.info(f"Z Colinear: {z_colinear_point_count}")
 
         if vertex_count < 3:
-            log.info("Not Enough Points")
+            log.info("Status: Not Enough Points")
             return {"FINISHED"}
 
         # Check colinear
@@ -158,11 +158,11 @@ async def medial_axis(o):
         y_values = [vertex[1] for vertex in vertices]
 
         if check_equal(x_values) or check_equal(y_values):
-            log.info("Points Are Colinear")
+            log.info("Status: Points Are Colinear")
             return {"FINISHED"}
 
         # Create diagram
-        log.info(f"Tesselation... ({vertex_count} Points)")
+        log.info(f"Tesselating: ({vertex_count} Points)")
 
         x_buffer, y_buffer = 5, 5
         z_position = 0
@@ -178,7 +178,7 @@ async def medial_axis(o):
         vertr = []
         filtered_points = []
 
-        log.info("Filtering Points...")
+        log.info(heading("Filtering Points"))
 
         newIdx = 0
         point_count = len(points)
@@ -217,9 +217,7 @@ async def medial_axis(o):
                 filtered_points.append((point[0], point[1], z))
                 newIdx += 1
 
-        log.info("-")
-        log.info("Filtering Edges...")
-        log.info("-")
+        log.info(heading("Filtering Edges"))
 
         filtered_edges = []
         line_edges = []

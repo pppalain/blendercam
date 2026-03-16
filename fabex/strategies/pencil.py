@@ -39,7 +39,7 @@ async def pencil(o):
     log.info("Coherency Check")
     chunks = chunks_coherency(chunks)
 
-    log.info("Sorting")
+    log.info("Status: Sorting")
     chunks = await sort_chunks(chunks, o)
 
     if o.movement.ramp:
@@ -47,7 +47,7 @@ async def pencil(o):
             ch.ramp_zig_zag(ch.zstart, None, o)
 
     if o.use_bridges:
-        log.info(chunks)
+        log.info(f"Chunks: {chunks}")
         for bridge_chunk in chunks:
             use_bridges(bridge_chunk, o)
 

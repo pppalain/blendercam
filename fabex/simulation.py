@@ -80,9 +80,9 @@ def create_simulation_object(name, operations, i):
     ob.scale.x = (o.max.x - o.min.x) / 2
     ob.scale.y = (o.max.y - o.min.y) / 2
 
-    log.info(f"{o.max.x}, {o.min.x}")
-    log.info(f"{o.max.y}, {o.min.y}")
-    log.info("Bounds")
+    log.info(heading("Bounds"))
+    log.info(f"X: {o.max.x}, {o.min.x}")
+    log.info(f"Y: {o.max.y}, {o.min.y}")
 
     disp = ob.modifiers[-1]
     disp.direction = "Z"
@@ -160,7 +160,7 @@ async def do_simulation(name, operations):
     i = await generate_simulation_image(operations, limits)
     cp = get_simulation_path() + name
 
-    log.info(f"Cache Path = {cp}")
+    log.info(f"Cache Path: {cp}")
 
     iname = cp + "_sim.exr"
     numpy_save(i, iname)

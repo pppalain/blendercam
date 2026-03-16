@@ -50,7 +50,7 @@ def import_gcode(self, context, filepath):
             {'FINISHED'}.
     """
 
-    log.info("Running read_some_data...")
+    log.info("Running: read_some_data...")
 
     scene = context.scene
 
@@ -78,7 +78,7 @@ def import_gcode(self, context, filepath):
 
     now = time.time()
 
-    log.info(f"Importing Gcode Took {round(now - then, 1)} Seconds")
+    log.info(f"Gcode Import Time: {round(now - then, 1)}s")
 
     return {"FINISHED"}
 
@@ -350,101 +350,68 @@ class GcodeParser:
     def parse_line(self):
         """Parse a line of G-code and execute the corresponding command.
 
-
         This method processes a line of G-code by stripping comments, cleaning
-
         the command, and identifying the command code and its arguments. It
-
         handles specific G-code commands and invokes the appropriate parsing
-
         method if available. If the command is unsupported, it prints an error
-
         message. The method also manages tool numbers and coordinates based on
         the parsed command.
         """
 
         # strip comments:
-
         bits = self.line.split(";", 1)
-
         if len(bits) > 1:
-
             GcodeParser.comment = bits[1]
 
         # extract & clean command
-
         command = bits[0].strip()
-
         s = ""
-
         a = ""
-
         a_old = ""
 
         for i in range(len(command)):  # check each character in the line
-
             a = command[i]
 
             if a.isupper() and a_old != " " and i > 0:
-
                 # add a space if upper case letter and no space is found before
-
                 s += " "
 
             s += a
-
             a_old = a
 
-        log.info(s)
-
+        log.info(f"Command: {s}")
         command = s
 
         # code is fist word, then args
-
         comm = command.split(None, 1)
-
         code = comm[0] if (len(comm) > 0) else None
-
         args = comm[1] if (len(comm) > 1) else None
 
         if code:
-
             # convert all G01 and G00 to G1 and G0
-
             if code == "G01":
-
                 code = "G1"
 
             if code == "G00":
-
                 code = "G0"
 
             if hasattr(self, "parse_" + code):
-
                 getattr(self, "parse_" + code)(args)
-
                 self.last_command = code
 
             else:
-
                 if code[0] == "T":
-
                     self.model.toolnumber = int(code[1:])
-
-                    log.info(self.model.toolnumber)
+                    log.info(f"Tool Number: {self.model.toolnumber}")
 
                     # if code doesn't start with a G but starts with a coordinate add the last command to the line
-
                 elif code[0] == "X" or code[0] == "Y" or code[0] == "Z":
-
                     self.line = self.last_command + " " + self.line
-
                     self.parse_line()  # parse this line again with the corrections
 
                 else:
                     pass
-
-                    log.info(f"Unsupported gcode {code}")
+                    log.info(f"Unsupported gcode: {code}")
 
     def parse_args(self, args):
         """Parse command-line arguments into a dictionary.

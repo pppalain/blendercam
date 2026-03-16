@@ -1,6 +1,6 @@
 name: Run tests on push / PR
 on:
-  # push:
+  push:
   pull_request:
 jobs:
   build_and_test:

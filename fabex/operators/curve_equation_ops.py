@@ -203,7 +203,7 @@ class CamSineCurve(Operator):
         elif self.wave == "invcycloid":
             zstring = f"-1 * abs({s_sine(amp, period, dc_offset=offset, phase_shift=shift)})"
 
-        log.info(zstring)
+        log.info(f"Equation: {zstring}")
         # make equation from string
 
         def e(t):
@@ -360,8 +360,8 @@ class CamLissajousCurve(Operator):
         def z(t):
             return eval(zstring)
 
-        log.info(f"X= {xstring}")
-        log.info(f"Y= {ystring}")
+        log.info(f"X: {xstring}")
+        log.info(f"Y: {ystring}")
 
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0):
@@ -450,10 +450,10 @@ class CamHypotrochoidCurve(Operator):
         def z(t):
             return eval(zstring)
 
-        log.info(f"X= {xstring}")
-        log.info(f"Y= {ystring}")
-        log.info(f"Z= {zstring}")
-        log.info(f"MaxAngle {maxangle}")
+        log.info(f"X: {xstring}")
+        log.info(f"Y: {ystring}")
+        log.info(f"Z: {zstring}")
+        log.info(f"Max Angle: {maxangle}")
 
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0):
@@ -462,7 +462,7 @@ class CamHypotrochoidCurve(Operator):
 
         iter = int(maxangle * 10)
         if iter > 10000:  # do not calculate more than 10000 points
-            log.info("limiting calculations to 10000 points")
+            log.info("Status: Limiting Calculations to 10000 Points")
             iter = 10000
         create_parametric_curve(
             f,
@@ -523,9 +523,9 @@ class CamCustomCurve(Operator):
     )
 
     def execute(self, context):
-        log.info(f"X= {self.x_string}")
-        log.info(f"Y= {self.y_string}")
-        log.info(f"Z= {self.z_string}")
+        log.info(f"X: {self.x_string}")
+        log.info(f"Y: {self.y_string}")
+        log.info(f"Z: {self.z_string}")
 
         # make equation from string
         def ex(t):

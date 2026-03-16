@@ -84,7 +84,7 @@ def update_exact(o, context):
     if o.optimisation.use_exact:
         if o.strategy == "POCKET" or o.strategy == "MEDIAL_AXIS" or o.inverse:
             o.optimisation.use_opencamlib = False
-            log.info("Current Operation Cannot Use Exact Mode")
+            log.info("Exact Mode Status: Current Operation Incompatible")
     else:
         o.optimisation.use_opencamlib = False
 
@@ -112,7 +112,7 @@ def update_opencamlib_1(o, context):
     if o.optimisation.use_opencamlib and (o.strategy == "POCKET" or o.strategy == "MEDIAL_AXIS"):
         o.optimisation.use_exact = False
         o.optimisation.use_opencamlib = False
-        log.info("Current Operation Cannot Use OpenCAMLib")
+        log.info("OpenCAMLib Status: Current Operation Incompatible")
 
 
 def get_strategy_list(scene, context):

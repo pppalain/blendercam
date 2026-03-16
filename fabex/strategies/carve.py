@@ -38,7 +38,7 @@ async def carve(o):
         ch.offset_z(-o.carve_depth)
 
     if o.use_bridges:
-        log.info(chunks)
+        log.info(f"Chunks: {chunks}")
         for bridge_chunk in chunks:
             use_bridges(bridge_chunk, o)
 

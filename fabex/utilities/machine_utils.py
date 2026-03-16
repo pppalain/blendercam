@@ -76,7 +76,7 @@ def update_machine(self, context):
         context: The context in which the machine update is being performed.
     """
 
-    log.info("Update Machine")
+    log.info("Status: Updated Machine")
     if not _IS_LOADING_DEFAULTS:
         add_machine_area_object()
 

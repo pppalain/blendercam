@@ -93,7 +93,7 @@ class PathsBackground(Operator):
         for p in bpy.utils.script_paths():
             scriptpath = p + os.sep + "addons" + os.sep + "cam" + os.sep + "backgroundop.py"
 
-            log.info(scriptpath)
+            log.info(f"Script Path: {scriptpath}")
 
             if os.path.isfile(scriptpath):
                 break
@@ -262,7 +262,7 @@ async def _calc_path(operator, context):
 
     log.info(heading("Array"))
     if o.array:
-        log.info(f"Array = Enabled")
+        log.info(f"Array: Enabled")
         log.info(f"X: {o.array_x_count} x {o.array_x_distance * 1000:.3f} mm")
         log.info(f"Y: {o.array_y_count} x {o.array_y_distance * 1000:.3f} mm")
     else:
@@ -617,8 +617,7 @@ class PathsAll(Operator):
         i = 0
         for o in bpy.context.scene.cam_operations:
             bpy.context.scene.cam_active_operation = i
-            log.info(f"\nCalculating Path : {o.name}")
-            log.info("\n")
+            log.info(heading(f"Calculating Path : {o.name}"))
             bpy.ops.object.calculate_cam_paths_background()
             i += 1
 
@@ -815,7 +814,7 @@ class PathExport(Operator):
         name_raw = operation.name if operation.link_operation_file_names else operation.filename
         name = safe_filename(name_raw)
 
-        log.info(f"EXPORTING {name} {bpy.data.objects[path_name].data} {operation}")
+        log.info(f"Exporting: {name} {bpy.data.objects[path_name].data} {operation}")
 
         export_gcode_path(name, [bpy.data.objects[path_name].data], [operation])
 

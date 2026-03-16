@@ -28,7 +28,7 @@ async def cross(o):
     chunks.extend(await sample_chunks(o, pathSamples, layers))
     log.info("Sampling: Finished Successfully")
 
-    log.info("Sorting")
+    log.info("Status: Sorting")
     chunks = await sort_chunks(chunks, o)
 
     if o.movement.ramp:
@@ -36,7 +36,7 @@ async def cross(o):
             ch.ramp_zig_zag(ch.zstart, None, o)
 
     if o.use_bridges:
-        log.info(chunks)
+        log.info(f"Chunks: {chunks}")
         for bridge_chunk in chunks:
             use_bridges(bridge_chunk, o)
 

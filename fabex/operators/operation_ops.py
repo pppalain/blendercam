@@ -227,7 +227,7 @@ class CamOperationRemove(Operator):
             log.warning(f"Could not delete operation object: {e}")
 
         ao = scene.cam_operations[scene.cam_active_operation]
-        log.info(was_hidden_dict)
+        log.info(f"Hidden: {was_hidden_dict}")
         if ao.name in was_hidden_dict:
             del was_hidden_dict[ao.name]
 

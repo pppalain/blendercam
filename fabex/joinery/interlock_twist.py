@@ -118,7 +118,7 @@ def twist_line(length, thickness, finger_play, percentage, amount, distance, cen
     while amount > 0:
         position = spacing * amount
         interlock_twist(length, thickness, finger_play, percentage=percentage, cx=position)
-        log.info(f"Twistline {amount}, {distance}, {position}")
+        log.info(f"Twistline: {amount}, {distance}, {position}")
         amount -= 1
 
     join_multiple("_groove")
@@ -257,7 +257,7 @@ def distributed_interlock(
         end (float): end distance from last point
     """
     coords = list(loop.coords)
-    log.info(closed)
+    log.info(f"Closed Loop: {closed}")
     if not closed:
         spacing = (loop_length - start - end) / (finger_amount - 1)
         distance = start
@@ -268,8 +268,8 @@ def distributed_interlock(
         end_distance = loop_length
 
     j = 0
-    log.info(f"Joinery Loop Length {round(loop_length * 1000)}mm")
-    log.info(f"Distance Between Joints {round(spacing * 1000)}mm")
+    log.info(f"Joinery Loop Length: {round(loop_length * 1000)}mm")
+    log.info(f"Joint Spacing: {round(spacing * 1000)}mm")
 
     for i, p in enumerate(coords):
         if i == 0:
@@ -289,10 +289,8 @@ def distributed_interlock(
                     groove_angle = fixed_angle
 
                 groove_point = loop.interpolate(distance)
-
-                log.info(
-                    f"{j} groove_angle {round(180 * groove_angle / pi)} distance {round(distance * 1000)}mm"
-                )
+                log.info(f"{j}: groove_angle {round(180 * groove_angle / pi)}")
+                log.info(f"{j}: Distance {round(distance * 1000)}mm")
                 single_interlock(
                     finger_depth,
                     finger_thick,

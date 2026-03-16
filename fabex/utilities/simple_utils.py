@@ -940,7 +940,7 @@ def subdivide_long_edges(ob, threshold):
             subdivided.
     """
 
-    log.info("Subdividing Long Edges")
+    log.info("Status: Subdividing Long Edges")
     m = ob.data
     scale = (ob.scale.x + ob.scale.y + ob.scale.z) / 3
     subdivides = []
@@ -958,7 +958,7 @@ def subdivide_long_edges(ob, threshold):
                 n += 1
                 subdivides.append(i)
         if n > 0:
-            log.info(len(subdivides))
+            log.info(f"Subdivisions: {len(subdivides)}")
             bpy.ops.object.editmode_toggle()
 
             # bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY')

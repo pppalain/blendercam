@@ -180,7 +180,7 @@ class CamPackObjects(Operator):
         placedpolys = []
         rotcenter = Point(0, 0)
         for pf in polyfield:
-            log.info(i)
+            log.info(f"Polygon: {i}")
             rot = 0
             porig = pf[2]
             placed = False
@@ -251,12 +251,16 @@ class CamPackObjects(Operator):
                     ptrans = affinity.rotate(porig, best[2], rotcenter, use_radians=True)
                     ptrans = affinity.translate(ptrans, best[0], best[1])
 
-                    log.info(f"{best[0]}, {best[1]}, {itera}")
+                    log.info(f"X: {best[0]}")
+                    log.info(f"Y: {best[1]}")
+                    log.info(f"Iteration: {itera}")
                     placedpolys.append(ptrans)
                     allpoly = prepared.prep(MultiPolygon(placedpolys))
 
                     # cleanup allpoly
-                    log.info(f"{itera}, {hits}, {besthit}")
+                    log.info(f"Iteration: {itera}")
+                    log.info(f"Hits: {hits}")
+                    log.info(f"Best Hit: {besthit}")
                 if not placed:
                     if direction == "Y":
                         x += shift
@@ -277,7 +281,7 @@ class CamPackObjects(Operator):
         t = time.time() - t
 
         shapely_to_curve("test", MultiPolygon(placedpolys), 0)
-        log.info(t)
+        log.info(f"Time: {t}")
         # layout.
         return {"FINISHED"}
 
