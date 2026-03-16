@@ -68,7 +68,13 @@ async def helix_four_axis(o):
     anglestep = 2 * pi / circlesteps
     # generalized rotation
     e = Euler((0, 0, 0))
-    e[a1] = anglestep
+
+    if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CW") or (o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CCW"):
+        direction = -1
+    else:
+        direction = 1
+
+    e[a1] = direction * anglestep
 
     # generalized length of the operation
     maxl = o.max[a1]
@@ -97,7 +103,7 @@ async def helix_four_axis(o):
             chunk.startpoints.append(cutterstart.to_tuple())
             chunk.endpoints.append(cutterend.to_tuple())
             rot = [0, 0, 0]
-            rot[a1] = a * 2 * pi + b * anglestep
+            rot[a1] = direction * (a * 2 * pi + b * anglestep)
             chunk.rotations.append(rot)
             cutterstart.rotate(e)
             cutterend.rotate(e)
