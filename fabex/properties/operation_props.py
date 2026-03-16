@@ -855,7 +855,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         update=update_rest,
     )
     ambient_cutter_restrict: BoolProperty(
-        name="Cutter Stays in Ambient Limits",
+        name="Cutter Ambient Limit",
         description="Cutter doesn't get out from ambient limits otherwise "
         "goes on the border exactly",
         default=True,
