@@ -172,7 +172,7 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
             if operation.name not in bpy.data.objects:
                 canSimulate = True  # force true
 
-            log.info(f"Operation Name {operation.name}")
+            log.info(f"Operation Name: {operation.name}")
 
         if canSimulate:
             try:
@@ -181,7 +181,7 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
                 return {"CANCELLED"}
 
         else:
-            log.info("No Computed Path to Simulate")
+            log.info("Error: No Computed Path to Simulate")
             return {"FINISHED"}
 
         return {"FINISHED"}

@@ -24,7 +24,7 @@ class CAM_MATERIAL_PositionObject(Operator):
         if operation.object_name in bpy.data.objects:
             position_object(operation)
         else:
-            log.info("No Object Assigned")
+            log.info("Error: No Object Assigned")
         return {"FINISHED"}
 
     def draw(self, context):

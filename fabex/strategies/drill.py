@@ -6,7 +6,7 @@ from ..utilities.chunk_utils import (
     chunks_to_mesh,
     sort_chunks,
 )
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import (
     check_min_z,
     get_layers,
@@ -39,7 +39,7 @@ async def drill(o):
             that modify the state of the Blender context.
     """
 
-    log.info("Strategy: Drill")
+    log.info(heading("Strategy: Drill"))
 
     chunks = []
 

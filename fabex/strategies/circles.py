@@ -16,7 +16,7 @@ from ..utilities.chunk_utils import (
     connect_chunks_low,
     sample_chunks,
 )
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import (
     get_layers,
     get_move_and_spin,
@@ -26,7 +26,7 @@ from ..utilities.simple_utils import progress
 
 
 async def circles(o):
-    log.info("~ Strategy: Circles ~")
+    log.info(heading("Strategy: Circles"))
 
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathSamples = []
@@ -101,14 +101,14 @@ async def circles(o):
 
     log.info(f"Sampling Object: {o.name}")
     chunks.extend(await sample_chunks(o, pathSamples, layers))
-    log.info("Sampling Finished Successfully")
+    log.info("Sampling: Finished Successfully")
 
     if o.movement.ramp:
         for ch in chunks:
             ch.ramp_zig_zag(ch.zstart, None, o)
 
     if o.use_bridges:
-        log.info(chunks)
+        log.info(f"Chunks: {chunks}")
         for bridge_chunk in chunks:
             use_bridges(bridge_chunk, o)
 

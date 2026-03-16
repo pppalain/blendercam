@@ -9,12 +9,12 @@ from ..utilities.chunk_utils import (
     sort_chunks,
 )
 from ..utilities.curve_utils import curve_to_chunks
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import get_layers
 
 
 async def carve(o):
-    log.info("~ Strategy: Carve ~")
+    log.info(heading("Strategy: Carve"))
 
     pathSamples = []
     ob = bpy.data.objects[o.curve_source]
@@ -28,7 +28,7 @@ async def carve(o):
 
     log.info(f"Sampling Object: {o.name}")
     chunks.extend(await sample_chunks(o, pathSamples, layers))
-    log.info("Sampling Finished Successfully")
+    log.info("Sampling: Finished Successfully")
 
     if o.movement.ramp:
         for ch in chunks:
@@ -38,7 +38,7 @@ async def carve(o):
         ch.offset_z(-o.carve_depth)
 
     if o.use_bridges:
-        log.info(chunks)
+        log.info(f"Chunks: {chunks}")
         for bridge_chunk in chunks:
             use_bridges(bridge_chunk, o)
 

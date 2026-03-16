@@ -6,7 +6,7 @@ from ..utilities.chunk_utils import (
     sort_chunks,
 )
 from ..utilities.curve_utils import curve_to_chunks
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import (
     get_operation_sources,
     check_min_z,
@@ -37,7 +37,7 @@ async def curve(o):
         CamException: If not all objects in the operation are curves.
     """
 
-    log.info("Strategy: Curve to Path")
+    log.info(heading("Strategy: Curve to Path"))
 
     path_samples = []
     get_operation_sources(o)
@@ -76,7 +76,7 @@ async def curve(o):
         # Set offset Z for all chunks according to the layer information,
         for chunk_layer in chunk_copies:
             chunk = chunk_layer[0]
-            layer = chunk_layer[1] #
+            layer = chunk_layer[1]  #
             chunk.clamp_z(layer[1])
             # Limit Cut Depth to Operation Z Minimum
             chunk.clamp_z(o.min_z)

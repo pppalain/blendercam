@@ -105,7 +105,7 @@ class CamSliceObjects(Operator):
             slicename = "slice_" + t  # name for the current slice
             tslicename = "t_" + t  # name for the current slice text
             height += start_height
-            log.info(slicename)
+            log.info(f"Slice Name: {slicename}")
 
             ob.select_set(True)  # select object to be sliced
             bpy.context.view_layer.objects.active = ob  # make object to be sliced active

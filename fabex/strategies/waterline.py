@@ -15,7 +15,7 @@ from ..utilities.chunk_utils import (
 )
 from ..utilities.image_shapely_utils import image_to_shapely
 from ..utilities.image_utils import prepare_area
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.waterline_utils import oclGetWaterline
 from ..utilities.operation_utils import (
     get_ambient,
@@ -27,7 +27,7 @@ from ..utilities.async_utils import progress_async
 
 
 async def waterline(o):
-    log.info("~ Strategy: Waterline ~")
+    log.info(heading("Strategy: Waterline"))
 
     climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
 

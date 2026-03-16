@@ -14,7 +14,7 @@ from ..utilities.chunk_utils import (
     sort_chunks,
 )
 from ..utilities.curve_utils import curve_to_chunks
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import (
     check_min_z,
     get_layers,
@@ -51,7 +51,7 @@ async def cutout(o):
             on the provided object.
     """
 
-    log.info("Strategy: Cutout")
+    log.info(heading("Strategy: Cutout"))
 
     max_depth = check_min_z(o)
     cutter_angle = radians(o.cutter_tip_angle / 2)
@@ -97,7 +97,7 @@ async def cutout(o):
 
     # Separate to allow open Curves :)
     if o.cut_type == "ONLINE" and o.onlycurves:
-        log.info("Separate")
+        log.info("Separate: True")
         chunks_from_curve = []
 
         for ob in o.objects:
@@ -197,9 +197,8 @@ async def cutout(o):
         remove_multiple(o.name + "_cut_bridges")
         bridge_height = min(o.max.z, o.min.z + abs(o.bridges_height))
 
-        log.info("-")
-        log.info("Using Bridges")
-        log.info("Old Briddge Cut Removed")
+        log.info("Using Bridges/Tabs: True")
+        log.info("Status: Old Briddge Cut Removed")
 
         for chunk_layer in chunk_copies:
             chunk = chunk_layer[0]
@@ -209,7 +208,7 @@ async def cutout(o):
                 use_bridges(chunk, o)
 
     if o.profile_start > 0:
-        log.info("Cutout Change Profile Start")
+        log.info("Status: Cutout Change Profile Start")
         for chunk_layer in chunk_copies:
             chunk = chunk_layer[0]
 
@@ -218,7 +217,7 @@ async def cutout(o):
 
     # Lead in
     if o.lead_in > 0.0 or o.lead_out > 0:
-        log.info("Cutout Lead-in")
+        log.info("Status: Cutout Lead-in")
         for chunk_layer in chunk_copies:
             chunk = chunk_layer[0]
 

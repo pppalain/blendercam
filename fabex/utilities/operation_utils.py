@@ -26,7 +26,7 @@ from bpy_extras import object_utils
 from mathutils import Vector
 
 from .curve_utils import curve_to_shapely
-from .logging_utils import log
+from .logging_utils import log, heading
 from .simple_utils import (
     get_cache_path,
     unit_value_to_string,
@@ -434,7 +434,7 @@ def update_rotation(o, context):
         context (object): The context in which the operation is performed.
     """
 
-    log.info("~ Update Rotation ~")
+    log.info(heading("Update Rotation"))
     if o.enable_b_axis or o.enable_a_axis:
         log.info(f"{o}, {o.rotation_a}")
         ob = bpy.data.objects[o.object_name]
@@ -464,7 +464,7 @@ def update_rest(o, context):
         context (object): The context in which the update is being performed.
     """
 
-    log.info("~ Update Rest ~")
+    log.info(heading("Update Rest"))
     o.changed = True
 
 
@@ -710,7 +710,8 @@ def get_cutter_array(operation, pixsize):
                 v.y = (b + 0.5 - m) * ps
 
                 if v.length <= r:
-                    car.itemset((a, b), 0)
+                    car[[a, b]] = 0
+                    # car.itemset((a, b), 0)
 
     elif cutter_type in ["BALL", "BALLNOSE"]:
         for a in range(0, res):
@@ -721,7 +722,8 @@ def get_cutter_array(operation, pixsize):
 
                 if v.length <= r:
                     z = sin(acos(v.length / r)) * r - r
-                    car.itemset((a, b), z)  # [a,b]=z
+                    car[[a, b]] = z
+                    # car.itemset((a, b), z)  # [a,b]=z
 
     elif cutter_type == "VCARVE":
         angle = operation.cutter_tip_angle
@@ -735,7 +737,8 @@ def get_cutter_array(operation, pixsize):
 
                 if v.length <= r:
                     z = -v.length * s
-                    car.itemset((a, b), z)
+                    car[[a, b]] = z
+                    # car.itemset((a, b), z)
 
     elif cutter_type == "CYLCONE":
         angle = operation.cutter_tip_angle
@@ -754,7 +757,8 @@ def get_cutter_array(operation, pixsize):
                     if v.length <= cyl_r:
                         z = 0
 
-                    car.itemset((a, b), z)
+                    car[[a, b]] = z
+                    # car.itemset((a, b), z)
 
     elif cutter_type == "BALLCONE":
         angle = radians(operation.cutter_tip_angle) / 2
@@ -777,7 +781,8 @@ def get_cutter_array(operation, pixsize):
                     if v.length <= ball_r:
                         z = sin(acos(v.length / Ball_R)) * Ball_R - Ball_R
 
-                    car.itemset((a, b), z)
+                    car[[a, b]] = z
+                    # car.itemset((a, b), z)
 
     elif cutter_type == "CUSTOM":
         cutob = bpy.data.objects[operation.cutter_object_name]
@@ -804,7 +809,8 @@ def get_cutter_array(operation, pixsize):
                         if z > maxz:
                             maxz = z
 
-                        car.itemset((a, b), z)
+                        car[[a, b]] = z
+                        # car.itemset((a, b), z)
 
         car -= maxz
 
@@ -869,12 +875,10 @@ def get_layers(operation, start_depth, end_depth):
         layers = []
         layer_count = ceil((start_depth - end_depth) / operation.stepdown)
 
-        log.info("-")
-        log.info("~ Getting Layer Data ~")
+        log.info(heading("Getting Layer Data"))
         log.info(f"Start Depth: {start_depth}")
         log.info(f"End Depth: {end_depth}")
         log.info(f"Layers: {layer_count}")
-        log.info("-")
 
         layer_start = operation.max_z
 

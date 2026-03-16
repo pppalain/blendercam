@@ -577,7 +577,7 @@ def open_curve(
             Blender context.
     """
 
-    log.info("Starting Open Curve Function")
+    log.info("Status: Starting Open Curve Function")
 
     coords = list(line.coords)
 
@@ -586,8 +586,8 @@ def open_curve(
     p_start = coords[0]
     p_end = coords[-1]
 
-    log.info(f"Start Angle {start_angle}")
-    log.info(f"End Angle {end_angle}")
+    log.info(f"Start Angle: {start_angle}")
+    log.info(f"End Angle: {end_angle}")
 
     bpy.ops.curve.simple(
         align="WORLD",
@@ -601,7 +601,7 @@ def open_curve(
         shape="3D",
     )
 
-    log.info("Created Open Curve")
+    log.info("Status: Created Open Curve")
 
     active_name("tmprect")
     move(y=thick)
@@ -615,7 +615,7 @@ def open_curve(
     dilated = line.buffer(thick / 2)  # expand shapely object to thickness
     shapely_to_curve("tmp_curve", dilated, 0.0)
 
-    log.info("Dilated and Processed with Shapely")
+    log.info("Status: Dilated and Processed with Shapely")
 
     # truncate curve at both ends with the rectangles
     difference("tmp", "tmp_curve")
@@ -627,7 +627,7 @@ def open_curve(
     union("tmp_")
     active_name("tmp_curve")
 
-    log.info("Adding Twists")
+    log.info("Status: Adding Twists")
 
     twist_male(
         "tmp_curve",

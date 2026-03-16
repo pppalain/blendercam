@@ -5,7 +5,7 @@ import time
 import bpy
 from mathutils import Vector
 
-from .logging_utils import log
+from .logging_utils import log, heading
 from .shapely_utils import shapely_to_curve, shapely_to_multipolygon
 from .simple_utils import (
     activate,
@@ -205,7 +205,7 @@ def get_bounds(o):
             log.info("~ Not Min Z from Object ~")
 
         if o.material.material_source == "MODEL":
-            log.info("~ Estimate Material from Model ~")
+            log.info(heading("Estimate Material from Model"))
             o.min.x = minx - o.material.radius_around_model
             o.min.y = miny - o.material.radius_around_model
             o.max.z = max(o.max_z, maxz)
@@ -214,7 +214,7 @@ def get_bounds(o):
             o.max.y = maxy + o.material.radius_around_model
 
         if o.material.material_source == "OBJECT":
-            log.info("~ Estimate Material from Alternate Object ~")
+            log.info(heading("Estimate Material from Alternate Object"))
             minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(
                 [o.material.alt_object],
                 o.use_modifiers,

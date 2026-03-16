@@ -7,14 +7,14 @@ from ..utilities.chunk_utils import (
     sample_chunks,
     sort_chunks,
 )
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import get_layers
 from ..utilities.simple_utils import progress
 from ..utilities.strategy_utils import parallel_pattern
 
 
 async def cross(o):
-    log.info("~ Strategy: Cross ~")
+    log.info(heading("Strategy: Cross"))
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
     pathSamples = []
@@ -26,9 +26,9 @@ async def cross(o):
 
     log.info(f"Sampling Object: {o.name}")
     chunks.extend(await sample_chunks(o, pathSamples, layers))
-    log.info("Sampling Finished Successfully")
+    log.info("Sampling: Finished Successfully")
 
-    log.info("Sorting")
+    log.info("Status: Sorting")
     chunks = await sort_chunks(chunks, o)
 
     if o.movement.ramp:
@@ -36,7 +36,7 @@ async def cross(o):
             ch.ramp_zig_zag(ch.zstart, None, o)
 
     if o.use_bridges:
-        log.info(chunks)
+        log.info(f"Chunks: {chunks}")
         for bridge_chunk in chunks:
             use_bridges(bridge_chunk, o)
 

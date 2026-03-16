@@ -22,7 +22,7 @@ from ..constants import (
     BULLET_SCALE,
     CUTTER_OFFSET,
 )
-from .logging_utils import log
+from .logging_utils import log, heading
 from .simple_utils import (
     activate,
     delete_object,
@@ -115,6 +115,7 @@ def get_cutter_bullet(o):
         bpy.ops.rigidbody.object_add(type="ACTIVE")
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = "CONE"
+
     elif type == "CYLCONE":
         angle = o.cutter_tip_angle
         s = tan(pi * (90 - angle / 2) / 180) / 2  # angles in degrees
@@ -138,6 +139,7 @@ def get_cutter_bullet(o):
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = "CONVEX_HULL"
         cutter.location = CUTTER_OFFSET
+
     elif type == "BALLCONE":
         angle = radians(o.cutter_tip_angle) / 2
         cutter_R = o.cutter_diameter / 2
@@ -180,6 +182,7 @@ def get_cutter_bullet(o):
         cutter.location = CUTTER_OFFSET
         cutter.rigid_body.collision_shape = "CONVEX_HULL"
         cutter.location = CUTTER_OFFSET
+
     elif type == "CUSTOM":
         cutob = bpy.data.objects[o.cutter_object_name]
         activate(cutob)
@@ -217,9 +220,8 @@ def prepare_bullet_collision(o):
     Args:
         o (Object): An object containing properties and settings for
     """
-    progress("~ Preparing Collisions ~")
-
-    log.info(o.name)
+    log.info(heading("Preparing Collisions"))
+    log.info(f"Object: {o.name}")
 
     active_collection = bpy.context.view_layer.active_layer_collection.collection
     t = time.time()
@@ -313,7 +315,7 @@ def prepare_bullet_collision(o):
     bpy.context.scene.frame_set(1)
     bpy.context.scene.frame_set(2)
 
-    progress(time.time() - t)
+    log.info(f"Time: {time.time() - t}")
 
 
 def cleanup_bullet_collision(o):
@@ -430,7 +432,6 @@ def get_sample_bullet_n_axis(cutter, startpoint, endpoint, rotation, cutter_comp
         pos = Vector(pos[0])
         # rescale and compensate from center to tip.
         res = pos / BULLET_SCALE - cutterVec / BULLET_SCALE
-
         return res
     else:
         return None

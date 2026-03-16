@@ -18,7 +18,7 @@ from .image_utils import (
     render_sample_image,
 )
 
-from .logging_utils import log
+from .logging_utils import log, heading
 from .shapely_utils import (
     chunks_to_shapely,
     shapely_to_curve,
@@ -135,7 +135,7 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
         if totfaces < 20000000:
             # boolean polygons method originaly was 20 000 poly limit, now limitless,
             t = time.time()
-            log.info("Shapely Getting Silhouette")
+            log.info("Status: Shapely Getting Silhouette")
             # polys = [] #removed EH
 
             for ob in objects:
@@ -294,7 +294,7 @@ def get_operation_silhouette(operation):
             operation.silhouette = chunks_to_shapely(chunks)
         # this conversion happens because we need the silh to be oriented, for milling directions.
         else:
-            log.info("~ Object Method for Retrieving Silhouette ~")
+            log.info(heading("Object Method for Retrieving Silhouette"))
             operation.silhouette = get_object_silhouette(
                 stype,
                 objects=operation.objects,

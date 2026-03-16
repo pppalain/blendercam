@@ -675,12 +675,12 @@ class CamPathChunk:
 
         if self.parents:  # if it is inside another parent
             perimeterDirection ^= 1  # toggle with a bitwise XOR
-            log.info("Has Parent")
+            log.info("Has Parent: True")
 
         if perimeterDirection == 1:
-            log.info("Path Direction is Clockwise")
+            log.info("Path Direction: Clockwise")
         else:
-            log.info("Path Direction is Counter Clockwise")
+            log.info("Path Direction: Counter Clockwise")
 
         iradius = o.lead_in
         oradius = o.lead_out

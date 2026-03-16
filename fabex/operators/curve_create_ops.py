@@ -1762,7 +1762,7 @@ class CamCurvePuzzle(Operator):
         """
 
         curve_detected = False
-        log.info(f"{len(context.selected_objects)} Selected Object {context.selected_objects}")
+        log.info(f"{len(context.selected_objects)} Selected Object(s): {context.selected_objects}")
         if len(context.selected_objects) > 0 and context.active_object.type == "CURVE":
             curve_detected = True
             # bpy.context.object.data.resolution_u = 60

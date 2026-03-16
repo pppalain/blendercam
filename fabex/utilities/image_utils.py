@@ -34,7 +34,7 @@ from mathutils import (
 
 from .async_utils import progress_async
 from ..chunk_builder import CamPathChunkBuilder
-from .logging_utils import log
+from .logging_utils import log, heading
 from .operation_utils import get_cutter_array
 from .parent_utils import parent_child_distance
 from .simple_utils import (
@@ -100,8 +100,7 @@ def numpy_to_image(a: np.ndarray, iname: str) -> bpy.types.Image:
     # suffix as Blender seems to use the ".%03d" pattern to avoid creating duplicate ids.
     iname_59 = iname[:59]
 
-    log.info("-")
-    log.info("~ Converting Numpy Array to Blender Image ~")
+    log.info(heading("Converting Numpy Array to Blender Image"))
     log.info(f"Name: {iname}")
     log.info(f"Dimensions: {width}x{height}")
 
@@ -138,10 +137,9 @@ def numpy_to_image(a: np.ndarray, iname: str) -> bpy.types.Image:
     a = a.repeat(4)
     a[3::4] = 1
 
-    image.pixels[:] = a[:]  # this gives big speedup!
+    image.pixels[:] = a  # [:]  # this gives big speedup!
 
     log.info(f"Time: {str(time.time() - t)}")
-    log.info("-")
 
     return image
 
@@ -176,7 +174,7 @@ def image_to_numpy(i):
     na = na.reshape(height, width)
     na = na.swapaxes(0, 1)
 
-    log.info(f"\nTime of Image to Numpy {time.time() - t}")
+    log.info(f"Image to Numpy Time: {time.time() - t}")
     return na
 
 
@@ -274,7 +272,7 @@ async def offset_area(o, samples):
             m : height - cwidth + m,
         ] = comparearea
 
-        log.info(f"\nOffset Image Time: {time.time() - t}")
+        log.info(f"Offset Image Time: {time.time() - t}")
 
         o.update_offset_image_tag = False
     return o.offset_image
@@ -442,7 +440,7 @@ def render_sample_image(o):
     """
 
     t = time.time()
-    progress("~ Getting Z-Buffer ~")
+    log.info(heading("Getting Z-Buffer"))
     o.update_offset_image_tag = True
 
     if o.geometry_source in ["OBJECT", "COLLECTION"]:
@@ -473,7 +471,9 @@ def render_sample_image(o):
                 image_size_y = i.size[1]
 
                 if image_size_x != resolution_x or image_size_y != resolution_y:
-                    log.info(f"Z Buffer Size Changed: {i.size} {resolution_x} {resolution_y}")
+                    log.info(heading(f"Z Buffer Size Changed"))
+                    log.info(f"Image Size: {i.size}")
+                    log.info(f"Resolution: {resolution_x}x{resolution_y}")
                     o.update_z_buffer_image_tag = True
             except:
                 o.update_z_buffer_image_tag = True
@@ -612,10 +612,10 @@ def render_sample_image(o):
                 if backup_settings is not None:
                     _restore_render_settings(SETTINGS_TO_BACKUP, backup_settings)
                 else:
-                    log.info("Failed to Backup Scene Settings")
+                    log.info("Status: Failed to Backup Scene Settings")
 
             i = bpy.data.images.load(image_name)
-            print(f"Image load: {image_name}")
+            log.info(f"Image load: {image_name}")
             bpy.context.scene.render.engine = "FABEX_RENDER"
 
         ####################################################################
@@ -701,10 +701,10 @@ def render_sample_image(o):
         o.min.z = np.min(image_array)
         o.zbuffer_image = image_array
 
-        log.info(f"Min Z {o.min.z}")
-        log.info(f"Max Z {o.max.z}")
-        log.info(f"Min Image {np.min(image_array)}")
-        log.info(f"Max Image {np.max(image_array)}")
+        log.info(f"Min Z: {o.min.z}")
+        log.info(f"Max Z: {o.max.z}")
+        log.info(f"Min Image: {np.min(image_array)}")
+        log.info(f"Max Image: {np.max(image_array)}")
 
     progress(time.time() - t)
     o.update_z_buffer_image_tag = False
@@ -823,11 +823,14 @@ def image_edge_search_on_line(o, ar, zimage):
                 ar[xs, ys] = False
 
                 if 0:
-                    log.info("Success")
-                    log.info(f"{xs}, {ys}, {testlength}, {testangle}")
-                    log.info(lastvect)
-                    log.info(testvect)
-                    log.info(itests)
+                    log.info("Status: Success")
+                    log.info(f"X: {xs}")
+                    log.info(f"Y: {ys}")
+                    log.info(f"Length: {testlength}")
+                    log.info(f"Angle: {testangle}")
+                    log.info(f"Last Vector: {lastvect}")
+                    log.info(f"Test Vector: {testvect}")
+                    log.info(f"Test Count: {itests}")
             else:
                 test_direction = last_direction
 
@@ -878,10 +881,12 @@ def image_edge_search_on_line(o, ar, zimage):
                 test_direction = directions[dindexmod]
 
                 if 0:
-                    log.info(
-                        f"{xs}, {ys}, {test_direction}, {last_direction}, {testangulardistance}"
-                    )
-                    log.info(totpix)
+                    log.info(f"X: {xs}")
+                    log.info(f"Y: {ys}")
+                    log.info(f"Test Direction: {test_direction}")
+                    log.info(f"Last Direction: {last_direction}")
+                    log.info(f"Angular DIstance: {testangulardistance}")
+                    log.info(f"Pixel Count: {totpix}")
             itests += 1
             totaltests += 1
 
@@ -938,7 +943,7 @@ def get_offset_image_cavities(o, i):  # for pencil operation mainly
         chunks = image_edge_search_on_line(o, ar, i)
         iname = get_cache_path(o) + "_pencilthres_comp.exr"
 
-        log.info("New Pencil Strategy")
+        log.info("Status: New Pencil Strategy")
 
     # crop pixels that are on outer borders
     for chi in range(len(chunks) - 1, -1, -1):
@@ -1109,8 +1114,8 @@ def image_to_chunks(o, image, with_border=False):
             i += 1
 
             if i % 10000 == 0:
-                log.info(len(ch))
-                log.info(i)
+                log.info(f"Chunk Count: {len(ch)}")
+                log.info(f"Iterations: {i}")
 
         vecchunks = []
 

@@ -383,4 +383,4 @@ def auto_cut_bridge(o):
     bridgecollectionname = o.bridges_collection_name
     bridgecollection = bpy.data.collections[bridgecollectionname]
     if len(bridgecollection.objects) > 0:
-        log.info("Bridges")
+        log.info("Bridges/Tabs: True")

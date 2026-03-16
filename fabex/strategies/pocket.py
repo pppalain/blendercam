@@ -22,7 +22,7 @@ from ..utilities.geom_utils import (
     circle,
     helix,
 )
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import (
     check_min_z,
     get_layers,
@@ -60,7 +60,7 @@ async def pocket(o):
         based on the pocketing operation.
     """
 
-    log.info("Strategy: Pocket")
+    log.info(heading("Strategy: Pocket"))
 
     join = 2 if o.straight else 1
     scene = bpy.context.scene
@@ -150,7 +150,7 @@ async def pocket(o):
         approximate_area = (min(size_x, size_y) / stepover) / 2
 
         log.info(f"Approximative: {approximate_area}")
-        log.info(o.name)
+        log.info(f"Object: {o.name}")
 
         i = 0
         chunks = []
@@ -189,7 +189,8 @@ async def pocket(o):
             parent_child_distance(last_chunks, nchunks, o)
             last_chunks = nchunks
             percent = int(i / approximate_area * 100)
-            progress("Outlining Polygons ", percent)
+            log.info(f"Outlining Polygons: {percent}")
+            # progress("Outlining Polygons ", percent)
             point = pnew
             i += 1
 

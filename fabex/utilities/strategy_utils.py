@@ -46,7 +46,7 @@ def update_strategy(o, context):
 
     """"""
     o.changed = True
-    log.info("Update Strategy")
+    log.info("Status: Updated Strategy")
     if o.machine_axes == "5" or (o.machine_axes == "4" and o.strategy_4_axis == "INDEXED"):
         # INDEXED 4 AXIS DOESN'T EXIST NOW...
         add_orientation_object(o)
@@ -77,14 +77,14 @@ def update_exact(o, context):
         None: This function does not return a value.
     """
 
-    log.info("Update Exact ")
+    log.info("Status: Updated Exact Mode")
     o.changed = True
     o.update_z_buffer_image_tag = True
     o.update_offset_image_tag = True
     if o.optimisation.use_exact:
         if o.strategy == "POCKET" or o.strategy == "MEDIAL_AXIS" or o.inverse:
             o.optimisation.use_opencamlib = False
-            log.info("Current Operation Cannot Use Exact Mode")
+            log.info("Exact Mode Status: Current Operation Incompatible")
     else:
         o.optimisation.use_opencamlib = False
 
@@ -107,12 +107,12 @@ def update_opencamlib_1(o, context):
         None: This function does not return any value.
     """
 
-    log.info("Update OpenCAMLib ")
+    log.info("Status: Updated OpenCAMLib ")
     o.changed = True
     if o.optimisation.use_opencamlib and (o.strategy == "POCKET" or o.strategy == "MEDIAL_AXIS"):
         o.optimisation.use_exact = False
         o.optimisation.use_opencamlib = False
-        log.info("Current Operation Cannot Use OpenCAMLib")
+        log.info("OpenCAMLib Status: Current Operation Incompatible")
 
 
 def get_strategy_list(scene, context):
