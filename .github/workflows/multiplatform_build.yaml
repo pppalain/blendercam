@@ -1,6 +1,6 @@
 name: Build Split Platform Extension
 on:
-  # push:
+  push:
   pull_request:
 jobs:
   build_and_test:
@@ -148,7 +148,7 @@ jobs:
     - name: make release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "fabex-*.zip"
+        artifacts: "./fabex-*.zip"
         tag: ${{ env.VERSION_TAG }}
         allowUpdates: true
         bodyFile: './docs/RELEASE.md'
