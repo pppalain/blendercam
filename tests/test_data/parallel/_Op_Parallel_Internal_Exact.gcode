@@ -1,10 +1,11 @@
-(Created with grbl post processor 2025/12/08 09:31)
+(Created with grbl post processor 2026/03/16 16:00)
 G21
 (G-code Generated with Fabex and NC library)
+(Rapids: 5000.0/min)
 G17G90
 (Tool: D = 3.0 mm  type END flutes 2)
 S12000M03
-G00 Z2.0
+G00 Z2.0 F5000.0
 
 G0X0Y0Z2
 X-99Y99.802

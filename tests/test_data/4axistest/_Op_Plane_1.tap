@@ -1,11 +1,12 @@
-O0(/home/spex/Documents/BlenderDev/blendercam/scripts/addons/cam/tests/test_data/4axistest/Op_Plane_1.tap)
+O0(/home/spex/Documents/BlenderDev/blendercam/tests/test_data/4axistest/Op_Plane_1.tap)
 G21
 (G-code Generated with Fabex and NC library)
+(Rapids: 5000.0/min)
 G17G90
 T2M06
 (Tool: D = 6.0 mm  type BALLNOSE flutes 2)
 S12000M03
-G00 Z25.0
+G00 Z25.0 F5000.0
 
 G00X0Y0Z0.1
 G01Z-4.9F500
