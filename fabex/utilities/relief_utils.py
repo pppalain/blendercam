@@ -842,7 +842,7 @@ def render_scene(width, height, bit_diameter, passes_per_radius, make_nodes, vie
             node_tree = scene.compositing_node_group
             nodes = node_tree.nodes
             render_layers = nodes["Render Layers"]
-            reroute = nodes["Reroute"]
+            reroute = nodes.new("NodeReroute")
 
             node_tree.links.new(
                 render_layers.outputs[render_layers.outputs.find("Depth")],
