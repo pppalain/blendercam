@@ -55,8 +55,7 @@ class FabexTest(unittest.TestCase):
         return "".join(list(diff)[:num_lines])
 
     def execute_blender(self, blend_file):
-        blender = '/home/spex/Documents/Blender/Releases/blender-5.0.0-linux-x64/blender'
-        command = f'{blender} -noaudio -b "{blend_file}" -P "{self.generator_path}"'
+        command = f'blender -noaudio -b "{blend_file}" -P "{self.generator_path}"'
         print(f"Executing: {command}")
         subprocess.run(command, shell=True, check=True)
 
