@@ -24,7 +24,7 @@ from ..constants import (
 from ..post_processors import iso
 
 from ..utilities.compare_utils import point_on_line
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.simple_utils import (
     progress,
     safe_filename,
@@ -52,7 +52,7 @@ def export_gcode_path(filename, vertslist, operations):
         None: This function does not return a value; it writes the G-code to a file.
     """
     log.debug("EXPORT")
-    progress("~ Exporting G-code File ~")
+    log.info(heading("Exporting G-code File"))
 
     t = time.time()
     s = bpy.context.scene
@@ -137,7 +137,6 @@ def export_gcode_path(filename, vertslist, operations):
         filename = basefilename + fileindex + extension
 
         log.info(f"Writing: {filename}")
-        log.info("-")
 
         c = postprocessor.Creator()
 
@@ -493,7 +492,7 @@ def export_gcode_path(filename, vertslist, operations):
                 c.write(aline + "\n")
 
     o.info.duration = duration * unitcorr
-    log.info(f"Total Time: {round(o.info.duration * 60)} seconds")
+    log.info(f"Cut Time: {round(o.info.duration * 60)}s")
     if bpy.context.scene.unit_settings.system == "METRIC":
         unit_distance = "m"
         cut_distance /= 1000
@@ -511,4 +510,4 @@ def export_gcode_path(filename, vertslist, operations):
 
     c.program_end()
     c.file_close()
-    log.info(f"{time.time() - t}")
+    log.info(f"Calculation TIme: {time.time() - t}")

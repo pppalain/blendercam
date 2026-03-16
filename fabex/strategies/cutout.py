@@ -14,7 +14,7 @@ from ..utilities.chunk_utils import (
     sort_chunks,
 )
 from ..utilities.curve_utils import curve_to_chunks
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import (
     check_min_z,
     get_layers,
@@ -51,7 +51,7 @@ async def cutout(o):
             on the provided object.
     """
 
-    log.info("Strategy: Cutout")
+    log.info(heading("Strategy: Cutout"))
 
     max_depth = check_min_z(o)
     cutter_angle = radians(o.cutter_tip_angle / 2)

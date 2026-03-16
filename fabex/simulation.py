@@ -396,7 +396,7 @@ async def generate_simulation_image(operations, limits):
     si = si[borderwidth:-borderwidth, borderwidth:-borderwidth]
     si += -minz
 
-    await progress_async("Simulated:", time.time() - start_time, "s")
+    await progress_async("Simulated", time.time() - start_time, "s")
 
     return si
 

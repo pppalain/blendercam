@@ -17,7 +17,7 @@ from .image_utils import (
     image_to_numpy,
     numpy_to_image,
 )
-from .logging_utils import log
+from .logging_utils import log, heading
 
 
 class ReliefError(Exception):
@@ -726,7 +726,7 @@ def build_mesh(mesh_z, br):
             bpy.data.objects.remove(object)
             log.info("Old BasRelief Removed")
 
-    log.info("Building Mesh")
+    log.info(heading("Building Mesh"))
     numY = mesh_z.shape[1]
     numX = mesh_z.shape[0]
     log.info(f"{numX}, {numY}")

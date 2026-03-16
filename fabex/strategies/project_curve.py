@@ -6,7 +6,7 @@ from ..utilities.chunk_utils import (
     chunks_refine,
 )
 from ..utilities.curve_utils import curve_to_chunks
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import (
     get_operation_sources,
     check_min_z,
@@ -37,7 +37,7 @@ async def projected_curve(o):
         CamException: If the target curve is not of type 'CURVE'.
     """
 
-    log.info("Strategy: Projected Curve")
+    log.info(heading("Strategy: Projected Curve"))
 
     path_samples = []
     chunks = []

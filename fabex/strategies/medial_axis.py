@@ -22,7 +22,7 @@ from ..utilities.chunk_utils import (
     sort_chunks,
 )
 from ..utilities.compare_utils import check_equal, unique
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import get_layers
 from ..utilities.shapely_utils import (
     shapely_to_curve,
@@ -63,7 +63,7 @@ async def medial_axis(o):
             is not closed.
     """
 
-    log.info("Strategy: Medial Axis")
+    log.info(heading("Strategy: Medial Axis"))
 
     remove_multiple("medialMesh")
 

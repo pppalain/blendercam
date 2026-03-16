@@ -15,7 +15,7 @@ from ..utilities.chunk_utils import (
     connect_chunks_low,
     sample_chunks,
 )
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import (
     get_layers,
     get_move_and_spin,
@@ -23,7 +23,7 @@ from ..utilities.operation_utils import (
 
 
 async def spiral(o):
-    log.info("~ Strategy: Spiral ~")
+    log.info(heading("Strategy: Spiral"))
 
     climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
@@ -72,7 +72,7 @@ async def spiral(o):
 
     log.info(f"Sampling Object: {o.name}")
     chunks.extend(await sample_chunks(o, pathSamples, layers))
-    log.info("Sampling Finished Successfully")
+    log.info("Sampling: Finished Successfully")
 
     if o.movement.ramp:
         for ch in chunks:

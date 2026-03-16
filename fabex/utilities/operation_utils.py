@@ -26,7 +26,7 @@ from bpy_extras import object_utils
 from mathutils import Vector
 
 from .curve_utils import curve_to_shapely
-from .logging_utils import log
+from .logging_utils import log, heading
 from .simple_utils import (
     get_cache_path,
     unit_value_to_string,
@@ -434,7 +434,7 @@ def update_rotation(o, context):
         context (object): The context in which the operation is performed.
     """
 
-    log.info("~ Update Rotation ~")
+    log.info(heading("Update Rotation"))
     if o.enable_b_axis or o.enable_a_axis:
         log.info(f"{o}, {o.rotation_a}")
         ob = bpy.data.objects[o.object_name]
@@ -464,7 +464,7 @@ def update_rest(o, context):
         context (object): The context in which the update is being performed.
     """
 
-    log.info("~ Update Rest ~")
+    log.info(heading("Update Rest"))
     o.changed = True
 
 
@@ -875,12 +875,10 @@ def get_layers(operation, start_depth, end_depth):
         layers = []
         layer_count = ceil((start_depth - end_depth) / operation.stepdown)
 
-        log.info("-")
-        log.info("~ Getting Layer Data ~")
+        log.info(heading("Getting Layer Data"))
         log.info(f"Start Depth: {start_depth}")
         log.info(f"End Depth: {end_depth}")
         log.info(f"Layers: {layer_count}")
-        log.info("-")
 
         layer_start = operation.max_z
 

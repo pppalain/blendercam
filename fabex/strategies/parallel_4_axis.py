@@ -11,7 +11,7 @@ from ..utilities.chunk_utils import (
     chunks_to_mesh,
     sample_chunks_n_axis,
 )
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import (
     get_layers,
     get_move_and_spin,
@@ -37,7 +37,7 @@ async def parallel_four_axis(o):
         list: A list of path chunks generated for the specified operation.
     """
 
-    log.info("~ Strategy: Parallel 4 Axis ~")
+    log.info(heading("Strategy: Parallel 4 Axis"))
 
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathchunks = []

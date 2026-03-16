@@ -22,7 +22,7 @@ from ..constants import (
     BULLET_SCALE,
     CUTTER_OFFSET,
 )
-from .logging_utils import log
+from .logging_utils import log, heading
 from .simple_utils import (
     activate,
     delete_object,
@@ -217,9 +217,8 @@ def prepare_bullet_collision(o):
     Args:
         o (Object): An object containing properties and settings for
     """
-    progress("~ Preparing Collisions ~")
-
-    log.info(o.name)
+    log.info(heading("Preparing Collisions"))
+    log.info(f"Object: {o.name}")
 
     active_collection = bpy.context.view_layer.active_layer_collection.collection
     t = time.time()
@@ -313,7 +312,7 @@ def prepare_bullet_collision(o):
     bpy.context.scene.frame_set(1)
     bpy.context.scene.frame_set(2)
 
-    progress(time.time() - t)
+    log.info(f"Time: {time.time() - t}")
 
 
 def cleanup_bullet_collision(o):

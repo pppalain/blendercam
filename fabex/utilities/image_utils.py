@@ -34,7 +34,7 @@ from mathutils import (
 
 from .async_utils import progress_async
 from ..chunk_builder import CamPathChunkBuilder
-from .logging_utils import log
+from .logging_utils import log, heading
 from .operation_utils import get_cutter_array
 from .parent_utils import parent_child_distance
 from .simple_utils import (
@@ -100,8 +100,7 @@ def numpy_to_image(a: np.ndarray, iname: str) -> bpy.types.Image:
     # suffix as Blender seems to use the ".%03d" pattern to avoid creating duplicate ids.
     iname_59 = iname[:59]
 
-    log.info("-")
-    log.info("~ Converting Numpy Array to Blender Image ~")
+    log.info(heading("Converting Numpy Array to Blender Image"))
     log.info(f"Name: {iname}")
     log.info(f"Dimensions: {width}x{height}")
 
@@ -138,10 +137,9 @@ def numpy_to_image(a: np.ndarray, iname: str) -> bpy.types.Image:
     a = a.repeat(4)
     a[3::4] = 1
 
-    image.pixels[:] = a[:]  # this gives big speedup!
+    image.pixels[:] = a  # [:]  # this gives big speedup!
 
     log.info(f"Time: {str(time.time() - t)}")
-    log.info("-")
 
     return image
 
@@ -176,7 +174,7 @@ def image_to_numpy(i):
     na = na.reshape(height, width)
     na = na.swapaxes(0, 1)
 
-    log.info(f"\nTime of Image to Numpy {time.time() - t}")
+    log.info(f"Image to Numpy Time: {time.time() - t}")
     return na
 
 
@@ -274,7 +272,7 @@ async def offset_area(o, samples):
             m : height - cwidth + m,
         ] = comparearea
 
-        log.info(f"\nOffset Image Time: {time.time() - t}")
+        log.info(f"Offset Image Time: {time.time() - t}")
 
         o.update_offset_image_tag = False
     return o.offset_image
@@ -442,7 +440,7 @@ def render_sample_image(o):
     """
 
     t = time.time()
-    progress("~ Getting Z-Buffer ~")
+    log.info(heading("Getting Z-Buffer"))
     o.update_offset_image_tag = True
 
     if o.geometry_source in ["OBJECT", "COLLECTION"]:
@@ -701,10 +699,10 @@ def render_sample_image(o):
         o.min.z = np.min(image_array)
         o.zbuffer_image = image_array
 
-        log.info(f"Min Z {o.min.z}")
-        log.info(f"Max Z {o.max.z}")
-        log.info(f"Min Image {np.min(image_array)}")
-        log.info(f"Max Image {np.max(image_array)}")
+        log.info(f"Min Z: {o.min.z}")
+        log.info(f"Max Z: {o.max.z}")
+        log.info(f"Min Image: {np.min(image_array)}")
+        log.info(f"Max Image: {np.max(image_array)}")
 
     progress(time.time() - t)
     o.update_z_buffer_image_tag = False

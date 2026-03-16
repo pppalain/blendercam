@@ -11,7 +11,7 @@ from ..utilities.image_utils import (
     prepare_area,
     get_offset_image_cavities,
 )
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import (
     get_layers,
     get_ambient,
@@ -19,7 +19,7 @@ from ..utilities.operation_utils import (
 
 
 async def pencil(o):
-    log.info("~ Strategy: Pencil ~")
+    log.info(heading("Strategy: Pencil"))
 
     await prepare_area(o)
     get_ambient(o)
@@ -34,7 +34,7 @@ async def pencil(o):
 
     log.info(f"Sampling Object: {o.name}")
     chunks.extend(await sample_chunks(o, pathSamples, layers))
-    log.info("Sampling Finished Successfully")
+    log.info("Sampling: Finished Successfully")
 
     log.info("Coherency Check")
     chunks = chunks_coherency(chunks)

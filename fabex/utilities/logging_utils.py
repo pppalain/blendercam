@@ -4,6 +4,25 @@ from datetime import datetime
 import logging
 from pathlib import Path
 
+LOG_WIDTH = 60
+
+
+class ConsoleFormatter(logging.Formatter):
+    def format(self, record):
+        if ":" in str(record.msg):
+            record.msg = record.msg.split(":")
+            record.msg = f"{record.msg[0]:>28}:{record.msg[1]:<30}"
+        return super(ConsoleFormatter, self).format(record)
+
+
+def heading(text):
+    border = int((LOG_WIDTH - len(text) - 4) / 2) * "~"
+    text = f"\n[{border} {text} {border}]"
+    if len(text) == 60:
+        text = text.replace("~]", "~~]")
+    return text
+
+
 current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
 
 log = logging.getLogger("fabex_logger")
@@ -36,7 +55,7 @@ error_formatter = logging.Formatter(
     "%(asctime)s | %(levelname)s: %(message)s | File '%(pathname)s', line %(lineno)d in %(funcName)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
-console_formatter = logging.Formatter(
+console_formatter = ConsoleFormatter(
     "%(message)s",
 )
 

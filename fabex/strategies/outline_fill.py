@@ -7,7 +7,7 @@ from ..utilities.chunk_utils import (
     sample_chunks,
     sort_chunks,
 )
-from ..utilities.logging_utils import log
+from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import (
     get_layers,
     get_move_and_spin,
@@ -19,7 +19,7 @@ from ..utilities.simple_utils import progress
 
 
 async def outline_fill(o):
-    log.info("~ Strategy: Outline Fill ~")
+    log.info(heading("Strategy: Outline Fill"))
 
     get_operation_silhouette(o)
 
@@ -61,7 +61,8 @@ async def outline_fill(o):
                 lastchunks = nchunks
 
             percent = int(i / approxn * 100)
-            progress("Outlining Polygons ", percent)
+            log.info(f"Outlining Polygons: {percent}")
+            # progress("Outlining Polygons ", percent)
             i += 1
 
     pathchunks.reverse()
@@ -113,7 +114,7 @@ async def outline_fill(o):
 
     log.info(f"Sampling Object: {o.name}")
     chunks.extend(await sample_chunks(o, pathSamples, layers))
-    log.info("Sampling Finished Successfully")
+    log.info("Sampling: Finished Successfully")
 
     log.info("Sorting")
     chunks = await sort_chunks(chunks, o)

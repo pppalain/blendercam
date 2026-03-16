@@ -43,7 +43,7 @@ from .image_utils import (
     prepare_area,
 )
 from .internal_utils import _optimize_internal
-from .logging_utils import log
+from .logging_utils import log, heading
 from .ocl_utils import (
     oclSample,
     oclResampleChunks,
@@ -422,7 +422,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
     t = time.time()
     totlen = 0  # total length of all chunks, to estimate sampling time.
 
-    log.info("~ Sampling Paths ~")
+    log.info(heading("Sampling Paths"))
 
     for chs in pathSamples:
         totlen += len(chs.startpoints)
@@ -619,7 +619,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
 
         lastrunchunks = thisrunchunks
 
-    progress("~ Checking Relations Between Paths ~")
+    progress(heading("Checking Relations Between Paths"))
     """#this algorithm should also work for n-axis, but now is "sleeping"
     if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
         if len(layers)>1:# sorting help so that upper layers go first always
@@ -777,7 +777,7 @@ async def sample_chunks(o, pathSamples, layers):
         zinvert = ob.location.z + maxz  # ob.bound_box[6][2]
 
     log.info(f"Total Sample Points: {totlen}")
-    log.info("-")
+    # log.info("-")
 
     n = 0
     last_percent = -1
@@ -948,7 +948,7 @@ async def sample_chunks(o, pathSamples, layers):
 
         lastrunchunks = thisrunchunks
 
-    progress("~ Checking Relations Between Paths ~")
+    progress(heading("Checking Relations Between Paths"))
     timing_start(sortingtime)
 
     if o.strategy == "PARALLEL" or o.strategy == "CROSS" or o.strategy == "OUTLINEFILL":
@@ -980,7 +980,7 @@ async def sample_chunks(o, pathSamples, layers):
     log.info(f"Sampling Time: {samplingtime[0]}")
     log.info(f"Sorting Time: {sortingtime[0]}")
     log.info(f"Total Time: {totaltime[0]}")
-    log.info("-")
+    # log.info("-")
 
     return chunks
 
@@ -1086,7 +1086,7 @@ async def sort_chunks(chunks, o, last_pos=None):
         list: A sorted list of chunk objects.
     """
 
-    log.info("-")
+    # log.info("-")
 
     if o.strategy != "WATERLINE":
         await progress_async("Sorting Paths")
@@ -1219,8 +1219,7 @@ def chunks_to_mesh(chunks, o):
                     array_chunks.append(chunk)
         chunks = array_chunks
 
-    log.info("-")
-    progress("~ Building Paths from Chunks ~")
+    log.info(heading("Building Paths from Chunks"))
     e = 0.0001
     lifted = True
 
@@ -1316,7 +1315,7 @@ def chunks_to_mesh(chunks, o):
             shapek.data[i].co = co
 
     log.info(f"Path Object Generation Time: {time.time() - t}")
-    log.info("-")
+    # log.info("-")
 
     ob.location = (0, 0, 0)
     ob.color = scene.cam_machine.path_color
