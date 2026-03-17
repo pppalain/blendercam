@@ -159,7 +159,7 @@ jobs:
       run: |
         export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
         export PATH=$PATH:${BLENDER_BIN_PATH}
-        blender --command extension build --source-dir=./fabex --split-platforms --output-filepath={id}-{version}-blender-${{matrix.blender_version}}
+        blender --command extension build --source-dir=./fabex --split-platforms --output-filepath={id}-{version}-blender-${{matrix.blender_version}}.zip
 
     # Upload the Linux Extension file for download
     - name: Upload Linux Build
