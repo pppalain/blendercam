@@ -85,15 +85,6 @@ jobs:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
 
-    # Build the Extension using Blender
-    - name: Build Extension
-      id: build
-      shell: bash
-      run: |
-        export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
-        export PATH=$PATH:${BLENDER_BIN_PATH}
-        blender --command extension build --source-dir=./fabex --split-platforms
-
     - name: Bump version
       shell: python
       env:
@@ -146,6 +137,28 @@ jobs:
         env_file.write_text(f"VERSION_TAG={major}.{minor}.{patch}")
 
         print(f"New version: {major}.{minor}.{patch}")
+
+    # Build the Extension using Blender
+    - name: Build Extension
+      id: build
+      shell: bash
+      run: |
+        export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
+        export PATH=$PATH:${BLENDER_BIN_PATH}
+        blender --command extension build --source-dir=./fabex --split-platforms
+
+    - name: Write version number
+      if: ${{ inputs.version_bump }} != "overwrite previous tag"
+      run: |
+        git config --global user.name 'Release robot'
+        git config --global user.email 'release-robot@users.noreply.github.com'
+        git commit -am "Version number" || true
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
 
     # Upload the Linux Extension file for download
     - name: Upload Linux Build
