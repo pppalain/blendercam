@@ -145,7 +145,7 @@ jobs:
       run: |
         export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
         export PATH=$PATH:${BLENDER_BIN_PATH}
-        blender --command extension build --source-dir=./fabex --split-platforms
+        blender --command extension build --source-dir=./fabex --split-platforms --output-filepath={id}-{version}-${{matrix.blender_version}}
 
     - name: Write version number
       if: ${{ inputs.version_bump }} != "overwrite previous tag"
@@ -165,32 +165,32 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: fabex-${{ env.VERSION_TAG }}-${{ env.OS }}_${{env.ARCH}}
-        path: ./fabex-${{ env.VERSION_TAG }}-${{ env.OS }}_${{env.ARCH}}.zip
+        name: fabex-${{ env.VERSION_TAG }}-${{matrix.blender_version}}-${{ env.OS }}_${{env.ARCH}}
+        path: ./fabex-${{ env.VERSION_TAG }}-${{matrix.blender_version}}-${{ env.OS }}_${{env.ARCH}}.zip
 
     # Upload the Windows Extension file for download
     - name: Upload Windows Build
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: fabex-${{ env.VERSION_TAG }}-windows_x64
-        path: ./fabex-${{ env.VERSION_TAG }}-windows_x64.zip
+        name: fabex-${{ env.VERSION_TAG }}-${{matrix.blender_version}}-windows_x64
+        path: ./fabex-${{ env.VERSION_TAG }}-${{matrix.blender_version}}-windows_x64.zip
 
     # Upload the Mac x64 Extension file for download
     - name: Upload Mac x86 Build
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: fabex-${{ env.VERSION_TAG }}-macos_x64
-        path: ./fabex-${{ env.VERSION_TAG }}-macos_x64.zip
+        name: fabex-${{ env.VERSION_TAG }}-${{matrix.blender_version}}-macos_x64
+        path: ./fabex-${{ env.VERSION_TAG }}-${{matrix.blender_version}}-macos_x64.zip
 
     # Upload the Mac ARM Extension file for download
     - name: Upload Mac ARM Build
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: fabex-${{ env.VERSION_TAG }}-macos_arm64
-        path: ./fabex-${{ env.VERSION_TAG }}-macos_arm64.zip
+        name: fabex-${{ env.VERSION_TAG }}-${{matrix.blender_version}}-macos_arm64
+        path: ./fabex-${{ env.VERSION_TAG }}-${{matrix.blender_version}}-macos_arm64.zip
 
     - name: make release
       uses: ncipollo/release-action@v1
