@@ -1,5 +1,6 @@
 name: Build Split Platform Extension
 on:
+  push:
   workflow_dispatch:
     inputs:
         version_bump:
@@ -34,56 +35,6 @@ jobs:
     # - name: Install blender (macOS)
     #   if: runner.os == 'macOS'
     #   run: brew install --cask blender
-    
-    # Check for a cached version of Blender
-    # Skips Download and Install if the Blender version is unchanged
-    - name: Cache blender
-      id: cache-blender
-      if: runner.os != 'macOS'
-      uses:  actions/cache/restore@v4
-      with:
-        path: blender
-        key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
-
-    # Download Blender for initial run, or when Blender version
-    # is updated
-    - name: Download blender
-      id: download
-      if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
-      shell: bash
-      run: |
-        declare -A os_suffixes
-        os_suffixes["ubuntu-latest"]="linux-x64.tar.xz"
-        os_suffixes["macos-latest"]="macos-x64.dmg"
-        os_suffixes["windows-latest"]="windows-x64.zip"
-        export OS_SUFFIX=${os_suffixes["${{ matrix.os }}"]}
-        IFS='.' read -ra BLENDER_SPLIT <<< "${{ matrix.blender_version }}"
-        export BLENDER_MAJOR=${BLENDER_SPLIT[0]}.${BLENDER_SPLIT[1]}
-        export BLENDER_MINOR=${BLENDER_SPLIT[2]}
-        export BLENDER_ARCHIVE="blender-${BLENDER_MAJOR}.${BLENDER_MINOR}-${OS_SUFFIX}"
-        echo Major version: $BLENDER_MAJOR
-        echo Minor version: $BLENDER_MINOR
-        echo Archive name: $BLENDER_ARCHIVE
-        curl -O -L https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
-        echo "BLENDER_ARCHIVE=${BLENDER_ARCHIVE}" >> "$GITHUB_OUTPUT"
-
-    # Extract the downloaded Blender archive
-    - name: Extract blender
-      if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
-      run: |
-        import shutil
-        import os
-        os.makedirs("blender",exist_ok=True)
-        shutil.unpack_archive("${{ steps.download.outputs.BLENDER_ARCHIVE }}","blender")
-      shell: python
-
-    # Save this Blender version to the cache for re-use
-    - name: Save blender
-      uses:  actions/cache/save@v4
-      if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
-      with:
-        path: blender
-        key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
 
     - name: Bump version
       shell: python
@@ -150,6 +101,56 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
+    
+    # Check for a cached version of Blender
+    # Skips Download and Install if the Blender version is unchanged
+    - name: Cache blender
+      id: cache-blender
+      if: runner.os != 'macOS'
+      uses:  actions/cache/restore@v4
+      with:
+        path: blender
+        key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
+
+    # Download Blender for initial run, or when Blender version
+    # is updated
+    - name: Download blender
+      id: download
+      if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
+      shell: bash
+      run: |
+        declare -A os_suffixes
+        os_suffixes["ubuntu-latest"]="linux-x64.tar.xz"
+        os_suffixes["macos-latest"]="macos-x64.dmg"
+        os_suffixes["windows-latest"]="windows-x64.zip"
+        export OS_SUFFIX=${os_suffixes["${{ matrix.os }}"]}
+        IFS='.' read -ra BLENDER_SPLIT <<< "${{ matrix.blender_version }}"
+        export BLENDER_MAJOR=${BLENDER_SPLIT[0]}.${BLENDER_SPLIT[1]}
+        export BLENDER_MINOR=${BLENDER_SPLIT[2]}
+        export BLENDER_ARCHIVE="blender-${BLENDER_MAJOR}.${BLENDER_MINOR}-${OS_SUFFIX}"
+        echo Major version: $BLENDER_MAJOR
+        echo Minor version: $BLENDER_MINOR
+        echo Archive name: $BLENDER_ARCHIVE
+        curl -O -L https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
+        echo "BLENDER_ARCHIVE=${BLENDER_ARCHIVE}" >> "$GITHUB_OUTPUT"
+
+    # Extract the downloaded Blender archive
+    - name: Extract blender
+      if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
+      run: |
+        import shutil
+        import os
+        os.makedirs("blender",exist_ok=True)
+        shutil.unpack_archive("${{ steps.download.outputs.BLENDER_ARCHIVE }}","blender")
+      shell: python
+
+    # Save this Blender version to the cache for re-use
+    - name: Save blender
+      uses:  actions/cache/save@v4
+      if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
+      with:
+        path: blender
+        key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
 
     # Build the Extension using Blender
     - name: Build Extension
