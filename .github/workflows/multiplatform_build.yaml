@@ -1,6 +1,5 @@
 name: Build Split Platform Extension
 on:
-  push:
   workflow_dispatch:
     inputs:
         version_bump:
