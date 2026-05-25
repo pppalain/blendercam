@@ -273,10 +273,9 @@ class CamPathChunk:
 
     def dedupe_points(self):
         if len(self.points) > 1:
-            # Fix from vukhanhtrung
             diffs = np.sum((self.points[1:] - self.points[:-1]) ** 2, axis=1)
             keep_points = np.ones(len(self.points), dtype=bool)
-            keep_points[1:] = diffs > 1e-9
+            keep_points[1:] = diffs > 1e-12
 
             self.points = self.points[keep_points, :]
 
