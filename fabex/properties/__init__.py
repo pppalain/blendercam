@@ -60,7 +60,7 @@ from .preset_props import (
     update_user_operation,
 )
 
-from ..utilities.operation_utils import update_operation
+from ..utilities.operation_utils import update_operation, update_active_operation
 
 
 classes = [
@@ -91,7 +91,7 @@ def register():
     scene.cam_active_operation = IntProperty(
         name="CAM Active Operation",
         description="The selected operation",
-        update=update_operation,
+        update=update_active_operation,
     )
     scene.cam_chains = CollectionProperty(
         type=CAM_CHAIN_Properties,
