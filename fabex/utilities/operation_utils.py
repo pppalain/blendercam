@@ -151,57 +151,51 @@ def reload_paths(o):
         bpy.data.meshes.remove(old_pathmesh)
 
 
-def update_operation(self, context):
-    """Update the visibility and selection state of CAM operations in the
-    scene.
+def update_active_operation(self, context):
+    """Update the visibility and selection state for the active CAM operation.
 
-    This method manages the visibility of objects associated with CAM
-    operations based on the current active operation. If the
-    'hide_all_others' flag is set to true, it hides all other objects except
-    for the currently active one. If the flag is false, it restores the
-    visibility of previously hidden objects. The method also attempts to
-    highlight the currently active object in the 3D view and make it the
-    active object in the scene.
+    This method highlights the generated CAM path object associated with the
+    currently active operation when the active operation changes.
 
     Args:
-        context (bpy.types.Context): The context containing the current scene and
+        context (bpy.types.Context): The context containing the current scene.
     """
 
     scene = context.scene
+    if len(scene.cam_operations) == 0:
+        return
+
     ao = scene.cam_operations[scene.cam_active_operation]
     operation_valid(self, context)
 
+    current_path_name = ao.path_object_name or scene.cam_names.path_name_full
+    current_path_obj = bpy.data.objects.get(current_path_name)
+
     if ao.hide_all_others:
         for _ao in scene.cam_operations:
-            if _ao.path_object_name in bpy.data.objects:
-                other_obj = bpy.data.objects[_ao.path_object_name]
-                current_obj = bpy.data.objects[ao.path_object_name]
-                if other_obj != current_obj:
-                    other_obj.hide_set(True)
-                    other_obj.select_set(False)
+            other_path_name = _ao.path_object_name or scene.cam_names.path_name_full
+            if other_path_name in bpy.data.objects and other_path_name != current_path_name:
+                other_obj = bpy.data.objects[other_path_name]
+                other_obj.hide_set(True)
+                other_obj.select_set(False)
     else:
-        for path_obj_name in was_hidden_dict:
-            log.info(was_hidden_dict)
-            if was_hidden_dict[path_obj_name]:
-                # Find object and make it hidde, then reset 'hidden' flag
+        for path_obj_name, was_hidden in list(was_hidden_dict.items()):
+            if was_hidden and path_obj_name in bpy.data.objects:
                 obj = bpy.data.objects[path_obj_name]
                 obj.hide_set(True)
                 obj.select_set(False)
                 was_hidden_dict[path_obj_name] = False
 
-    # try highlighting the object in the 3d view and make it active
+    if current_path_obj is None:
+        return
+
+    # Highlight the generated path object for the selected operation
     bpy.ops.object.select_all(action="DESELECT")
-    # highlight the cutting path if it exists
-    try:
-        ob = bpy.data.objects[ao.path_object_name]
-        ob.select_set(state=True, view_layer=None)
-        # Show object if, it's was hidden
-        if ob.hide_get():
-            ob.hide_set(False)
-            was_hidden_dict[ao.path_object_name] = True
-        bpy.context.view_layer.objects.active = ob
-    except Exception as e:
-        log.error(e)
+    if current_path_obj.hide_get():
+        current_path_obj.hide_set(False)
+        was_hidden_dict[current_path_name] = True
+    current_path_obj.select_set(True)
+    context.view_layer.objects.active = current_path_obj
 
 
 def source_valid(o, context):

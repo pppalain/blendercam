@@ -199,8 +199,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
             row = col.row()
             row.use_property_split = False
             row.prop(self.op, "inverse")
+            col.prop(self.op, "skin")
             if self.op.strategy in ["PARALLEL", "CROSS"]:
-                col.prop(self.op, "skin")
                 col.prop(self.op, "parallel_angle")
             box = col.box()
             col = box.column(align=True)
