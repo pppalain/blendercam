@@ -1235,7 +1235,7 @@ class CamCurveDrawer(Operator):
         name="Finger Inset",
         default=0.0,
         min=0.0,
-        max=0.01,
+        max=0.04,
         precision=4,
         unit="LENGTH",
     )
