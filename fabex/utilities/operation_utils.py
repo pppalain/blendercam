@@ -522,7 +522,7 @@ def get_chain_operations(chain):
     #             chop.append(so)\
 
     operations = bpy.context.scene.cam_operations
-    chop = [so for so in operations for cho in chain.operations if so.name == cho.name]
+    chop = [so for cho in chain.operations for so in operations if so.name == cho.name]
     return chop
 
 
