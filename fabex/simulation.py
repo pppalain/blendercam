@@ -22,7 +22,7 @@ from .exception import CamException
 from .utilities.async_utils import progress_async
 from .utilities.bounds_utils import get_bounds_multiple
 from .utilities.image_utils import numpy_save
-from .utilities.logging_utils import log
+from .utilities.logging_utils import log ,heading
 from .utilities.operation_utils import (
     get_operation_sources,
     get_cutter_array,

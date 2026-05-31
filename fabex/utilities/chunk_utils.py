@@ -1023,6 +1023,9 @@ async def connect_chunks_low(chunks, o):
 
     if o.movement.merge_distance > 0:
         mergedist = o.movement.merge_distance
+
+    if mergedist > o.cutter_diameter:
+        mergedist = o.cutter_diameter
     # mergedist=10
     lastch = None
     i = len(chunks)
