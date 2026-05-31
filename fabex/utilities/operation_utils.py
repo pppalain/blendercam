@@ -704,7 +704,7 @@ def get_cutter_array(operation, pixsize):
                 v.y = (b + 0.5 - m) * ps
 
                 if v.length <= r:
-                    car[[a, b]] = 0
+                    car[a, b] = 0
                     # car.itemset((a, b), 0)
 
     elif cutter_type in ["BALL", "BALLNOSE"]:
@@ -716,7 +716,7 @@ def get_cutter_array(operation, pixsize):
 
                 if v.length <= r:
                     z = sin(acos(v.length / r)) * r - r
-                    car[[a, b]] = z
+                    car[a, b] = z
                     # car.itemset((a, b), z)  # [a,b]=z
 
     elif cutter_type == "VCARVE":
@@ -731,7 +731,7 @@ def get_cutter_array(operation, pixsize):
 
                 if v.length <= r:
                     z = -v.length * s
-                    car[[a, b]] = z
+                    car[a, b] = z
                     # car.itemset((a, b), z)
 
     elif cutter_type == "CYLCONE":
@@ -751,7 +751,7 @@ def get_cutter_array(operation, pixsize):
                     if v.length <= cyl_r:
                         z = 0
 
-                    car[[a, b]] = z
+                    car[a, b] = z
                     # car.itemset((a, b), z)
 
     elif cutter_type == "BALLCONE":
@@ -775,7 +775,7 @@ def get_cutter_array(operation, pixsize):
                     if v.length <= ball_r:
                         z = sin(acos(v.length / Ball_R)) * Ball_R - Ball_R
 
-                    car[[a, b]] = z
+                    car[a, b] = z
                     # car.itemset((a, b), z)
 
     elif cutter_type == "CUSTOM":
@@ -803,7 +803,7 @@ def get_cutter_array(operation, pixsize):
                         if z > maxz:
                             maxz = z
 
-                        car[[a, b]] = z
+                        car[a, b] = z
                         # car.itemset((a, b), z)
 
         car -= maxz
