@@ -174,11 +174,18 @@ def get_strategy_list(scene, context):
             4,
         ),
         (
+            "PENCIL",
+            "Pencil",
+            "Pencil path",
+            "GREASEPENCIL",
+            5,
+        ),
+        (
             "BLOCK",
             "Block",
             "Block path",
             fabex_icons["BlockIcon"].icon_id,  # "META_PLANE",
-            5,
+            6,
         ),
         (
             "SPIRAL",

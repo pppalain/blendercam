@@ -316,8 +316,7 @@ def chunks_coherency(chunks):
                 lastvec = vec
 
             if len(nchunk.points) > 4:  # this is a testing threshold
-                nchunk.points = np.array(nchunk.points)
-                nchunks.append(nchunk)
+                nchunks.append(nchunk.to_chunk())
 
     return nchunks
 

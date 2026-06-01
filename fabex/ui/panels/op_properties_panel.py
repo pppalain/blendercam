@@ -202,6 +202,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
             col.prop(self.op, "skin")
             if self.op.strategy in ["PARALLEL", "CROSS"]:
                 col.prop(self.op, "parallel_angle")
+            if self.op.strategy == "PENCIL":
+                col.prop(self.op, "pencil_threshold", text="Pencil Threshold")
             box = col.box()
             col = box.column(align=True)
             col.label(text="Toolpath")
