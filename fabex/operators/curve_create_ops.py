@@ -116,7 +116,6 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape, join, ob
     else:
         bpy.ops.object.curve_remove_doubles()
 
-    bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="MEDIAN")
     depth = ob.location[2]
     shapes = curve_to_shapely(ob)
 
@@ -248,8 +247,9 @@ class CamCurveHatch(Operator):
             join = 1
         ob = context.active_object
         obname = ob.name
+        crosshatch_prefix = f"{obname}_crosshatch"
         ob.select_set(True)
-        remove_multiple("crosshatch")
+        remove_multiple(crosshatch_prefix)
         depth = ob.location[2]
         xingOffset = self.offset
 
@@ -263,7 +263,7 @@ class CamCurveHatch(Operator):
             self.pocket_shape,
             join,
         )
-        shapely_to_curve("crosshatch_lines", xing, depth)
+        shapely_to_curve(f"{crosshatch_prefix}_lines", xing, depth)
 
         if self.xhatch:
             make_active(obname)
@@ -275,24 +275,24 @@ class CamCurveHatch(Operator):
                 self.pocket_shape,
                 join,
             )
-            shapely_to_curve("crosshatch_lines_ra", xingra, depth)
+            shapely_to_curve(f"{crosshatch_prefix}_lines_ra", xingra, depth)
 
         bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="MEDIAN")
-        join_multiple("crosshatch")
+        join_multiple(crosshatch_prefix)
         if self.contour:
             deselect()
             bpy.context.view_layer.objects.active = ob
             ob.select_set(True)
             bpy.ops.object.silhouette_offset(offset=self.offset)
             if self.contour_separate:
-                active_name("contour_hatch")
+                active_name(f"{obname}_contour_hatch")
                 deselect()
             else:
-                active_name("crosshatch_contour")
-                join_multiple("crosshatch")
+                active_name(f"{obname}_crosshatch_contour")
+                join_multiple(crosshatch_prefix)
                 remove_doubles()
         else:
-            join_multiple("crosshatch")
+            join_multiple(crosshatch_prefix)
             remove_doubles()
         return {"FINISHED"}
 
