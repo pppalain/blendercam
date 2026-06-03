@@ -26,7 +26,7 @@ async def pencil(o):
 
     pathSamples = get_offset_image_cavities(o, o.offset_image)
     pathSamples = limit_chunks(pathSamples, o)
-    # sort before sampling
+    # sort before sampling to keep pencil path chunks in a coherent spatial order
     pathSamples = await sort_chunks(pathSamples, o)
 
     chunks = []
@@ -39,8 +39,8 @@ async def pencil(o):
     log.info("Coherency Check")
     chunks = chunks_coherency(chunks)
 
-    log.info("Status: Sorting")
-    chunks = await sort_chunks(chunks, o)
+    log.info("Status: Connecting Low Paths")
+    chunks = await connect_chunks_low(chunks, o)
 
     if o.movement.ramp:
         for ch in chunks:
