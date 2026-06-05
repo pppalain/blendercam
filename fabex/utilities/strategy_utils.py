@@ -173,6 +173,13 @@ def get_strategy_list(scene, context):
             fabex_icons["CrossIcon"].icon_id,  #  "ADD",
             4,
         ),
+        # (
+        #     "PENCIL",
+        #     "Pencil",
+        #     "Pencil path",
+        #     "GREASEPENCIL",
+        #     5,
+        # ),
         (
             "BLOCK",
             "Block",
