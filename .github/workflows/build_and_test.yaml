@@ -87,7 +87,7 @@ jobs:
         fi
         export ADDON_PATH=${PWD}/blendercam.zip
         cd fabex/tests
-        # python install_addon.py ${ADDON_PATH}
+        python install_addon.py ${ADDON_PATH}
         # python __init__.py -vvv
         blender --background --factory-startup  --python __init__.py
 
