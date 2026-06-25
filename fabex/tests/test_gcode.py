@@ -58,7 +58,8 @@ class FabexGcodeTest(unittest.TestCase):
         command = f'blender -noaudio -b "{blend_file}" -P "{self.generator_path}"'
         # print(f"Executing: {command}")
         # subprocess.run(command, shell=True, check=True)
-        blender = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
+        # blender = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
+        blender = "blender"
         subprocess.run(
             [
                 blender,
@@ -69,8 +70,8 @@ class FabexGcodeTest(unittest.TestCase):
             ],
             shell=True,
             check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
+            # stdout=subprocess.PIPE,
+            # stderr=subprocess.STDOUT,
         )
 
     def run_test_case(self, test_case):
@@ -105,25 +106,25 @@ class FabexGcodeTest(unittest.TestCase):
                         msg="\n" + self.get_diff(gcode_file[1:], gcode_file),
                     )
 
-                # os.remove(gcode_file[1:])  # cleanup generated file unless test fails
+                os.remove(gcode_file[1:])  # cleanup generated file unless test fails
 
-    def test_gcode(self):
-        # Add a test method for each test case to the TestCase class
-        for test_case in self.get_test_cases():
+    # def test_gcode(self):
+    #     # Add a test method for each test case to the TestCase class
+    #     for test_case in self.get_test_cases():
 
-            def test_func(self, tc=test_case):
-                return self.run_test_case(tc)
+    #         def test_func(self, tc=test_case):
+    #             return self.run_test_case(tc)
 
-            setattr(self, f'test_{test_case["subdir_name"]}', test_func)
+    #         setattr(self, f'test_{test_case["subdir_name"]}', test_func)
 
 
-# if __name__ == "__main__":
-#     # # Add a test method for each test case to the TestCase class
-#     for test_case in FabexGcodeTest.get_test_cases():
+if __name__ == "__main__":
+    # # Add a test method for each test case to the TestCase class
+    for test_case in FabexGcodeTest.get_test_cases():
 
-#         def test_func(self, tc=test_case):
-#             return self.run_test_case(tc)
+        def test_func(self, tc=test_case):
+            return self.run_test_case(tc)
 
-#         setattr(FabexGcodeTest, f'test_{test_case["subdir_name"]}', test_func)
+        setattr(FabexGcodeTest, f'test_{test_case["subdir_name"]}', test_func)
 
-#     unittest.main(verbosity=2)
+    unittest.main()
