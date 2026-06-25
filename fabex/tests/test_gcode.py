@@ -3,11 +3,11 @@ import os
 import subprocess
 import sys
 import unittest
+from pathlib import Path
 
-# from ..utilities.logging_utils import log
 
-
-class FabexTest(unittest.TestCase):
+# @unittest.skip("Old Gcode Test")
+class FabexGcodeTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.original_dir = os.getcwd()
@@ -56,13 +56,26 @@ class FabexTest(unittest.TestCase):
 
     def execute_blender(self, blend_file):
         command = f'blender -noaudio -b "{blend_file}" -P "{self.generator_path}"'
-        print(f"Executing: {command}")
-        subprocess.run(command, shell=True, check=True)
+        # print(f"Executing: {command}")
+        # subprocess.run(command, shell=True, check=True)
+        blender = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
+        subprocess.run(
+            [
+                blender,
+                "-b",
+                blend_file,
+                "-P",
+                self.generator_path,
+            ],
+            shell=True,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
 
     def run_test_case(self, test_case):
         # Start in the original working directory
         os.chdir(self.original_dir)
-
         blend_dir = os.path.join("test_data", test_case["subdir_name"])
         os.chdir(blend_dir)
         self.execute_blender(test_case["blend_file"])
@@ -72,6 +85,7 @@ class FabexTest(unittest.TestCase):
             with self.subTest(operation=f"{test_case['subdir_name']}//{gcode_file}"):
                 generated = self.get_gcode_from_file(gcode_file[1:])
                 expected = self.get_gcode_from_file(gcode_file)
+
                 if sys.platform == "darwin" and os.path.exists(gcode_file + ".mac"):
                     # bullet physics gives slightly different results on mac sometimes...
                     # this is something we can't fix, so compare against mac generated test
@@ -83,22 +97,33 @@ class FabexTest(unittest.TestCase):
                         expected,
                         msg="\n" + self.get_diff(gcode_file[1:], gcode_file + ".mac"),
                     )
+
                 else:
                     self.assertMultiLineEqual(
                         generated,
                         expected,
                         msg="\n" + self.get_diff(gcode_file[1:], gcode_file),
                     )
-                os.remove(gcode_file[1:])  # cleanup generated file unless test fails
+
+                # os.remove(gcode_file[1:])  # cleanup generated file unless test fails
+
+    def test_gcode(self):
+        # Add a test method for each test case to the TestCase class
+        for test_case in self.get_test_cases():
+
+            def test_func(self, tc=test_case):
+                return self.run_test_case(tc)
+
+            setattr(self, f'test_{test_case["subdir_name"]}', test_func)
 
 
-if __name__ == "__main__":
-    # Add a test method for each test case to the TestCase class
-    for test_case in FabexTest.get_test_cases():
+# if __name__ == "__main__":
+#     # # Add a test method for each test case to the TestCase class
+#     for test_case in FabexGcodeTest.get_test_cases():
 
-        def test_func(self, tc=test_case):
-            return self.run_test_case(tc)
+#         def test_func(self, tc=test_case):
+#             return self.run_test_case(tc)
 
-        setattr(FabexTest, f'test_{test_case["subdir_name"]}', test_func)
+#         setattr(FabexGcodeTest, f'test_{test_case["subdir_name"]}', test_func)
 
-    unittest.main()
+#     unittest.main(verbosity=2)

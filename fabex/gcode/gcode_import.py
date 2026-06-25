@@ -416,27 +416,19 @@ class GcodeParser:
     def parse_args(self, args):
         """Parse command-line arguments into a dictionary.
 
-
         This function takes a string of arguments, splits it into individual
-
         components, and maps each component's first character to its
-
         corresponding numeric value. If a numeric value cannot be converted from
-
         the string, it defaults to 1. The resulting dictionary contains the
-
         first characters as keys and their associated numeric values as values.
 
 
         Args:
-
             args (str): A string of space-separated arguments, where each argument
-
                 consists of a letter followed by a numeric value.
 
 
         Returns:
-
             dict: A dictionary mapping each letter to its corresponding numeric value.
         """
 

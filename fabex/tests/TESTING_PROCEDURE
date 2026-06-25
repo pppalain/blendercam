@@ -1,10 +1,8 @@
-
 1. Running the tests
 
 > python test-suite.py
 
 The script will go through each blend file, generate GCode for all operations and compare the results with the reference.
-
 
 2. Creating new tests
 
@@ -26,5 +24,3 @@ become the reference result files.
 - Save the blender file
 
 - Commit and push
-
-
