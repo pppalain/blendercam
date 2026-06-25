@@ -86,7 +86,7 @@ jobs:
           export PATH=$PATH:${BLENDER_BIN_PATH}
         fi
         export ADDON_PATH=${PWD}/blendercam.zip
-        cd tests
+        cd fabex/tests
         python install_addon.py ${ADDON_PATH}
         python test_gcode.py -vvv
 
