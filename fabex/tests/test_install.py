@@ -10,7 +10,7 @@ class FabexDependencyTest(unittest.TestCase):
     """
 
     def setUp(self):
-        subprocess.run("blender")
+        subprocess.run(["blender", "--background"])
         import bpy
 
         bpy.context.preferences.system.use_online_access = True
