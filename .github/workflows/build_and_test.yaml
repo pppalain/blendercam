@@ -89,7 +89,7 @@ jobs:
         # cd fabex/tests
         # python install_addon.py ${ADDON_PATH}
         # python __init__.py -vvv
-        blender --background --factory-startup  --python /path/to/this/__init__.py
+        blender --background --factory-startup  --python __init__.py
 
     - uses: actions/upload-artifact@v4
       if: always()
