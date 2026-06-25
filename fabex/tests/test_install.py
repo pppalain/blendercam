@@ -1,4 +1,5 @@
 import unittest
+import subprocess
 from pathlib import Path
 
 
@@ -9,6 +10,7 @@ class FabexDependencyTest(unittest.TestCase):
     """
 
     def setUp(self):
+        subprocess.run("blender")
         import bpy
 
         bpy.context.preferences.system.use_online_access = True
