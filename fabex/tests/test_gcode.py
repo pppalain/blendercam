@@ -56,23 +56,23 @@ class FabexGcodeTest(unittest.TestCase):
 
     def execute_blender(self, blend_file):
         command = f'blender -noaudio -b "{blend_file}" -P "{self.generator_path}"'
-        # print(f"Executing: {command}")
-        # subprocess.run(command, shell=True, check=True)
+        print(f"Executing: {command}")
+        subprocess.run(command, shell=True, check=True)
         # blender = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
-        blender = "blender"
-        subprocess.run(
-            [
-                blender,
-                "-b",
-                blend_file,
-                "-P",
-                self.generator_path,
-            ],
-            shell=True,
-            check=True,
-            # stdout=subprocess.PIPE,
-            # stderr=subprocess.STDOUT,
-        )
+        # blender = "blender"
+        # subprocess.run(
+        #     [
+        #         blender,
+        #         "-b",
+        #         blend_file,
+        #         "-P",
+        #         self.generator_path,
+        #     ],
+        #     shell=True,
+        #     check=True,
+        #     # stdout=subprocess.PIPE,
+        #     # stderr=subprocess.STDOUT,
+        # )
 
     def run_test_case(self, test_case):
         # Start in the original working directory
