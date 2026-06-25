@@ -6,9 +6,10 @@ from pathlib import Path
 
 # Blender Executable
 # Use 'blender' if Blender is available on PATH
-blender = "blender"
+# blender = "blender"
+
 # Otherwise supply the path to the Blender executable
-# blender = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
+blender = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
 
 # To run the tests use the following command:
 # blender --background --factory-startup  --python /path/to/this/__init__.py
