@@ -1088,19 +1088,15 @@ async def sort_chunks(chunks, o, last_pos=None):
         list: A sorted list of chunk objects.
     """
 
-    # log.info("-")
-
     if o.strategy != "WATERLINE":
         await progress_async("Sorting Paths")
     # the getNext() function of CamPathChunk was running out of recursion limits.
     sys.setrecursionlimit(100000)
     sortedchunks = []
-    chunks_to_resample = []
 
     lastch = None
     last_progress_time = time.time()
     total = len(chunks)
-    i = len(chunks)
     stall_count = 0
     pos = (0, 0, 0) if last_pos is None else last_pos
 
@@ -1111,11 +1107,12 @@ async def sort_chunks(chunks, o, last_pos=None):
         if o.strategy != "WATERLINE" and time.time() - last_progress_time > 0.1:
             await progress_async("Sorting Paths", 100.0 * (total - len(chunks_remaining)) / total)
             last_progress_time = time.time()
+
         ch = None
         if len(sortedchunks) == 0 or len(lastch.parents) == 0:
             # first chunk or when there are no parents -> parents come after children here...
             ch = get_closest_chunk(o, pos, list(chunks_remaining))
-        elif len(lastch.parents) > 0:  # looks in parents for next candidate, recursively
+        else:  # looks in parents for next candidate, recursively
             for parent in lastch.parents:
                 ch = parent.get_next_closest(o, pos)
                 if ch is not None and ch in chunks_remaining:
@@ -1124,7 +1121,7 @@ async def sort_chunks(chunks, o, last_pos=None):
                 ch = get_closest_chunk(o, pos, list(chunks_remaining))
 
         if ch is not None:  # found next chunk, append it to list
-            # only adaptdist the chunk if it has not been sorted before
+            # only adapt the chunk's distance if it has not been sorted before
             if not ch.sorted:
                 ch.adapt_distance(pos, o)
                 ch.sorted = True
@@ -1142,8 +1139,6 @@ async def sort_chunks(chunks, o, last_pos=None):
                 )
                 sortedchunks.extend(chunks_remaining)
                 break
-
-        i -= 1
 
     if o.strategy == "POCKET" and o.pocket_option == "OUTSIDE":
         sortedchunks.reverse()
