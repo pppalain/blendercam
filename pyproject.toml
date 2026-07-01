@@ -5,8 +5,6 @@ description = "G-code Generation Tools"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    # bpy - for testing
-    "bpy>=5.1.2",
     # llvmlite
     "llvmlite ; platform_machine == 'arm64' and sys_platform == 'darwin'",
     "llvmlite ; platform_machine == 'aarch64' and sys_platform == 'linux'",
@@ -76,5 +74,14 @@ target-version = ['py313']
 include = '\.py'
 
 [tool.unittest]
-testpaths = ["fabex/tests"]
+discover = true
+start-directory = "./fabex/tests"
 pattern = "test*.py"
+top-level-directory = "./fabex"
+verbosity=2
+
+
+[dependency-groups]
+dev = [
+    "bpy>=5.1.2",
+]

@@ -28,9 +28,9 @@ def _get_preset_path(subdir):
     return paths[0] if paths else None
 
 
-##################
+#####################
 # Operation Presets #
-##################
+#####################
 operation_presets = []
 operation_preset_path = _get_preset_path("cam_operations")
 # operation_preset_path = bpy.utils.preset_paths("cam_operations")[0]

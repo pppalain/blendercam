@@ -1,3 +1,5 @@
+import sys
+
 # Blender Executable
 # Use 'blender' if Blender is available on PATH
 # blender = "blender"
@@ -17,6 +19,8 @@ bpy.ops.wm.read_homefile(app_template="")
 bpy.ops.script.reload()
 bpy.ops.wm.quit_blender()
 """
+
+NUM_RETRIES = 10
 
 # G-code Generator script, stripped down
 GCODE_SCRIPT = """import sys
