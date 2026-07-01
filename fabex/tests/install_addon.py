@@ -4,8 +4,8 @@ import subprocess
 import sys
 import tempfile
 
-from .constants import INSTALL_CODE, NUM_RETRIES, BLENDER as blender
-from .base import blender_command
+from ..tests.constants import INSTALL_CODE, NUM_RETRIES, BLENDER as blender
+from ..tests.base import blender_command
 
 # INSTALL_CODE = f"""
 # import bpy
