@@ -22,6 +22,9 @@ bpy.ops.wm.quit_blender()
 
 NUM_RETRIES = 10
 
+# file = Path("install_file.py").write_text(INSTALL_CODE)
+# command = [shutil.which("blender"), "-b", "-P", "install_file.py"]
+
 with tempfile.TemporaryDirectory() as td:
     file = pathlib.Path(td, "install.py")
     file.write_text(INSTALL_CODE)

@@ -58,21 +58,6 @@ class FabexGcodeTest(unittest.TestCase):
         command = f'blender -noaudio -b "{blend_file}" -P "{self.generator_path}"'
         print(f"Executing: {command}")
         subprocess.run(command, shell=True, check=True)
-        # blender = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
-        # blender = "blender"
-        # subprocess.run(
-        #     [
-        #         blender,
-        #         "-b",
-        #         blend_file,
-        #         "-P",
-        #         self.generator_path,
-        #     ],
-        #     shell=True,
-        #     check=True,
-        #     # stdout=subprocess.PIPE,
-        #     # stderr=subprocess.STDOUT,
-        # )
 
     def run_test_case(self, test_case):
         # Start in the original working directory
@@ -107,15 +92,6 @@ class FabexGcodeTest(unittest.TestCase):
                     )
 
                 os.remove(gcode_file[1:])  # cleanup generated file unless test fails
-
-    # def test_gcode(self):
-    #     # Add a test method for each test case to the TestCase class
-    #     for test_case in self.get_test_cases():
-
-    #         def test_func(self, tc=test_case):
-    #             return self.run_test_case(tc)
-
-    #         setattr(self, f'test_{test_case["subdir_name"]}', test_func)
 
 
 if __name__ == "__main__":

@@ -88,7 +88,7 @@ jobs:
         export ADDON_PATH=${PWD}/blendercam.zip
         cd fabex/tests
         python install_addon.py ${ADDON_PATH}
-        python test_gcode.py -vvv
+        python test_suite.py -vvv
 
     - uses: actions/upload-artifact@v4
       if: always()

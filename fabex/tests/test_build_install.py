@@ -10,44 +10,45 @@ class FabexDependencyTest(unittest.TestCase):
     """
 
     def setUp(self):
+
         import bpy
 
         bpy.context.preferences.system.use_online_access = True
         bpy.ops.extensions.repo_sync_all(use_active_only=False)
 
-        addons = bpy.context.preferences.addons
-        modules = [addon.module for addon in addons]
         dependencies = [
             "curve_tools",
             "simplify_curves_plus",
             "stl_format_legacy",
         ]
+
         for dependency in dependencies:
-            bpy.ops.extensions.package_install(repo_index=0, pkg_id=dependency)
+            try:
+                bpy.ops.preferences.addon_enable(module=f"bl_ext.blender_org.{dependency}")
+            except:
+                bpy.ops.extensions.package_install(repo_index=0, pkg_id=dependency)
+
+        addons = bpy.context.preferences.addons
+        self.modules = [addon.module for addon in addons]
 
     def test_curve_tools(self):
         """Check for Curve Tools addon"""
+
         import bpy
 
-        addons = bpy.context.preferences.addons
-        modules = [addon.module for addon in addons]
-        self.assertIn(f"bl_ext.blender_org.curve_tools", modules)
+        self.assertIn(f"bl_ext.blender_org.curve_tools", self.modules)
 
     def test_simplify_curves_plus(self):
         """Check for Simplify Curves Plus addon"""
         import bpy
 
-        addons = bpy.context.preferences.addons
-        modules = [addon.module for addon in addons]
-        self.assertIn(f"bl_ext.blender_org.simplify_curves_plus", modules)
+        self.assertIn(f"bl_ext.blender_org.simplify_curves_plus", self.modules)
 
     def test_stl_format_legacy(self):
         """Check for STL Format Legacy addon"""
         import bpy
 
-        addons = bpy.context.preferences.addons
-        modules = [addon.module for addon in addons]
-        self.assertIn(f"bl_ext.blender_org.stl_format_legacy", modules)
+        self.assertIn(f"bl_ext.blender_org.stl_format_legacy", self.modules)
 
 
 class FabexInstallTest(unittest.TestCase):
@@ -64,7 +65,7 @@ class FabexInstallTest(unittest.TestCase):
         path = str(Path(__file__).parent.parent.parent / f"fabex-{major}.{minor}.{patch}.zip")
         bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
 
-    def test_install(self):
+    def test_1_install(self):
         import bpy
 
         addons = bpy.context.preferences.addons
@@ -103,7 +104,7 @@ class FabexEnableTest(unittest.TestCase):
 
         bpy.ops.preferences.addon_enable(module="bl_ext.user_default.fabex")
 
-    def test_disable(self):
+    def test_enable(self):
         import bpy
 
         addons = bpy.context.preferences.addons
@@ -115,6 +116,7 @@ class FabexEngineTest(unittest.TestCase):
     """Test that the Fabex Engine is available in the Scene."""
 
     def setUp(self):
+
         import bpy
 
         # Set the Render Engine to Fabex
@@ -124,3 +126,32 @@ class FabexEngineTest(unittest.TestCase):
 
     def test_engine(self):
         self.assertTrue(self.engine == "FABEX_RENDER")
+
+
+class FabexAddOpTest(unittest.TestCase):
+    """Test that the Fabex Engine is available in the Scene."""
+
+    def setUp(self):
+        import bpy
+
+        version_file = Path(__file__).parent.parent / "version.py"
+        with open(version_file) as f:
+            lines = f.readlines()
+            version = lines[0].split("(")[1].replace(",", "")
+        major, minor, patch = version[0], version[1], version[2]
+        path = str(Path(__file__).parent.parent.parent / f"fabex-{major}.{minor}.{patch}.zip")
+        bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
+
+        scene = bpy.context.scene
+        scene.render.engine = "FABEX_RENDER"
+
+        bpy.context.view_layer.objects["Cube"].select_set(True)
+        bpy.ops.scene.cam_operation_add()
+
+    def test_path(self):
+        import bpy
+
+        scene = bpy.context.scene
+        operations = [operation.name for operation in scene.cam_operations]
+
+        self.assertIn("Op_Cube_1", operations)

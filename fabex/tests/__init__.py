@@ -1,20 +1,14 @@
-from pathlib import Path
 import unittest
-
-import subprocess
 from pathlib import Path
+import subprocess
 
-# Blender Executable
-# Use 'blender' if Blender is available on PATH
-# blender = "blender"
-# Otherwise supply the path to the Blender executable
 blender = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
-
-# To run the tests use the following command:
-# blender --background --factory-startup  --python /path/to/this/__init__.py
 
 
 def build_extension(blender):
+    # source_dir = str(Path(__file__).parent.parent / "fabex")
+    # output_dir = str(Path(__file__).parent.parent)
+
     source_dir = str(Path(__file__).parent.parent)
     output_dir = str(Path(__file__).parent.parent.parent)
 
@@ -41,12 +35,13 @@ if __name__ == "__main__":
 
     # Queue and run tests
     loader = unittest.TestLoader()
-    path = str(Path(__file__).parent)
+    loader.sortTestMethodsUsing
+    path = str(Path(__file__).parent.parent / "tests")
     suite = loader.discover(path)
-    runner = unittest.TextTestRunner()
+    runner = unittest.TextTestRunner(verbosity=2)
     runner.run(suite)
 
-    # quit Blender after running
-    import bpy
+    # # quit Blender after running
+    # import bpy
 
-    bpy.ops.wm.quit_blender()
+    # bpy.ops.wm.quit_blender()
