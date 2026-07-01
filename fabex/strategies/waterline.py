@@ -19,6 +19,7 @@ from ..utilities.logging_utils import log, heading
 from ..utilities.waterline_utils import oclGetWaterline
 from ..utilities.operation_utils import (
     get_ambient,
+    get_layers,
     get_move_and_spin,
 )
 from ..utilities.parent_utils import parent_child_distance
@@ -48,28 +49,38 @@ async def waterline(o):
         chunks = []
         await progress_async("Retrieving Object Slices")
         await prepare_area(o)
-        layerstep = 1000000000
 
         if o.use_layers:
-            layerstep = floor(o.stepdown / o.slice_detail)
-            if layerstep == 0:
-                layerstep = 1
+            macro_layers = get_layers(o, o.max_z, o.min_z)  # top-down: [[start, end], ...]
+            layer_boundaries = {round(layer_end, 6) for (_, layer_end) in macro_layers}
+
+            z_levels = []
+            for layer_start, layer_end in macro_layers:
+                n = max(1, ceil(round((layer_start - layer_end) / o.slice_detail, 6)))
+                for s in range(1, n + 1):
+                    zz = round(layer_start - s * o.slice_detail, 6)
+                    if zz <= layer_end or s == n:
+                        zz = round(layer_end, 6)  # clamp the final step exactly onto the boundary
+                    z_levels.append(zz)
+            z_levels = sorted(set(z_levels))
+        else:
+            layer_boundaries = set()
+            n_regular = ceil(abs((o.min_z - o.max_z) / o.slice_detail))
+            z_levels = sorted({round(o.min_z + h * o.slice_detail, 6) for h in range(n_regular)})
 
         # for projection of filled areas
         layerstart = o.max.z  #
         layerend = o.min.z  #
         layers = [[layerstart, layerend]]
-        nslices = ceil(abs((o.min_z - o.max_z) / o.slice_detail))
+        nslices = len(z_levels)
         lastslice = Polygon()  # polyversion
-        layerstepinc = 0
         slicesfilled = 0
         get_ambient(o)
 
-        for h in range(0, nslices):
-            layerstepinc += 1
+        for h, z_nominal in enumerate(z_levels):
             slicechunks = []
             # lower the layer by the skin value so the slice gets done at the tip of the tool
-            z = o.min_z + h * o.slice_detail - o.skin
+            z = z_nominal - o.skin
 
             if h == 0:
                 z += 0.0000001
@@ -143,16 +154,17 @@ async def waterline(o):
                         )
                         i += 1
 
-                i = 0
                 #  fill layers and last slice, last slice with inverse is not working yet
                 #  - inverse millings end now always on 0 so filling ambient does have no sense.
+
+                hit_boundary = z_nominal in layer_boundaries
+
                 if (
-                    (slicesfilled > 0 and layerstepinc == layerstep)
+                    (slicesfilled > 0 and hit_boundary)
                     or (not o.inverse and not poly.is_empty and slicesfilled == 1)
                     or (o.inverse and poly.is_empty and slicesfilled > 0)
                 ):
                     fillz = z
-                    layerstepinc = 0
                     bound_rectangle = o.ambient
                     restpoly = bound_rectangle.difference(poly)
 
