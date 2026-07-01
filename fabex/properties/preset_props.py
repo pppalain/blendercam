@@ -14,26 +14,26 @@ import bpy
 from ..utilities.logging_utils import log
 
 
-# def _get_preset_path(subdir):
-#     """Return the path to a preset subdirectory.
+def _get_preset_path(subdir):
+    """Return the path to a preset subdirectory.
 
-#     Checks the extension-local presets folder first (works in Blender 5.x
-#     extensions where bpy.utils.preset_paths() returns an empty list), then
-#     falls back to the traditional Blender preset paths.
-#     """
-#     local = Path(__file__).parent.parent / "presets" / subdir
-#     if local.is_dir():
-#         return str(local)
-#     paths = bpy.utils.preset_paths(subdir)
-#     return paths[0] if paths else None
+    Checks the extension-local presets folder first (works in Blender 5.x
+    extensions where bpy.utils.preset_paths() returns an empty list), then
+    falls back to the traditional Blender preset paths.
+    """
+    local = Path(__file__).parent.parent / "presets" / subdir
+    if local.is_dir():
+        return str(local)
+    paths = bpy.utils.preset_paths(subdir)
+    return paths[0] if paths else None
 
 
 ##################
 # Operation Presets #
 ##################
 operation_presets = []
-# _get_preset_path("cam_operations")
-operation_preset_path = bpy.utils.preset_paths("cam_operations")[0]
+operation_preset_path = _get_preset_path("cam_operations")
+# operation_preset_path = bpy.utils.preset_paths("cam_operations")[0]
 if operation_preset_path:
     operation_presets = sorted(listdir(operation_preset_path))
 
