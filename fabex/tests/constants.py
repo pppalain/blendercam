@@ -1,11 +1,5 @@
 import sys
 
-# Blender Executable
-# Use 'blender' if Blender is available on PATH
-# blender = "blender"
-# Otherwise supply the path to the Blender executable
-BLENDER = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
-
 INSTALL_CODE = f"""
 import bpy
 bpy.context.preferences.system.use_online_access = True

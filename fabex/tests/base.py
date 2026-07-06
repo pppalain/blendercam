@@ -1,8 +1,6 @@
 from pathlib import Path
 import subprocess
 
-blender = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
-
 
 def build_extension(blender):
     source_dir = str(Path(__file__).parent.parent)

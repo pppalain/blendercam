@@ -5,11 +5,11 @@ import sys
 import unittest
 import shutil
 
-blender = (
-    "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
-    if shutil.which("blender") is None
-    else "blender"
-)
+# blender = (
+#     "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
+#     if shutil.which("blender") is None
+#     else "blender"
+# )
 
 
 # @unittest.skip("Old Gcode Test")

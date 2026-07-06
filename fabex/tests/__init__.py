@@ -1,9 +1,16 @@
 import unittest
 from pathlib import Path
+import shutil
 
 import bpy
 
-# from .constants import BLENDER
+# Blender Executable
+# Will use 'blender' if Blender is available on PATH
+# blender = "blender"
+# Otherwise supply the path to the Blender executable
+path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
+
+blender = path_to_blender_executable if shutil.which("blender") is None else "blender"
 
 # Path to the 'fabex' directory
 # __init__.py / tests / fabex
