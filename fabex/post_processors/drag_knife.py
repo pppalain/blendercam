@@ -23,7 +23,7 @@ class Creator(recreator.Redirector):
         self.path = None
 
     def cut_path(self):
-        if self.path == None:
+        if self.path is None:
             return
 
         print(self.drag_distance)
@@ -45,13 +45,13 @@ class Creator(recreator.Redirector):
         py = self.y
         pz = self.z
         recreator.Redirector.feed(self, x, y, z, a, b, c)
-        if self.x == None or self.y == None or self.z == None:
+        if self.x is None or self.y is None or self.z is None:
             return
         if px == self.x and py == self.y:
             return
 
         # add a line to the path
-        if self.path == None:
+        if self.path is None:
             self.path = area.Curve()
         self.path.append(area.Point(self.x, self.y))
 
@@ -59,7 +59,7 @@ class Creator(recreator.Redirector):
         recreator.Redirector.arc(self, x, y, z, i, j, k, r, ccw)
 
         # add an arc to the path
-        if self.path == None:
+        if self.path is None:
             self.path = area.Curve()
         self.path.append(
             area.Vertex(1 if ccw else -1, area.Point(self.x, self.y), area.Point(i, j))
@@ -68,7 +68,7 @@ class Creator(recreator.Redirector):
 
 def drag_begin(drag_distance):
     global dragging
-    if dragging == True:
+    if dragging:
         drag_end()
     nc.creator = Creator(nc.creator, drag_distance)
     dragging = True

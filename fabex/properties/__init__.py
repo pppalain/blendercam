@@ -60,7 +60,10 @@ from .preset_props import (
     update_user_operation,
 )
 
-from ..utilities.operation_utils import update_operation, update_active_operation
+from ..utilities.operation_utils import (
+    update_operation as update_operation,
+    update_active_operation,
+)
 
 
 classes = [

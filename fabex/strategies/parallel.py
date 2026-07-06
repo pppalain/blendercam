@@ -7,7 +7,6 @@ from ..utilities.chunk_utils import (
 )
 from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import get_layers
-from ..utilities.simple_utils import progress
 from ..utilities.strategy_utils import parallel_pattern
 
 

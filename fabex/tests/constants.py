@@ -23,7 +23,8 @@ bpy.ops.wm.quit_blender()
 NUM_RETRIES = 10
 
 # G-code Generator script, stripped down
-GCODE_SCRIPT = """import sys
+GCODE_SCRIPT = """
+import sys
 import warnings
 
 import bpy

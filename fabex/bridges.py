@@ -25,7 +25,6 @@ from .utilities.logging_utils import log
 from .utilities.operation_utils import get_operation_sources
 from .utilities.silhouette_utils import (
     get_object_silhouette,
-    get_operation_silhouette,
 )
 from .utilities.curve_utils import curve_to_shapely
 from .utilities.simple_utils import (
@@ -233,12 +232,11 @@ def use_bridges(ch, o):
         faces = []
         while vi < len(ch_points):
             i1 = vi
-            i2 = vi
             chp1 = ch_points[i1]
             # Vector(v1)#this is for case of last point and not closed chunk..
             chp2 = ch_points[i1]
             if vi + 1 < len(ch_points):
-                i2 = vi + 1
+                vi + 1
                 chp2 = ch_points[vi + 1]  # Vector(ch_points[vi+1])
             v1 = Vector(chp1)
             v2 = Vector(chp2)
@@ -252,9 +250,9 @@ def use_bridges(ch, o):
                     interrupted = False
 
                 endinside = o.bridgespoly.contains(p2)
-                l = LineString([chp1, chp2])
-                if o.bridgespoly_boundary_prep.intersects(l):
-                    intersections = o.bridgespoly_boundary.intersection(l)
+                line = LineString([chp1, chp2])
+                if o.bridgespoly_boundary_prep.intersects(line):
+                    intersections = o.bridgespoly_boundary.intersection(line)
 
                 else:
                     intersections = GeometryCollection()

@@ -4,8 +4,6 @@ Functions and Classes to allow asynchronous updates.
 Used to report progress during path calculation.
 """
 
-import sys
-
 import bpy
 
 from ..utilities.async_utils import progress_async
@@ -127,7 +125,7 @@ class AsyncOperatorMixin:
             Exception: If an unexpected error occurs during the execution of the tick.
         """
 
-        if self.coroutine == None:
+        if self.coroutine is None:
             self.coroutine = self.execute_async(context)
 
         try:
@@ -168,7 +166,7 @@ class AsyncOperatorMixin:
         if bpy.app.background:
             # running in background - don't run as modal,
             # otherwise tests all fail
-            while self.tick(context) == True:
+            while self.tick(context):
                 pass
             return {"FINISHED"}
         else:

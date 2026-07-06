@@ -52,7 +52,6 @@ def import_gcode(self, context, filepath):
 
     log.info("Running: read_some_data...")
 
-    scene = context.scene
 
     mytool = self
 

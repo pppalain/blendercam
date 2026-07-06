@@ -37,7 +37,6 @@ from ..utilities.silhouette_utils import get_object_outline
 from ..utilities.simple_utils import (
     activate,
     join_multiple,
-    progress,
     remove_multiple,
 )
 
@@ -63,7 +62,6 @@ async def pocket(o):
     log.info(heading("Strategy: Pocket"))
 
     join = 2 if o.straight else 1
-    scene = bpy.context.scene
     remove_multiple("3D_poc")
     max_depth = check_min_z(o) + o.skin
     cutter_angle = radians(o.cutter_tip_angle / 2)

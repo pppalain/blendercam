@@ -5,7 +5,6 @@ They mostly call the functions from 'utils.py'
 """
 
 from math import pi
-import os
 import random
 import time
 
@@ -25,13 +24,11 @@ import bpy
 from bpy.props import (
     BoolProperty,
     EnumProperty,
-    StringProperty,
     FloatProperty,
 )
 from bpy.types import Operator
 
 from ..constants import PRECISION
-from ..utilities.pack_utils import pack_curves
 
 from ..utilities.curve_utils import curve_to_chunks
 from ..utilities.logging_utils import log
@@ -132,7 +129,6 @@ class CamPackObjects(Operator):
         """
 
         bpy.ops.object.mode_set(mode="OBJECT")  # force object mode
-        obs = bpy.context.selected_objects
         if speedups.available:
             speedups.enable()
         t = time.time()

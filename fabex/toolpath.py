@@ -166,7 +166,6 @@ async def get_path_3_axis(context, operation):
         the operation and context directly.
     """
 
-    s = bpy.context.scene
     o = operation
     get_bounds(o)
     tw = time.time()
@@ -192,7 +191,7 @@ async def get_path_3_axis(context, operation):
 
     await strategy_from_operation[o.strategy](o)
 
-    await progress_async(f"Done", time.time() - tw, "s")
+    await progress_async("Done", time.time() - tw, "s")
 
 
 async def get_path_4_axis(context, operation):
@@ -215,7 +214,6 @@ async def get_path_4_axis(context, operation):
             the state of the operation by processing chunks for meshing.
     """
 
-    s = bpy.context.scene
     o = operation
     get_bounds(o)
     tw = time.time()
@@ -228,4 +226,4 @@ async def get_path_4_axis(context, operation):
 
     await strategy_from_operation[o.strategy_4_axis](o)
 
-    await progress_async(f"Done", time.time() - tw, "s")
+    await progress_async("Done", time.time() - tw, "s")

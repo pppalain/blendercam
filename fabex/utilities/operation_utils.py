@@ -34,6 +34,7 @@ from .simple_utils import (
 
 from .. import __package__ as base_package
 from ..constants import was_hidden_dict
+from ..exception import CamException
 
 
 def get_operation_sources(o):

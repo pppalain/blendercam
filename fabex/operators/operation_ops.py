@@ -10,17 +10,10 @@ import bpy
 from bpy.props import EnumProperty
 from bpy.types import (
     Operator,
-    PropertyGroup,
-)
-from mathutils import (
-    Euler,
-    Vector,
 )
 
-from ..bridges import add_auto_bridges
 from ..constants import was_hidden_dict
 
-from ..utilities.simple_utils import add_to_group
 from ..utilities.machine_utils import add_machine_area_object
 from ..utilities.logging_utils import log
 from ..utilities.bounds_utils import get_bounds_worldspace
@@ -196,8 +189,8 @@ class CamOperationCopy(Operator):
         copyop = scene.cam_operations[scene.cam_active_operation]
         scene.cam_operations.add()
         scene.cam_active_operation += 1
-        l = len(scene.cam_operations) - 1
-        scene.cam_operations.move(l, scene.cam_active_operation)
+        length = len(scene.cam_operations) - 1
+        scene.cam_operations.move(length, scene.cam_active_operation)
         o = scene.cam_operations[scene.cam_active_operation]
 
         copy_operation_properties(copyop, o)

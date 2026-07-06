@@ -39,6 +39,8 @@ NUM_RETRIES = 10
 #         print(e.output)
 #         print("------------------------------")
 
+# crash_file = pathlib.Path(line[len("Writing: ") :] for line in str(e.output) if line.startswith("Writing: "))
+
 #         for line in str(e.output):
 #             if line.startswith("Writing: "):
 #                 crash_file = pathlib.Path(line[len("Writing: ") :])

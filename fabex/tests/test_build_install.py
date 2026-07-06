@@ -1,11 +1,8 @@
 import unittest
-import subprocess
-from pathlib import Path
 
 from .base import (
     activate_dependencies,
     activate_engine,
-    build_extension,
     get_modules,
     install_extension,
 )
@@ -23,21 +20,21 @@ class FabexDependencyTest(unittest.TestCase):
     def test_curve_tools(self):
         """Check for Curve Tools addon"""
         self.assertIn(
-            f"bl_ext.blender_org.curve_tools",
+            "bl_ext.blender_org.curve_tools",
             self.modules,
         )
 
     def test_simplify_curves_plus(self):
         """Check for Simplify Curves Plus addon"""
         self.assertIn(
-            f"bl_ext.blender_org.simplify_curves_plus",
+            "bl_ext.blender_org.simplify_curves_plus",
             self.modules,
         )
 
     def test_stl_format_legacy(self):
         """Check for STL Format Legacy addon"""
         self.assertIn(
-            f"bl_ext.blender_org.stl_format_legacy",
+            "bl_ext.blender_org.stl_format_legacy",
             self.modules,
         )
 
@@ -51,7 +48,7 @@ class FabexInstallTest(unittest.TestCase):
 
     def test_install(self):
         self.assertIn(
-            f"bl_ext.user_default.fabex",
+            "bl_ext.user_default.fabex",
             self.modules,
         )
 
@@ -73,7 +70,7 @@ class FabexDisableTest(unittest.TestCase):
 
     def test_disable(self):
         self.assertNotIn(
-            f"bl_ext.user_default.fabex",
+            "bl_ext.user_default.fabex",
             self.modules,
         )
 
@@ -90,7 +87,7 @@ class FabexEnableTest(unittest.TestCase):
 
     def test_enable(self):
         self.assertIn(
-            f"bl_ext.user_default.fabex",
+            "bl_ext.user_default.fabex",
             self.modules,
         )
 

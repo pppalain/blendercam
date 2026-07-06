@@ -25,7 +25,6 @@ def dict_cleanup(ndict):
     log.info("Removing Lonely Points")
     # found_solitaires=True
     # while found_solitaires:
-    found_solitaires = False
     keys = []
     keys.extend(ndict.keys())
     removed = 0
@@ -41,7 +40,6 @@ def dict_cleanup(ndict):
                         newcheck.append(v)
                     dict_remove(ndict, v)
             removed += 1
-            found_solitaires = True
     log.info(removed)
 
 

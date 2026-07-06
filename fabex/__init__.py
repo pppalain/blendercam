@@ -4,12 +4,13 @@ Import Modules, Register and Unregister  Classes
 """
 
 # Python Standard Library
-import subprocess
-import sys
+# import subprocess
+
+# import sys
 
 # pip Wheels
-import opencamlib
-import shapely
+# import opencamlib
+# import shapely
 
 # Blender Library
 import bpy
@@ -42,7 +43,7 @@ from .utilities.addon_utils import (
     on_blender_startup,
     keymap_register,
     keymap_unregister,
-    on_engine_change,
+    # on_engine_change,
 )
 from .utilities.thread_utils import timer_update
 

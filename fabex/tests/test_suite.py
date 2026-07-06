@@ -3,7 +3,13 @@ import os
 import subprocess
 import sys
 import unittest
-from pathlib import Path
+import shutil
+
+blender = (
+    "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
+    if shutil.which("blender") is None
+    else "blender"
+)
 
 
 # @unittest.skip("Old Gcode Test")
@@ -55,8 +61,6 @@ class FabexGcodeTest(unittest.TestCase):
         return "".join(list(diff)[:num_lines])
 
     def execute_blender(self, blend_file):
-        blender = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
-
         command = f'{blender} -noaudio -b "{blend_file}" -P "{self.generator_path}"'
         print(f"Executing: {command}")
         subprocess.run(command, shell=True, check=True)

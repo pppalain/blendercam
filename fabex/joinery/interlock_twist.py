@@ -304,7 +304,6 @@ def distributed_interlock(
 
                 j += 1
                 distance = j * spacing + start
-        oldp = p
 
     join_multiple("_groove")
     active_name("interlock")

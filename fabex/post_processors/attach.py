@@ -34,7 +34,7 @@ class Creator(recreator.Redirector):
     ##  Shift in Z
 
     def setPdcfIfNotSet(self):
-        if self.pdcf == None:
+        if self.pdcf is None:
             self.pdcf = ocl.PathDropCutter()
             self.pdcf.setSTL(self.stl)
             self.pdcf.setCutter(self.cutter)
@@ -58,7 +58,7 @@ class Creator(recreator.Redirector):
         return p.z + self.material_allowance / units
 
     def cut_path(self):
-        if self.path == None:
+        if self.path is None:
             return
         self.setPdcfIfNotSet()
 
@@ -93,7 +93,7 @@ class Creator(recreator.Redirector):
         self.path = ocl.Path()
 
     def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
-        if z != None:
+        if z is not None:
             if z < self.z:
                 return
         recreator.Redirector.rapid(self, x, y, z, a, b, c)
@@ -103,13 +103,13 @@ class Creator(recreator.Redirector):
         py = self.y
         pz = self.z
         recreator.Redirector.feed(self, x, y, z, a, b, c)
-        if self.x == None or self.y == None or self.z == None:
+        if self.x is None or self.y is None or self.z is None:
             return
         if px == self.x and py == self.y:
             return
 
         # add a line to the path
-        if self.path == None:
+        if self.path is None:
             self.path = ocl.Path()
         self.path.append(ocl.Line(ocl.Point(px, py, pz), ocl.Point(self.x, self.y, self.z)))
 
@@ -120,7 +120,7 @@ class Creator(recreator.Redirector):
         recreator.Redirector.arc(self, x, y, z, i, j, k, r, ccw)
 
         # add an arc to the path
-        if self.path == None:
+        if self.path is None:
             self.path = ocl.Path()
         self.path.append(
             ocl.Arc(
@@ -137,7 +137,7 @@ class Creator(recreator.Redirector):
 
 def attach_begin():
     global attached
-    if attached == True:
+    if attached:
         attach_end()
     nc.creator = Creator(nc.creator)
     recreator.units = units

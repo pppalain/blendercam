@@ -4,7 +4,6 @@ Import UI, Register and Unregister Classes
 """
 
 import bpy
-from bpy.props import PointerProperty
 
 from .menus.import_gcode import TOPBAR_MT_import_gcode
 from .menus.curve_creators import VIEW3D_MT_tools_add, VIEW3D_MT_tools_create

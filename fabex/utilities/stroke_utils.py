@@ -5,7 +5,6 @@ from math import (
 import random
 
 import numpy as np
-import numpy as np
 
 from mathutils import Vector, Euler
 
@@ -19,7 +18,7 @@ from .image_utils import (
     prepare_area,
 )
 from .logging_utils import log
-from .operation_utils import get_move_and_spin
+from .operation_utils import get_move_and_spin, get_cutter_array
 from .parent_utils import (
     parent_child_distance,
 )
@@ -84,7 +83,7 @@ def crazy_stroke_image(o):
     testvect = lastvect.normalized() * r / 2.0
     rot = Euler((0, 0, 1))
     i = 0
-    perc = 0
+    # perc = 0
     itests = 0
     totaltests = 0
     maxtests = 500
@@ -162,7 +161,7 @@ def crazy_stroke_image(o):
                 # TODO:the testing should start not from the same angle as lastvector, but more towards material.
                 #  So values closer to toomuchpix are obtained rather than satisfypix
                 testvect = lastvect.normalized() * testlength
-                right = True
+                # right = True
 
                 if testangleinit == 0:  # meander
                     if testleftright:

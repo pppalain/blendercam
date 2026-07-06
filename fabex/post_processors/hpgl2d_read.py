@@ -1,5 +1,4 @@
 from . import num_reader
-import sys
 import math
 
 

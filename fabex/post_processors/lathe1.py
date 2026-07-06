@@ -146,17 +146,17 @@ class CreatorIso(nc.Creator):
 
     def set_temporary_origin(self, x=None, y=None, z=None, a=None, b=None, c=None):
         self.write((iso.codes.SET_TEMPORARY_COORDINATE_SYSTEM()))
-        if x != None:
+        if x is not None:
             self.write(iso.codes.SPACE() + "X " + (self.fmt % x))
-        if y != None:
+        if y is not None:
             self.write(iso.codes.SPACE() + "Y " + (self.fmt % y))
-        if z != None:
+        if z is not None:
             self.write(iso.codes.SPACE() + "Z " + (self.fmt % z))
-        if a != None:
+        if a is not None:
             self.write(iso.codes.SPACE() + "A " + (self.fmt % a))
-        if b != None:
+        if b is not None:
             self.write(iso.codes.SPACE() + "B " + (self.fmt % b))
-        if c != None:
+        if c is not None:
             self.write(iso.codes.SPACE() + "C " + (self.fmt % c))
         self.write("\n")
 
@@ -256,7 +256,7 @@ class CreatorIso(nc.Creator):
             self.write(iso.codes.RAPID())
         self.write_preps()
 
-        if y != None:
+        if y is not None:
             dy = y - self.y
             if self.absolute_flag:
                 self.write(iso.codes.X() + (self.fmt % (y * 2)))
@@ -265,7 +265,7 @@ class CreatorIso(nc.Creator):
 
             self.y = y
 
-        if x != None:
+        if x is not None:
             dx = x - self.x
             if self.absolute_flag:
                 self.write(iso.codes.Z() + (self.fmt % x))
@@ -273,8 +273,8 @@ class CreatorIso(nc.Creator):
                 self.write(iso.codes.Z() + (self.fmt % dx))
             self.x = x
 
-        if z != None:
-            dz = z - self.z
+        if z is not None:
+            z - self.z
             if self.absolute_flag:
                 pass
                 # self.write(iso.codes.Z() + (self.fmt % z))
@@ -284,7 +284,7 @@ class CreatorIso(nc.Creator):
 
             self.z = z
 
-        if a != None:
+        if a is not None:
             da = a - self.a
             if self.absolute_flag:
                 self.write(iso.codes.A() + (self.fmt % a))
@@ -292,7 +292,7 @@ class CreatorIso(nc.Creator):
                 self.write(iso.codes.A() + (self.fmt % da))
             self.a = a
 
-        if b != None:
+        if b is not None:
             db = b - self.b
             if self.absolute_flag:
                 self.write(iso.codes.B() + (self.fmt % b))
@@ -300,7 +300,7 @@ class CreatorIso(nc.Creator):
                 self.write(iso.codes.B() + (self.fmt % db))
             self.b = b
 
-        if c != None:
+        if c is not None:
             dc = c - self.c
             if self.absolute_flag:
                 self.write(iso.codes.C() + (self.fmt % c))
@@ -324,7 +324,7 @@ class CreatorIso(nc.Creator):
         self.write_preps()
         dx = dy = dz = 0
 
-        if y != None:
+        if y is not None:
             dy = y - self.y
             if self.absolute_flag:
                 self.write(iso.codes.X() + (self.fmt % (y * 2)))
@@ -333,7 +333,7 @@ class CreatorIso(nc.Creator):
 
             self.y = y
 
-        if x != None:
+        if x is not None:
             dx = x - self.x
             if self.absolute_flag:
                 self.write(iso.codes.Z() + (self.fmt % x))
@@ -341,7 +341,7 @@ class CreatorIso(nc.Creator):
                 self.write(iso.codes.Z() + (self.fmt % dx))
             self.x = x
 
-        if z != None:
+        if z is not None:
             dz = z - self.z
             if self.absolute_flag:
                 pass
@@ -359,13 +359,13 @@ class CreatorIso(nc.Creator):
         self.write("\n")
 
     def same_xyz(self, x=None, y=None, z=None):
-        if x != None:
+        if x is not None:
             if (self.fmt % x) != (self.fmt % self.x):
                 return False
-        if y != None:
+        if y is not None:
             if (self.fmt % y) != (self.fmt % self.y):
                 return False
-        if z != None:
+        if z is not None:
             if (self.fmt % z) != (self.fmt % self.z):
                 return False
 
@@ -388,7 +388,7 @@ class CreatorIso(nc.Creator):
             self.write(arc_g_code)
         self.write_preps()
         # make X take y values and multiply by 2 for diameter values for lathe
-        if y != None:
+        if y is not None:
             dy = y - self.y
             if self.absolute_flag:
                 self.write(iso.codes.X() + (self.fmt % (y * 2)))
@@ -397,15 +397,15 @@ class CreatorIso(nc.Creator):
             self.y = y
 
         # make Z take x values for lathe
-        if x != None:
+        if x is not None:
             dx = x - self.x
             if self.absolute_flag:
                 self.write(iso.codes.Z() + (self.fmt % x))
             else:
                 self.write(iso.codes.Z() + (self.fmt % dx))
             self.x = x
-        if z != None:
-            dz = z - self.z
+        if z is not None:
+            z - self.z
             if self.absolute_flag:
                 pass
                 # self.write(iso.codes.X() + (self.fmt % z))
@@ -414,13 +414,13 @@ class CreatorIso(nc.Creator):
                 # self.write(iso.codes.X() + (self.fmt % dz))
             self.z = z
 
-        if j != None:
+        if j is not None:
             self.write(iso.codes.CENTRE_X() + (self.fmt % j))  # change the order
-        if i != None:
+        if i is not None:
             self.write(iso.codes.CENTRE_Z() + (self.fmt % i))  # and reversed i and j
-        if k != None:
+        if k is not None:
             pass  # self.write(iso.codes.CENTRE_Z() + (self.fmt % k))
-        if r != None:
+        if r is not None:
             self.write(iso.codes.RADIUS() + (self.fmt % r))
         #       use horizontal feed rate
         if self.fhv:
@@ -461,7 +461,7 @@ class CreatorIso(nc.Creator):
 
     def start_CRC(self, left=True, radius=0.0):
         # set up prep code, to be output on next line
-        if self.t == None:
+        if self.t is None:
             raise "No tool specified for start_CRC()"
         self.g = ("G41" + iso.codes.SPACE() + "D%i") % self.t
 

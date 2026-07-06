@@ -9,7 +9,6 @@
 
 from . import nc
 from . import iso
-import math
 from .format import Format
 from .format import *
 
@@ -157,7 +156,7 @@ class Creator(iso.Creator):
 
         self.write_preps()
 
-        if x != None:
+        if x is not None:
             dx = x - self.x
             if self.absolute_flag:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
@@ -165,7 +164,7 @@ class Creator(iso.Creator):
                 self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
             self.x = x
 
-        if y != None:
+        if y is not None:
             dy = y - self.y
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
@@ -173,7 +172,7 @@ class Creator(iso.Creator):
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(dy)))
             self.y = y
 
-        if z != None:
+        if z is not None:
             dz = z - self.z
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
@@ -197,14 +196,14 @@ class Creator(iso.Creator):
 
         dx = dy = dz = 0
 
-        if x != None:
+        if x is not None:
             dx = x - self.x
             if self.absolute_flag:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             else:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
             self.x = x
-        if y != None:
+        if y is not None:
             dy = y - self.y
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
@@ -212,7 +211,7 @@ class Creator(iso.Creator):
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(dy)))
 
             self.y = y
-        if z != None:
+        if z is not None:
             dz = z - self.z
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))

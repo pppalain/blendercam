@@ -308,10 +308,10 @@ class CamCurveSimpleOvercuts(Operator):
                                     shape = circle(diameter / 2, 64)
                                     shape = shapely.affinity.translate(shape, p.x, p.y)
                                 else:
-                                    l = tan(a / 2) * diameter / 2
-                                    p1 = p - sign * v * l
-                                    l = shapely.geometry.LineString((p, p1))
-                                    shape = l.buffer(diameter / 2, resolution=64)
+                                    line = tan(a / 2) * diameter / 2
+                                    p1 = p - sign * v * line
+                                    line = shapely.geometry.LineString((p, p1))
+                                    shape = line.buffer(diameter / 2, resolution=64)
 
                                 if sign > 0:
                                     negative_overcuts.append(shape)
@@ -424,8 +424,8 @@ class CamCurveBoneFilletOvercuts(Operator):
             else:  # elongate overcut circle to make sure tool bit can fit into slot
                 log.info(">pi/2: True")
                 p1 = pos + (extendedv * radius)
-                l = shapely.geometry.LineString((pos, p1))
-                shape = l.buffer(radius, resolution=64)
+                line = shapely.geometry.LineString((pos, p1))
+                shape = line.buffer(radius, resolution=64)
 
             if sign > 0:
                 negative_overcuts.append(shape)

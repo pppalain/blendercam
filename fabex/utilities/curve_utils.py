@@ -110,9 +110,8 @@ def mesh_from_curve_to_chunk(object):
     z = object.location.z
     lastvi = 0
     vtotal = len(mesh.vertices)
-    perc = 0
 
-    progress(f"Processing Curve: Start")
+    progress("Processing Curve: Start")
     log.info(f"Vertices: {vtotal}")
 
     for vi in range(0, len(mesh.vertices) - 1):

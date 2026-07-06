@@ -1,6 +1,9 @@
-from shapely.geometry import LineString
+from shapely.geometry import LineString, Point
 
+from .compare_utils import angle
+from .logging_utils import log
 from .shapely_utils import shapely_to_curve
+from .simple_utils import remove_multiple
 
 
 def find_slope(p1, p2):
@@ -57,11 +60,12 @@ def d_slope_array(loop, resolution=0.001):
     pnt_amount = round(length / resolution)
     sarray = []
     dsarray = []
+    oldp = None
     for i in range(pnt_amount):
         distance = i * resolution
         pt = loop.interpolate(distance)
         p = (pt.x, pt.y)
-        if i != 0:
+        if i != 0 and oldp is not None:
             slope = abs(angle(p, oldp))
             sarray.append((distance, slope * -0.01))
         oldp = p

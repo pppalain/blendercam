@@ -7,7 +7,6 @@
 
 from . import nclathe_read as nc
 import re
-import sys
 
 ################################################################################
 

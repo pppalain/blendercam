@@ -16,7 +16,6 @@ from ..utilities.operation_utils import (
     get_layers,
     get_move_and_spin,
 )
-from ..utilities.simple_utils import progress
 
 
 async def parallel_four_axis(o):

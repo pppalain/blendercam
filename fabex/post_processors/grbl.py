@@ -1,8 +1,6 @@
 from . import nc
 from . import iso_modal
-import math
 import datetime
-import time
 
 now = datetime.datetime.now()
 
@@ -31,7 +29,7 @@ class Creator(iso_modal.Creator):
     # Begin Program
 
     def program_begin(self, id, comment):
-        if self.useCrc == False:
+        if not self.useCrc:
             self.write(
                 (
                     "(Created with grbl post processor "

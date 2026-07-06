@@ -4,12 +4,16 @@ Various helper functions, less complex than those found in the 'utils' files.
 """
 
 from math import (
+    cos,
     hypot,
     pi,
+    sin,
 )
 import os
 import string
-import sys
+import numpy
+
+# import sys
 import time
 
 from shapely.geometry import Polygon
@@ -376,12 +380,12 @@ def get_cache_path(o):
         str: The constructed cache path as a string.
     """
     fn = bpy.data.filepath
-    l = len(bpy.path.basename(fn))
+    length = len(bpy.path.basename(fn))
     bn = bpy.path.basename(fn)[:-6]
-    log.info(f"Folder: {fn[:-l]}")
+    log.info(f"Folder: {fn[:-length]}")
     log.info(f"File: {bn}")
 
-    iname = f"{fn[:-l]}temp_cam{os.sep}{bn}_{o.name}"
+    iname = f"{fn[:-length]}temp_cam{os.sep}{bn}_{o.name}"
     return iname
 
 
@@ -397,8 +401,8 @@ def get_simulation_path():
         str: The path to the temporary CAM directory.
     """
     fn = bpy.data.filepath
-    l = len(bpy.path.basename(fn))
-    iname = f"{fn[:-l]}temp_cam{os.sep}"
+    length = len(bpy.path.basename(fn))
+    iname = f"{fn[:-length]}temp_cam{os.sep}"
     return iname
 
 
@@ -953,8 +957,8 @@ def subdivide_long_edges(ob, threshold):
             v1 = m.vertices[e.vertices[0]].co
             v2 = m.vertices[e.vertices[1]].co
             vec = v2 - v1
-            l = vec.length
-            if l * scale > threshold:
+            length = vec.length
+            if length * scale > threshold:
                 n += 1
                 subdivides.append(i)
         if n > 0:

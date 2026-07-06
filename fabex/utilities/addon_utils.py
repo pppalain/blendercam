@@ -6,11 +6,9 @@ import subprocess
 import sys
 
 import bpy
-from bpy.app.handlers import persistent
 
 from .logging_utils import log
 
-from ..constants import _IS_LOADING_DEFAULTS
 from ..exception import CamException
 from .. import __package__ as base_package
 
@@ -122,7 +120,7 @@ def copy_if_not_exists(src, dst):
         dst (str): The path to the destination where the file should be copied.
     """
 
-    if Path(dst).exists() == False:
+    if not Path(dst).exists():
         shutil.copy2(src, dst)
 
 
@@ -176,7 +174,6 @@ def on_blender_startup(context):
 
     scene = bpy.context.scene
     render_engine = scene.render.engine
-    interface_layout = scene.interface.layout
 
     for o in scene.cam_operations:
         if o.computing:
@@ -213,7 +210,6 @@ def on_blender_startup(context):
         render_engine = "FABEX_RENDER"
 
     if render_engine == "FABEX_RENDER":
-        interface_layout = addon_prefs.default_layout
 
         add_collections()
         log.debug("Collections Added to Scene")
@@ -234,12 +230,10 @@ def on_engine_change(*args):
     scene = context.scene
 
     render_engine = scene.render.engine
-    interface_layout = scene.interface.layout
 
     addon_prefs = context.preferences.addons[base_package].preferences
 
     if render_engine == "FABEX_RENDER":
-        interface_layout = addon_prefs.default_layout
 
         add_collections()
         log.debug("Collections Added to Scene")
@@ -411,7 +405,7 @@ def edit_user_post_processor():
         text_editor = [area.spaces[0] for area in areas if area.type == "TEXT_EDITOR"][0]
 
         with bpy.context.temp_override(space=text_editor):
-            text_editor.text = bpy.data.texts[f"user.py"]
+            text_editor.text = bpy.data.texts["user.py"]
 
     except IndexError:
         pass

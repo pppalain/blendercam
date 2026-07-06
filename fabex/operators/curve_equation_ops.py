@@ -5,14 +5,10 @@ Operators to create a number of geometric shapes with curves.
 
 from math import (
     pi,
-    sin,
-    cos,
-    sqrt,
 )
 
 import numpy as np
 
-import bpy
 from bpy.props import (
     EnumProperty,
     FloatProperty,

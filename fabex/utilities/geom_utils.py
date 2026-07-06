@@ -10,6 +10,7 @@ from shapely.geometry import Polygon
 
 import bpy
 from mathutils import Euler, Vector
+import numpy
 
 
 def circle(r, np):

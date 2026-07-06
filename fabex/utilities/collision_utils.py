@@ -26,7 +26,6 @@ from .logging_utils import log, heading
 from .simple_utils import (
     activate,
     delete_object,
-    progress,
     subdivide_long_edges,
 )
 
@@ -245,7 +244,6 @@ def prepare_bullet_collision(o):
 
         if collisionob.type in ("CURVE", "FONT"):  # support for curve objects collision
             if collisionob.type == "CURVE":
-                odata = collisionob.data.dimensions
                 collisionob.data.dimensions = "2D"
 
             bpy.ops.object.convert(target="MESH", keep_original=False)
@@ -253,7 +251,7 @@ def prepare_bullet_collision(o):
         if o.use_modifiers:
             depsgraph = bpy.context.evaluated_depsgraph_get()
             mesh_owner = collisionob.evaluated_get(depsgraph)
-            newmesh = mesh_owner.to_mesh()
+            mesh_owner.to_mesh()
             oldmesh = collisionob.data
             collisionob.modifiers.clear()
             collisionob.data = bpy.data.meshes.new_from_object(

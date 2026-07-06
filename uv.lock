@@ -28,7 +28,7 @@ wheels = [
 [[package]]
 name = "blendercam"
 version = "3.1.6"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "llvmlite", marker = "platform_machine == 'aarch64' or platform_machine == 'x86_64'" },
     { name = "numba", marker = "platform_machine == 'aarch64' or platform_machine == 'x86_64'" },

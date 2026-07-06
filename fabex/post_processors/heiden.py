@@ -15,7 +15,7 @@
 # 53 END PGM 0011 MM
 
 
-from . import iso, nc, emc2
+from . import nc
 import math
 from .format import Format
 from .format import *
@@ -382,17 +382,17 @@ class Creator(nc.Creator):
     def set_temporary_origin(self, x=None, y=None, z=None, a=None, b=None, c=None):
         self.write_blocknum()
         self.write(self.SPACE() + (self.SET_TEMPORARY_COORDINATE_SYSTEM()))
-        if x != None:
+        if x is not None:
             self.write(self.SPACE() + "X " + (self.fmt.string(x + self.shift_x)))
-        if y != None:
+        if y is not None:
             self.write(self.SPACE() + "Y " + (self.fmt.string(y + self.shift_y)))
-        if z != None:
+        if z is not None:
             self.write(self.SPACE() + "Z " + (self.fmt.string(z + self.shift_z)))
-        if a != None:
+        if a is not None:
             self.write(self.SPACE() + "A " + (self.fmt.string(a)))
-        if b != None:
+        if b is not None:
             self.write(self.SPACE() + "B " + (self.fmt.string(b)))
-        if c != None:
+        if c is not None:
             self.write(self.SPACE() + "C " + (self.fmt.string(c)))
         self.write("\n")
 
@@ -423,10 +423,10 @@ class Creator(nc.Creator):
         self.write(self.SPACE() + self.TOOL_DEFINITION())
         self.write(self.SPACE() + ("P%i" % id) + " ")
 
-        if radius != None:
+        if radius is not None:
             self.write(self.SPACE() + ("R%.3f" % (float(params["diameter"]) / 2)))
 
-        if length != None:
+        if length is not None:
             self.write(self.SPACE() + "Z%.3f" % float(params["cutting edge height"]))
 
         self.write("\n")
@@ -480,7 +480,7 @@ class Creator(nc.Creator):
             self.f.set(self.fh)
 
     def spindle(self, s, clockwise):
-        if clockwise == True:
+        if clockwise:
             self.s.set(s, self.SPACE() + self.SPINDLE_CW(), self.SPACE() + self.SPINDLE_CCW())
         else:
             self.s.set(s, self.SPACE() + self.SPINDLE_CCW(), self.SPACE() + self.SPINDLE_CW())
@@ -512,14 +512,14 @@ class Creator(nc.Creator):
         else:
             self.write(self.SPACE() + self.RAPID())
         self.write_preps()
-        if x != None:
+        if x is not None:
             dx = x - self.x
             if self.absolute_flag:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             else:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
             self.x = x
-        if y != None:
+        if y is not None:
             dy = y - self.y
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
@@ -527,7 +527,7 @@ class Creator(nc.Creator):
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(dy)))
 
             self.y = y
-        if z != None:
+        if z is not None:
             dz = z - self.z
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
@@ -536,7 +536,7 @@ class Creator(nc.Creator):
 
             self.z = z
 
-        if a != None:
+        if a is not None:
             da = a - self.a
             if self.absolute_flag:
                 self.write(self.SPACE() + self.A() + (self.fmt.string(a)))
@@ -544,7 +544,7 @@ class Creator(nc.Creator):
                 self.write(self.SPACE() + self.A() + (self.fmt.string(da)))
             self.a = a
 
-        if b != None:
+        if b is not None:
             db = b - self.b
             if self.absolute_flag:
                 self.write(self.SPACE() + self.B() + (self.fmt.string(b)))
@@ -552,7 +552,7 @@ class Creator(nc.Creator):
                 self.write(self.SPACE() + self.B() + (self.fmt.string(db)))
             self.b = b
 
-        if c != None:
+        if c is not None:
             dc = c - self.c
             if self.absolute_flag:
                 self.write(self.SPACE() + self.C() + (self.fmt.string(c)))
@@ -575,14 +575,14 @@ class Creator(nc.Creator):
             self.write(self.FEED())
         self.write_preps()
         dx = dy = dz = 0
-        if x != None:
+        if x is not None:
             dx = x - self.x
             if self.absolute_flag:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             else:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
             self.x = x
-        if y != None:
+        if y is not None:
             dy = y - self.y
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
@@ -590,7 +590,7 @@ class Creator(nc.Creator):
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(dy)))
 
             self.y = y
-        if z != None:
+        if z is not None:
             dz = z - self.z
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
@@ -606,13 +606,13 @@ class Creator(nc.Creator):
         self.write("\n")
 
     def same_xyz(self, x=None, y=None, z=None):
-        if x != None:
+        if x is not None:
             if (self.fmt.string(x + self.shift_x)) != (self.fmt.string(self.x)):
                 return False
-        if y != None:
+        if y is not None:
             if (self.fmt.string(y + self.shift_y)) != (self.fmt.string(self.y)):
                 return False
-        if z != None:
+        if z is not None:
             if (self.fmt.string(z + self.shift_z)) != (self.fmt.string(self.z)):
                 return False
 
@@ -658,16 +658,16 @@ class Creator(nc.Creator):
 
     def arc(self, cw, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         if (
-            self.can_do_helical_arcs == False
-            and self.in_quadrant_splitting == False
-            and (z != None)
+            not self.can_do_helical_arcs
+            and not self.in_quadrant_splitting
+            and (z is not None)
             and (math.fabs(z - self.z) > 0.000001)
             and (self.fmt.string(z) != self.fmt.string(self.z))
         ):
             # split the helical arc into little line feed moves
-            if x == None:
+            if x is None:
                 x = self.x
-            if y == None:
+            if y is None:
                 y = self.y
             sdx = self.x - i
             sdy = self.y - j
@@ -691,13 +691,13 @@ class Creator(nc.Creator):
                 self.feed(next_x, next_y, next_z)
             return
 
-        if self.arc_centre_positive == True and self.in_quadrant_splitting == False:
+        if self.arc_centre_positive and not self.in_quadrant_splitting:
             # split in to quadrant arcs
             self.in_quadrant_splitting = True
 
-            if x == None:
+            if x is None:
                 x = self.x
-            if y == None:
+            if y is None:
                 y = self.y
             sdx = self.x - i
             sdy = self.y - j
@@ -768,51 +768,51 @@ class Creator(nc.Creator):
         else:
             self.write(arc_g_code)
         self.write_preps()
-        if x != None:
+        if x is not None:
             dx = x - self.x
             if self.absolute_flag:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             else:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
-        if y != None:
+        if y is not None:
             dy = y - self.y
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
             else:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(dy)))
-        if z != None:
+        if z is not None:
             dz = z - self.z
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
             else:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(dz)))
-        if i != None:
-            if self.arc_centre_absolute == False:
+        if i is not None:
+            if not self.arc_centre_absolute:
                 i = i - self.x
             s = self.fmt.string(i)
-            if self.arc_centre_positive == True:
+            if self.arc_centre_positive:
                 if s[0] == "-":
                     s = s[1:]
             self.write(self.SPACE() + self.CENTRE_X() + s)
-        if j != None:
-            if self.arc_centre_absolute == False:
+        if j is not None:
+            if not self.arc_centre_absolute:
                 j = j - self.y
             s = self.fmt.string(j)
-            if self.arc_centre_positive == True:
+            if self.arc_centre_positive:
                 if s[0] == "-":
                     s = s[1:]
             self.write(self.SPACE() + self.CENTRE_Y() + s)
-        if k != None:
-            if self.arc_centre_absolute == False:
+        if k is not None:
+            if not self.arc_centre_absolute:
                 k = k - self.z
             s = self.fmt.string(k)
-            if self.arc_centre_positive == True:
+            if self.arc_centre_positive:
                 if s[0] == "-":
                     s = s[1:]
             self.write(self.SPACE() + self.CENTRE_Z() + s)
-        if r != None:
+        if r is not None:
             s = self.fmt.string(r)
-            if self.arc_centre_positive == True:
+            if self.arc_centre_positive:
                 if s[0] == "-":
                     s = s[1:]
             self.write(self.SPACE() + self.RADIUS() + s)
@@ -823,11 +823,11 @@ class Creator(nc.Creator):
         self.write_spindle()
         self.write_misc()
         self.write("\n")
-        if x != None:
+        if x is not None:
             self.x = x
-        if y != None:
+        if y is not None:
             self.y = y
-        if z != None:
+        if z is not None:
             self.z = z
 
     def arc_cw(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
@@ -864,7 +864,7 @@ class Creator(nc.Creator):
 
     def start_CRC(self, left=True, radius=0.0):
         # set up prep code, to be output on next line
-        if self.t == None:
+        if self.t is None:
             raise "No tool specified for start_CRC()"
         self.write_blocknum()
         if left:
@@ -917,16 +917,16 @@ class Creator(nc.Creator):
         internal_coolant_on=None,
         rapid_to_clearance=None,
     ):
-        if standoff == None:
+        if standoff is None:
             # This is a bad thing.	All the drilling cycles need a retraction (and starting) height.
             return
 
-        if z == None:
+        if z is None:
             return  # We need a Z value as well.	This input parameter represents the top of the hole
 
         if self.drillExpanded:
             # for machines which don't understand G81, G82 etc.
-            if peck_depth == None:
+            if peck_depth is None:
                 peck_depth = depth
             current_z = z
             self.rapid(x, y)
@@ -997,12 +997,12 @@ class Creator(nc.Creator):
 
         # Set the retraction point to the 'standoff' distance above the starting z height.
         retract_height = z + standoff
-        if x != None:
+        if x is not None:
             dx = x - self.x
             self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             self.x = x
 
-        if y != None:
+        if y is not None:
             dy = y - self.y
             self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
             self.y = y
@@ -1058,14 +1058,14 @@ class Creator(nc.Creator):
         # zretract=None, dwell_bottom=None,pitch=None, stoppos=None, spin_in=None, spin_out=None):
         # I dont see how to map these to EMC Gcode
 
-        if standoff == None:
+        if standoff is None:
             # This is a bad thing.	All the drilling cycles need a retraction (and starting) height.
             return
-        if z == None:
+        if z is None:
             return  # We need a Z value as well.  This input parameter represents the top of the hole
-        if pitch == None:
+        if pitch is None:
             return  # We need a pitch value.
-        if direction == None:
+        if direction is None:
             return  # We need a direction value.
 
         if tap_mode != 0:
@@ -1086,15 +1086,15 @@ class Creator(nc.Creator):
             self.rapid(z=retract_height)
 
         # then continue to x,y if given
-        if (x != None) or (y != None):
+        if (x is not None) or (y is not None):
             self.write_blocknum()
             self.write(self.RAPID())
 
-            if x != None:
+            if x is not None:
                 self.write(self.X() + self.fmt.string(x + self.shift_x))
                 self.x = x
 
-            if y != None:
+            if y is not None:
                 self.write(self.Y() + self.fmt.string(y + self.shift_y))
                 self.y = y
             self.write("\n")
@@ -1334,7 +1334,7 @@ class Creator(nc.Creator):
         self.write(self.FEEDRATE() + " [" + self.ffmt.string(self.fh) + " / 5.0 ]")
         self.write("\t(Set the feed rate for probing)\n")
 
-        if x != None and y != None:
+        if x is not None and y is not None:
             self.write_blocknum()
             self.write(self.RAPID())
             self.write(" X " + x + " Y " + y + "\n")
@@ -1408,13 +1408,13 @@ class Creator(nc.Creator):
     def rapid_to_midpoint(self, x1=None, y1=None, z1=None, x2=None, y2=None, z2=None):
         self.write_blocknum()
         self.write(self.RAPID())
-        if (x1 != None) and (x2 != None):
+        if (x1 is not None) and (x2 is not None):
             self.write((" X " + "[[[" + x1 + " - " + x2 + "] / 2.0] + " + x2 + "]"))
 
-        if (y1 != None) and (y2 != None):
+        if (y1 is not None) and (y2 is not None):
             self.write((" Y " + "[[[" + y1 + " - " + y2 + "] / 2.0] + " + y2 + "]"))
 
-        if (z1 != None) and (z2 != None):
+        if (z1 is not None) and (z2 is not None):
             self.write((" Z " + "[[[" + z1 + " - " + z2 + "] / 2.0] + " + z2 + "]"))
 
         self.write("\n")

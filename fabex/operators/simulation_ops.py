@@ -4,14 +4,7 @@ Blender Operator definitions are in this file.
 They mostly call the functions from 'utils.py'
 """
 
-import os
 
-import shapely
-from shapely import (
-    affinity,
-    prepared,
-    speedups,
-)
 
 import bpy
 from bpy.props import StringProperty
@@ -77,7 +70,7 @@ class CAMSimulate(Operator, AsyncOperatorMixin):
         if operation_name in bpy.data.objects:
             try:
                 await do_simulation(operation_name, [operation])
-            except AsyncCancelledException as e:
+            except AsyncCancelledException:
                 return {"CANCELLED"}
 
         else:
@@ -177,7 +170,7 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
         if canSimulate:
             try:
                 await do_simulation(chain.name, chainops)
-            except AsyncCancelledException as e:
+            except AsyncCancelledException:
                 return {"CANCELLED"}
 
         else:

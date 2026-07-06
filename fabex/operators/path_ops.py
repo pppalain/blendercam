@@ -10,16 +10,9 @@ import os
 import subprocess
 import textwrap
 import threading
-import time
 import traceback
 
 import bpy
-from bpy.props import (
-    BoolProperty,
-    EnumProperty,
-    StringProperty,
-    FloatProperty,
-)
 from bpy.types import Operator
 
 from .async_op import (
@@ -28,33 +21,22 @@ from .async_op import (
 )
 
 from .. import __package__ as base_package
-from ..constants import was_hidden_dict
 from ..exception import CamException
 from ..gcode.gcode_export import export_gcode_path
 from ..toolpath import get_path
 
 from ..utilities.async_utils import progress_async
-from ..utilities.logging_utils import log, heading, LOG_WIDTH
-from ..utilities.shapely_utils import (
-    shapely_to_curve,
-    chunks_to_shapely,
-)
+from ..utilities.logging_utils import log, heading
 from ..utilities.simple_utils import (
-    activate,
-    add_to_group,
     safe_filename,
 )
 from ..utilities.thread_utils import (
     threadCom,
     thread_read,
-    timer_update,
 )
-from ..utilities.machine_utils import add_machine_area_object
-from ..utilities.bounds_utils import get_bounds_worldspace
 from ..utilities.operation_utils import (
     chain_valid,
     source_valid,
-    reload_paths,
     get_chain_operations,
 )
 
@@ -250,20 +232,20 @@ async def _calc_path(operator, context):
 
     log.info(heading("A & B Axes"))
     if o.enable_a_axis:
-        log.info(f"A Axis: Enabled")
+        log.info("A Axis: Enabled")
         log.info(f"Angle: {o.rotation_a * 180 / pi:.1f} deg")
         log.info(f"A Along X: {o.a_along_x}")
     else:
         log.info("A Axis: Disabled")
     if o.enable_b_axis:
-        log.info(f"B Axis: Enabled")
+        log.info("B Axis: Enabled")
         log.info(f"Angle: {o.rotation_b * 180 / pi:.1f} deg")
     else:
         log.info("B Axis: Disabled")
 
     log.info(heading("Array"))
     if o.array:
-        log.info(f"Array: Enabled")
+        log.info("Array: Enabled")
         log.info(f"X: {o.array_x_count} x {o.array_x_distance * 1000:.3f}{unit}")
         log.info(f"Y: {o.array_y_count} x {o.array_y_distance * 1000:.3f}{unit}")
     else:
@@ -271,7 +253,7 @@ async def _calc_path(operator, context):
 
     log.info(heading("Bridges"))
     if o.use_bridges:
-        log.info(f"Bridges: Enabled")
+        log.info("Bridges: Enabled")
         log.info(f"Width: {o.bridges_width * 1000:.3f}{unit}")
         log.info(f"Height: {o.bridges_height * 1000:.3f}{unit}")
         log.info(f"Bridge Collection: {o.bridges_collection_name or 'None'}")
@@ -510,7 +492,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
         }
 
         module = f".post_processors.{processor_extension[m.post_processor][0]}"
-        postprocessor = import_module(module, base_package)
+        import_module(module, base_package)
         extension = processor_extension[m.post_processor][1]
 
         name_raw = operation.name if operation.link_operation_file_names else operation.filename

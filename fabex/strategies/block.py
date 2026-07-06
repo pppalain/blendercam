@@ -16,7 +16,6 @@ from ..utilities.operation_utils import (
     get_layers,
     get_move_and_spin,
 )
-from ..utilities.simple_utils import progress
 
 
 async def block(o):
@@ -32,8 +31,6 @@ async def block(o):
     minyp = miny
     x = 0.0
     y = 0.0
-    incx = 1
-    incy = 0
     chunk = CamPathChunkBuilder([])
     i = 0
 

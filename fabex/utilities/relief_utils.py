@@ -90,7 +90,7 @@ def restrict_buffer(inbuf, outbuf):
         # 3 is the maximum value...?pff.
         indices = np.arange(outx * outy * 2 * 3).reshape((2, outx * outy, 3))
 
-        r = sxendrange - sxstartrange
+        sxendrange - sxstartrange
 
         indices[0] = sxstartrange.repeat(outy)
         indices[1] = systartrange.repeat(outx).reshape(outx, outy).swapaxes(0, 1).flatten()
@@ -271,9 +271,8 @@ def calculate_defect(D, U, F):
     sy = F.shape[1]
 
     h = 1.0 / sqrt(sx * sy * 1.0)
-    h2i = 1.0 / (h * h)
+    1.0 / (h * h)
 
-    h2i = 1
     D[1:-1, 1:-1] = (
         F[1:-1, 1:-1] - U[:-2, 1:-1] - U[2:, 1:-1] - U[1:-1, :-2] - U[1:-1, 2:] + 4 * U[1:-1, 1:-1]
     )
@@ -832,7 +831,7 @@ def render_scene(width, height, bit_diameter, passes_per_radius, make_nodes, vie
     if make_nodes:
         # If Blender is v5 or greater, use the new Compositor settings
         if blender_version >= 5:
-            if scene.compositing_node_group == None:
+            if scene.compositing_node_group is None:
                 bpy.ops.node.new_compositing_node_group()
 
             for group in bpy.data.node_groups:
@@ -851,7 +850,7 @@ def render_scene(width, height, bit_diameter, passes_per_radius, make_nodes, vie
         # If Blender is v4 or lower, use the legacy Compositor settings
         else:
             # make depth render node and viewer node
-            if scene.use_nodes == False:
+            if not scene.use_nodes:
                 scene.use_nodes = True
             node_tree = scene.node_tree
             nodes = node_tree.nodes
@@ -928,7 +927,7 @@ def problem_areas(br):
             saves the result.
     """
 
-    t = time.time()
+    # t = time.time()
     if br.use_image_source:
         i = bpy.data.images[br.source_image_name]
     else:
@@ -936,11 +935,11 @@ def problem_areas(br):
     silh_thres = br.silhouette_threshold
     recover_silh = br.recover_silhouettes
     silh_scale = br.silhouette_scale
-    MINS = br.min_gridsize
-    smoothiterations = br.smooth_iterations
-    vcycleiterations = br.vcycle_iterations
-    linbcgiterations = br.linbcg_iterations
-    useplanar = br.use_planar
+    # MINS = br.min_gridsize
+    # smoothiterations = br.smooth_iterations
+    # vcycleiterations = br.vcycle_iterations
+    # linbcgiterations = br.linbcg_iterations
+    # useplanar = br.use_planar
     if br.gradient_scaling_mask_use:
         m = bpy.data.images[br.gradient_scaling_mask_name]
 
@@ -960,7 +959,7 @@ def problem_areas(br):
 
     # it' ok, we can treat neg and positive silh separately here:
     a = br.attenuation
-    planar = nar < (nar.min() + 0.0001)
+    # planar = nar < (nar.min() + 0.0001)
     # sqrt for silhouettes recovery:
     sqrarx = np.abs(gx)
     for iter in range(0, br.silhouette_exponent):
@@ -1129,7 +1128,7 @@ def relief(br):
         divgf = np.fft.fft2(divg)
         divgfshift = np.fft.fftshift(divgf)
         mask = divg.copy()
-        pos = np.array((crow, ccol))
+        # pos = np.array((crow, ccol))
 
         def filterwindow(x, y, cx=0, cy=0):
             return abs((cx - x)) + abs((cy - y))

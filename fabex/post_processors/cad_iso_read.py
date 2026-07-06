@@ -5,9 +5,9 @@
 #
 # Hirutso Enni, 2009-01-13
 
-""" use this script to backplot nc files to *.scr file for autocad,bricscad,
-    draftsight,progecad,ares commander, etc....
-    usage: python cad_iso_read.py temp.nc temp.scr
+"""use this script to backplot nc files to *.scr file for autocad,bricscad,
+draftsight,progecad,ares commander, etc....
+usage: python cad_iso_read.py temp.nc temp.scr
 """
 
 
@@ -137,12 +137,12 @@ class Parser(nc.Parser):
         elif word[0] == "O":
             self.col = "program"
         elif word[0] == "P" or word[0] == "p":
-            if self.no_move != True:
+            if not self.no_move:
                 self.col = "axis"
                 self.p = eval(word[1:])
                 self.move = True
         elif word[0] == "Q" or word[0] == "q":
-            if self.no_move != True:
+            if not self.no_move:
                 self.col = "axis"
                 self.q = eval(word[1:])
                 self.move = True

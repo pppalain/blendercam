@@ -12,13 +12,11 @@ from ..utilities.compare_utils import angle
 from ..utilities.logging_utils import log
 from ..utilities.simple_utils import (
     active_name,
-    duplicate,
     mirror_x,
     union,
     move,
     join_multiple,
     duplicate,
-    difference,
     make_active,
     remove_multiple,
     rename,
@@ -323,7 +321,6 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
                 j += 1
                 distance = j * 2 * finger_size + finger_size / 2
                 old_mortise_angle = mortise_angle
-        oldp = p
     if base:
         join_multiple("_base")
         active_name("base")
@@ -436,7 +433,6 @@ def variable_finger(
 
                 oldfinger_sz = finger_sz
                 old_mortise_angle = mortise_angle
-        oldp = p
     if base:
         join_multiple("_base")
         active_name("base")

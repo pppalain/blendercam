@@ -42,6 +42,13 @@ error_log_path = Path(error_log_folder, f"Error_{current_time}.log")
 error_handler = logging.FileHandler(error_log_path)
 error_handler.setLevel(logging.ERROR)
 
+# Create another file handler for test logging
+test_log_folder = Path(__file__).parent.parent / "logs"
+test_log_folder.mkdir(parents=True, exist_ok=True)
+test_log_path = Path(error_log_folder, f"Test_{current_time}.log")
+test_handler = logging.FileHandler(error_log_path)
+test_handler.setLevel(logging.ERROR)
+
 # Create console handler to pass messages to console
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.INFO)
@@ -51,7 +58,7 @@ file_formatter = logging.Formatter(
     "%(asctime)s | %(levelname)8s: %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
-error_formatter = logging.Formatter(
+error_formatter = test_formatter = logging.Formatter(
     "%(asctime)s | %(levelname)s: %(message)s | File '%(pathname)s', line %(lineno)d in %(funcName)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
@@ -61,9 +68,11 @@ console_formatter = ConsoleFormatter(
 
 file_handler.setFormatter(file_formatter)
 error_handler.setFormatter(error_formatter)
+test_handler.setFormatter(test_formatter)
 console_handler.setFormatter(console_formatter)
 
 # Adding handlers to the logger
 log.addHandler(file_handler)
 log.addHandler(error_handler)
+log.addHandler(test_handler)
 log.addHandler(console_handler)

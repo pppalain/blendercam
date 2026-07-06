@@ -4,7 +4,6 @@ Parent (Mixin) class for all panels in 'panels'
 Sets up polling and operations to show / hide panels based on Interface Level
 """
 
-import inspect
 
 import bpy
 
@@ -47,6 +46,6 @@ class CAMParentPanel:
         self.op = operations[operation_index] if operations_count > 0 else None
 
         # Auto-title and widen panels when called from pie_menu
-        if not context.area.type == "PROPERTIES" and not context.region.type in ["UI", "TOOLS"]:
+        if not context.area.type == "PROPERTIES" and context.region.type not in ["UI", "TOOLS"]:
             self.layout.ui_units_x = 20
             # self.layout.label(text=self.bl_label)

@@ -7,7 +7,6 @@
 
 from . import nc_read as nc
 import re
-import sys
 
 ################################################################################
 
@@ -144,12 +143,12 @@ class Parser(nc.Parser):
         elif word[0] == "O":
             self.col = "program"
         elif word[0] == "P" or word[0] == "p":
-            if self.no_move != True:
+            if not self.no_move:
                 self.col = "axis"
                 self.p = eval(word[1:])
                 self.move = True
         elif word[0] == "Q" or word[0] == "q":
-            if self.no_move != True:
+            if not self.no_move:
                 self.col = "axis"
                 self.q = eval(word[1:])
                 self.move = True

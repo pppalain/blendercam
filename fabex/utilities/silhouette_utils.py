@@ -1,4 +1,4 @@
-import time, bmesh
+import time
 
 import numpy as np
 from shapely.ops import unary_union
@@ -8,6 +8,7 @@ from shapely.geometry import (
 )
 
 import bpy
+import bmesh
 
 from .curve_utils import (
     curve_to_shapely,
@@ -148,12 +149,12 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
                     m = ob.data
 
                 mw = ob.matrix_world
-                mwi = mw.inverted()
+                # mwi = mw.inverted()
                 r = ob.rotation_euler
                 m.calc_loop_triangles()
                 id = 0
                 e = 0.000001
-                scaleup = 100
+                # scaleup = 100
 
                 for tri in m.loop_triangles:
                     n = tri.normal.copy()
@@ -255,8 +256,8 @@ def get_operation_silhouette(operation):
         Silhouette: The computed silhouette for the operation.
     """
     if operation.update_silhouette_tag:
-        image = None
-        objects = None
+        # image = None
+        # objects = None
 
         if operation.geometry_source in ["OBJECT", "COLLECTION"]:
             if not operation.onlycurves:

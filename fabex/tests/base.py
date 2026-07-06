@@ -1,6 +1,5 @@
 from pathlib import Path
 import subprocess
-import tempfile
 
 blender = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
 
@@ -27,9 +26,8 @@ def build_extension(blender):
 
 
 def blender_command(blender, command):
-
     path = "test_func.py"
-    temp_file = Path(path).write_text(command)
+    Path(path).write_text(command)
 
     subprocess.run(
         [
