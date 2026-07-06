@@ -22,9 +22,9 @@ if __name__ == "__main__":
         import sys
 
         sys.path.append(fabex_path)
-        from tests.base import build_extension, blender
+        from tests.base import build_extension
     else:
-        from .base import build_extension, blender
+        from .base import build_extension
 
     # Build fresh copy of extension
     build_extension(blender)
