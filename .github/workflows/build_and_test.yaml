@@ -87,7 +87,6 @@ jobs:
         fi
         export ADDON_PATH=${PWD}/blendercam.zip
         cd fabex/tests
-        python install_addon.py ${ADDON_PATH}
         blender -b -P __init__.py
 
     - uses: actions/upload-artifact@v4
