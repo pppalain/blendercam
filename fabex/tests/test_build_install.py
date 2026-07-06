@@ -1,11 +1,22 @@
 import unittest
 
-from .base import (
-    activate_dependencies,
-    activate_engine,
-    get_modules,
-    install_extension,
-)
+if __package__ is None:
+    import sys
+
+    sys.path.append(fabex_path)
+    from tests.base import (
+        activate_dependencies,
+        activate_engine,
+        get_modules,
+        install_extension,
+    )
+else:
+    from .base import (
+        activate_dependencies,
+        activate_engine,
+        get_modules,
+        install_extension,
+    )
 
 
 class FabexDependencyTest(unittest.TestCase):
