@@ -34,7 +34,7 @@ if __name__ == "__main__":
     suite = loader.discover(
         start_dir=test_path,
         pattern="test*.py",
-        top_level_dir="fabex",
+        # top_level_dir="fabex",
     )
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(suite)
