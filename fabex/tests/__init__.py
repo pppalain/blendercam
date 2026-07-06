@@ -12,6 +12,28 @@ path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.
 
 blender = path_to_blender_executable if shutil.which("blender") is None else "blender"
 
+
+def build_extension(blender):
+    source_dir = str(Path(__file__).parent.parent)
+    output_dir = str(Path(__file__).parent.parent.parent)
+
+    subprocess.run(
+        [
+            blender,
+            "--background",
+            "--factory-startup",
+            "--command",
+            "extension",
+            "build",
+            "--source-dir",
+            source_dir,
+            "--output-dir",
+            output_dir,
+            # "--split-platforms",
+        ],
+    )
+
+
 # Path to the 'fabex' directory
 # __init__.py / tests / fabex
 fabex_path = str(Path(__file__).parent.parent)
@@ -34,7 +56,7 @@ if __name__ == "__main__":
     suite = loader.discover(
         start_dir=test_path,
         pattern="test*.py",
-        # top_level_dir="fabex",
+        top_level_dir="fabex",
     )
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(suite)

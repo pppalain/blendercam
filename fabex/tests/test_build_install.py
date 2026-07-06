@@ -4,27 +4,6 @@ from pathlib import Path
 import subprocess
 
 
-def build_extension(blender):
-    source_dir = str(Path(__file__).parent.parent)
-    output_dir = str(Path(__file__).parent.parent.parent)
-
-    subprocess.run(
-        [
-            blender,
-            "--background",
-            "--factory-startup",
-            "--command",
-            "extension",
-            "build",
-            "--source-dir",
-            source_dir,
-            "--output-dir",
-            output_dir,
-            # "--split-platforms",
-        ],
-    )
-
-
 def blender_command(blender, command):
     path = "test_func.py"
     Path(path).write_text(command)
