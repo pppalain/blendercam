@@ -68,7 +68,7 @@ jobs:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
 
-    - name: Run tests
+    - name: Run Basic tests
       shell: bash
       run: |
         if [ "${{ runner.os }}" != "macOS" ]; then
@@ -77,7 +77,16 @@ jobs:
         fi
         cd fabex/tests
         blender -b --factory-startup -P __init__.py
-        blender -b -P test_suite.py
+
+    - name: Run Advanced tests
+      shell: bash
+      run: |
+        if [ "${{ runner.os }}" != "macOS" ]; then
+          export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
+          export PATH=$PATH:${BLENDER_BIN_PATH}
+        fi
+        cd fabex/tests
+        python test_suite.py -vvv
 
     - uses: actions/upload-artifact@v4
       if: always()
