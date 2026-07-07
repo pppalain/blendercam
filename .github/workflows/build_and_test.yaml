@@ -77,7 +77,7 @@ jobs:
         fi
         cd fabex/tests
         blender -b --factory-startup -P __init__.py
-        python test_suite.py -vvv
+        blender -b --factory-startup -P test_suite.py
 
     - uses: actions/upload-artifact@v4
       if: always()
