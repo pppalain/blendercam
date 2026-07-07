@@ -76,7 +76,7 @@ jobs:
           export PATH=$PATH:${BLENDER_BIN_PATH}
         fi
         cd fabex/tests
-        blender -b -P __init__.py
+        blender -b --factory-startup -P __init__.py
 
     - uses: actions/upload-artifact@v4
       if: always()

@@ -4,12 +4,35 @@ import subprocess
 import sys
 import unittest
 import shutil
+from pathlib import Path
 
-# blender = (
-#     "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
-#     if shutil.which("blender") is None
-#     else "blender"
-# )
+blender = (
+    "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
+    if shutil.which("blender") is None
+    else "blender"
+)
+
+# G-code Generator script, stripped down
+GCODE_SCRIPT = """
+import sys
+import warnings
+
+import bpy
+
+# Set the Render Engine to Fabex
+scene = bpy.context.scene
+scene.render.engine = "FABEX_RENDER"
+operations = scene.cam_operations
+
+for i, operation in enumerate(operations):
+    # Set the active operation using the index
+    scene.cam_active_operation = i
+
+    # Run the calculate_cam_path() operator
+    bpy.ops.object.calculate_cam_path()
+
+sys.exit(0)
+"""
 
 
 # @unittest.skip("Old Gcode Test")
@@ -17,7 +40,7 @@ class FabexGcodeTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.original_dir = os.getcwd()
-        cls.generator_path = os.path.join(cls.original_dir, "gcode_generator.py")
+        # cls.generator_path = os.path.join(cls.original_dir, "gcode_generator.py")
         cls.blend_test_cases = cls.get_test_cases()
 
     @staticmethod
@@ -61,9 +84,12 @@ class FabexGcodeTest(unittest.TestCase):
         return "".join(list(diff)[:num_lines])
 
     def execute_blender(self, blend_file):
-        command = f'{blender} -noaudio -b "{blend_file}" -P "{self.generator_path}"'
+        path = "test_func.py"
+        Path(path).write_text(GCODE_SCRIPT)
+        command = f'{blender} -noaudio -b "{blend_file}" -P "{path}"'
         print(f"Executing: {command}")
         subprocess.run(command, shell=True, check=True)
+        Path.unlink(path)
 
     def run_test_case(self, test_case):
         # Start in the original working directory
