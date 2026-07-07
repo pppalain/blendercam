@@ -75,7 +75,6 @@ def blender_command(blender, command):
 class FabexGcodeTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        blender_command(blender, INSTALL_CODE)
         cls.original_dir = os.getcwd()
         # cls.generator_path = os.path.join(cls.original_dir, "gcode_generator.py")
         cls.blend_test_cases = cls.get_test_cases()
@@ -171,5 +170,7 @@ if __name__ == "__main__":
             return self.run_test_case(tc)
 
         setattr(FabexGcodeTest, f'test_{test_case["subdir_name"]}', test_func)
+
+        blender_command(blender, INSTALL_CODE)
 
     unittest.main()
