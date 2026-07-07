@@ -41,7 +41,7 @@ def activate_dependencies(self):
     for dependency in dependencies:
         try:
             bpy.ops.preferences.addon_enable(module=f"bl_ext.blender_org.{dependency}")
-        except:
+        except ModuleNotFoundError:
             bpy.ops.extensions.package_install(repo_index=0, pkg_id=dependency)
 
     addons = bpy.context.preferences.addons
