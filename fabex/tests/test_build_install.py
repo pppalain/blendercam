@@ -38,11 +38,13 @@ def activate_dependencies(self):
         "stl_format_legacy",
     ]
 
+    addons = bpy.context.preferences.addons
+
     for dependency in dependencies:
-        # try:
-        #     bpy.ops.preferences.addon_enable(module=f"bl_ext.blender_org.{dependency}")
-        # except (RuntimeError, ModuleNotFoundError):
-        bpy.ops.extensions.package_install(repo_index=0, pkg_id=dependency)
+        if dependency in addons:
+            bpy.ops.preferences.addon_enable(module=f"bl_ext.blender_org.{dependency}")
+        else:
+            bpy.ops.extensions.package_install(repo_index=0, pkg_id=dependency)
 
     addons = bpy.context.preferences.addons
     self.modules = [addon.module for addon in addons]
