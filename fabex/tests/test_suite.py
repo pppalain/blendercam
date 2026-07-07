@@ -35,18 +35,6 @@ sys.exit(0)
 """
 
 
-def install_extension():
-    import bpy
-
-    version_file = Path(__file__).parent.parent / "version.py"
-    with open(version_file) as f:
-        lines = f.readlines()
-        version = lines[0].split("(")[1].replace(",", "")
-    major, minor, patch = version[0], version[1], version[2]
-    path = str(Path(__file__).parent.parent.parent / f"fabex-{major}.{minor}.{patch}.zip")
-    bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
-
-
 # @unittest.skip("Old Gcode Test")
 class FabexGcodeTest(unittest.TestCase):
     @classmethod
@@ -139,7 +127,6 @@ class FabexGcodeTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    install_extension()
     # # Add a test method for each test case to the TestCase class
     for test_case in FabexGcodeTest.get_test_cases():
 
