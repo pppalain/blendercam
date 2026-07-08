@@ -2,7 +2,7 @@ import unittest
 from pathlib import Path
 import subprocess
 import time
-import shutil
+import os
 
 from .base import build_extension
 
@@ -116,7 +116,7 @@ class FabexInstallTest(unittest.TestCase):
     """Test Installation of addon, uses the zip created in the __init__"""
 
     def setUp(self):
-        build_extension(shutil.which("blender"))
+        build_extension(os.getenv("blender"))
         install_extension()
         get_modules(self)
 
