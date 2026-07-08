@@ -97,7 +97,7 @@ jobs:
 
     - name: Run tests
       run:  |
-        if ( "${{ runner.os }}" != "macOS" ); then
+        if [ "${{ runner.os }}" != "macOS" ]; then
           export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
           export PATH=$PATH:${BLENDER_BIN_PATH}
         fi 
@@ -111,7 +111,7 @@ jobs:
           export PATH=$PATH:${BLENDER_BIN_PATH}
         fi
         cd fabex/tests
-        python test_suite.py -vvv
+        uv run test_suite.py -vvv
 
     - uses: actions/upload-artifact@v4
       if: always()
