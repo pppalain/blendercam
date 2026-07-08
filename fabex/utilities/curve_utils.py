@@ -20,9 +20,13 @@ from shapely.validation import explain_validity
 
 from ..exception import CamException
 
+import bpy
+
+
 def curve_validate():
     poly=active_to_shapely_poly()
     error_msg = explain_validity(poly)
+    remove_multiple("Self-intersection[")  #remove old errors
 
     # Find negative numbers, decimals, and integers
     pattern = r'-?\d+\.?\d*'
@@ -34,6 +38,8 @@ def curve_validate():
         bpy.ops.curve.primitive_bezier_circle_add(radius=0.003, align='WORLD',
                                                   location=(coordinates[0], coordinates[1], 0))
         active_name(error_msg)
+        bpy.ops.view3d.view_selected()
+
     print(error_msg)
 
 def curve_to_shapely(cob, use_modifiers=False):
