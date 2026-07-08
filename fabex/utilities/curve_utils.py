@@ -22,6 +22,10 @@ from ..exception import CamException
 
 import bpy
 
+"""Validates a curve and checks for self intersections using
+Shapely.  
+Upon error detection, it creates a circle at the problem coordinates named with
+the problem error message"""
 
 def curve_validate():
     poly=active_to_shapely_poly()
