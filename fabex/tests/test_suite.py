@@ -166,9 +166,9 @@ class FabexGcodeTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    build_extension(blender)
+    # build_extension(blender)
     install_extension()
-    activate_engine()
+    # activate_engine()
     # # Add a test method for each test case to the TestCase class
     for test_case in FabexGcodeTest.get_test_cases():
 
