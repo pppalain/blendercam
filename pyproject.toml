@@ -60,7 +60,7 @@ shapely = [
 
 [tool.pytest.ini_options]
 pythonpath = [
-  "./fabex/tests"
+    "fabex/tests"
 ]
 
 [tool.uv]
@@ -83,12 +83,12 @@ exclude = "/fabex/presets/"
 target-version = ['py313']
 include = '\.py'
 
-[tool.unittest]
-discover = true
-start-directory = "./fabex/tests"
-pattern = "test*.py"
-top-level-directory = "./fabex"
-verbosity=2
+# [tool.unittest]
+# discover = true
+# start-directory = "./fabex/tests"
+# pattern = "test*.py"
+# top-level-directory = "./fabex"
+# verbosity=2
 
 [dependency-groups]
 dev = [
