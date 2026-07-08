@@ -90,8 +90,6 @@ jobs:
     - name: Install the project
       run: uv sync --locked --all-extras --dev
 
-
-
     - name: Run Basic tests
       shell: bash
       run: |
@@ -103,7 +101,7 @@ jobs:
 
     - name: Run tests
       # For example, using `pytest`
-      run: uv run pytest tests
+      run: uv run pytest
 
     # - name: Run Advanced tests
     #   shell: bash
