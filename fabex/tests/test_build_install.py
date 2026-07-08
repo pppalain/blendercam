@@ -3,8 +3,12 @@ from pathlib import Path
 import subprocess
 import time
 import os
-
+import shutil
 from .base import build_extension
+
+path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
+
+blender = path_to_blender_executable if shutil.which("blender") is None else "blender"
 
 
 def blender_command(blender, command):
@@ -116,7 +120,7 @@ class FabexInstallTest(unittest.TestCase):
     """Test Installation of addon, uses the zip created in the __init__"""
 
     def setUp(self):
-        build_extension("blender")
+        build_extension(blender)
         install_extension()
         get_modules(self)
 
