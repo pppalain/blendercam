@@ -90,17 +90,15 @@ jobs:
     - name: Install the project
       run: uv sync --locked --all-extras --dev
 
-    - name: Run Basic tests
+    - name: Export blender var
       shell: bash
       run: |
         if [ "${{ runner.os }}" != "macOS" ]; then
           export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
           export PATH=$PATH:${BLENDER_BIN_PATH}
         fi
-# uv run pytest
 
     - name: Run tests
-      # For example, using `pytest`
       run: uv run pytest
 
     # - name: Run Advanced tests
