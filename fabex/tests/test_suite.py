@@ -76,6 +76,9 @@ def activate_engine():
 
 # @unittest.skip("Old Gcode Test")
 class FabexGcodeTest(unittest.TestCase):
+    def setUp():
+        install_extension()
+
     @classmethod
     def setUpClass(cls):
         cls.original_dir = os.getcwd()
@@ -167,7 +170,7 @@ class FabexGcodeTest(unittest.TestCase):
 
 if __name__ == "__main__":
     # build_extension(blender)
-    install_extension()
+    # install_extension()
     # activate_engine()
     # # Add a test method for each test case to the TestCase class
     for test_case in FabexGcodeTest.get_test_cases():
