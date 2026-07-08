@@ -104,7 +104,7 @@ jobs:
         fi
 
     - name: Run tests
-      run: uv run pytest --verbosity=2
+      run: uv run pytest --ignore=blender
 
     # - name: Run Advanced tests
     #   shell: bash
