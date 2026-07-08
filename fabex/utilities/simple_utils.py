@@ -533,6 +533,7 @@ def make_active(name):
     bpy.ops.object.select_all(action="DESELECT")
     bpy.context.view_layer.objects.active = ob
     ob.select_set(True)
+    return ob
 
 
 # change the name of the active object
@@ -546,12 +547,15 @@ def active_name(name):
 
     Args:
         name (str): The new name to assign to the active object.
+
+    Returns: the object
     """
     bpy.context.active_object.name = name
+    return bpy.context.active_object
 
 
 # renames and makes active name and makes it active
-def rename(name, name2):
+def rename(oldName, newName):
     """Rename an object and make it active.
 
     This function renames an object in the Blender context and sets it as
@@ -560,11 +564,11 @@ def rename(name, name2):
     new name provided.
 
     Args:
-        name (str): The current name of the object to be renamed.
-        name2 (str): The new name to assign to the active object.
+        oldName (str): The current name of the object to be renamed.
+        newName (str): The new name to assign to the active object.
     """
-    make_active(name)
-    bpy.context.active_object.name = name2
+    make_active(oldName)
+    bpy.context.active_object.name = newName
 
 
 # boolean union of objects starting with name result is object name.
@@ -608,7 +612,7 @@ def intersect(name):
 
 
 def difference(name, basename):
-    """Perform a boolean difference operation on objects.
+    """Perform a boolean difference operation on curve objects.
 
     This function selects a series of objects specified by `name` and
     performs a boolean difference operation with the object specified by
@@ -632,7 +636,7 @@ def difference(name, basename):
 
 # duplicate active object or duplicate move
 # if x or y not the default, duplicate move will be executed
-def duplicate(x=0.0, y=0.0):
+def duplicate(x=0.0, y=0.0, z=0.0):
     """Duplicate an active object or move it based on the provided coordinates.
 
     This function duplicates the currently active object in Blender. If both
@@ -646,12 +650,12 @@ def duplicate(x=0.0, y=0.0):
         y (float): The y-coordinate offset for the duplication.
             Defaults to 0.
     """
-    if x == 0.0 and y == 0.0:
+    if x == 0.0 and y == 0.0 and z ==0.0:
         bpy.ops.object.duplicate()
     else:
         bpy.ops.object.duplicate_move(
             OBJECT_OT_duplicate={"linked": False, "mode": "TRANSLATION"},
-            TRANSFORM_OT_translate={"value": (x, y, 0.0)},
+            TRANSFORM_OT_translate={"value": (x, y, z)},
         )
 
 
@@ -691,7 +695,7 @@ def mirror_y():
 
 
 # move active object and apply translation
-def move(x=0.0, y=0.0):
+def move(x=0.0, y=0.0, z=0.0):
     """Move the active object in the 3D space by applying a translation.
 
     This function translates the active object in Blender's 3D view by the
@@ -702,8 +706,9 @@ def move(x=0.0, y=0.0):
     Args:
         x (float): The distance to move the object along the x-axis. Defaults to 0.0.
         y (float): The distance to move the object along the y-axis. Defaults to 0.0.
+        Z (float)
     """
-    bpy.ops.transform.translate(value=(x, y, 0.0))
+    bpy.ops.transform.translate(value=(x, y, z))
     bpy.ops.object.transform_apply(location=True)
 
 
@@ -981,6 +986,27 @@ def subdivide_long_edges(ob, threshold):
             ob.update_from_editmode()
         iter += 1
 
+def extrude_curve2mesh(height=0.001):
+    """Extrudes a closed curve to mesh with a height.
+    This way of extruding does not produce non manifold mesh"""
+    bpy.context.object.data.dimensions = '2D'
+    bpy.context.object.data.fill_mode = 'BOTH'
+    bpy.ops.object.convert(target='MESH')
+    bpy.ops.object.editmode_toggle()
+    bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.mesh.dissolve_limited(angle_limit=0.00872665) # 0.5 degrees
+    bpy.ops.mesh.extrude_region_move(TRANSFORM_OT_translate={"value": (0, 0, height)})
+    bpy.ops.object.editmode_toggle()
+    return(bpy.context.active_object)
+
+def mesh_difference(toBeRemoved):
+    """subtract toBeRemoved from the active Mesh
+        Both need to be MANIFOLD"""
+    bpy.ops.object.modifier_add(type='BOOLEAN')
+    bpy.context.object.modifiers["Boolean"].solver = 'MANIFOLD'
+    bpy.context.object.modifiers["Boolean"].operation = 'DIFFERENCE'
+    bpy.context.object.modifiers["Boolean"].object = toBeRemoved  # difference
+    bpy.ops.object.modifier_apply(modifier="Boolean")
 
 def dilate_array(ar, cycles):
     """Dilate a binary array using a specified number of cycles.
@@ -1025,3 +1051,4 @@ def rotate_point_by_point(originp, p, ang):  # rotate point around another point
         qy = oy + sin(ang) * (px - ox) + cos(ang) * (py - oy)
     rot_p = [qx, qy, oz]
     return rot_p
+
