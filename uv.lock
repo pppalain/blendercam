@@ -39,7 +39,6 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "bpy" },
-    { name = "numpy" },
     { name = "pytest" },
 ]
 
@@ -66,7 +65,6 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "bpy", specifier = ">=5.1.2" },
-    { name = "numpy", specifier = "==2.3.4" },
     { name = "pytest", specifier = ">=9.1.1" },
 ]
 
