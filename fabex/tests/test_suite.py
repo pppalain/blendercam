@@ -66,13 +66,12 @@ def install_extension():
     bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
 
 
-def activate_engine(self):
+def activate_engine():
     import bpy
 
     # Set the Render Engine to Fabex
     scene = bpy.context.scene
     scene.render.engine = "FABEX_RENDER"
-    self.engine = scene.render.engine
 
 
 # @unittest.skip("Old Gcode Test")
@@ -169,7 +168,7 @@ class FabexGcodeTest(unittest.TestCase):
 if __name__ == "__main__":
     build_extension(blender)
     install_extension()
-    activate_engine(self)
+    activate_engine()
     # # Add a test method for each test case to the TestCase class
     for test_case in FabexGcodeTest.get_test_cases():
 
