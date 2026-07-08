@@ -66,8 +66,8 @@ pythonpath = [
 [tool.uv]
 environments = [
     "sys_platform == 'linux'",
-    # "sys_platform == 'darwin'",
-    # "sys_platform == 'win32'"
+    #"sys_platform == 'darwin'",
+    "sys_platform == 'win32'"
 ]
 required-environments = [
     "sys_platform == 'darwin' and platform_machine == 'x86_64'",
