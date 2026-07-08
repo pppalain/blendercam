@@ -3,6 +3,8 @@ from pathlib import Path
 import subprocess
 import time
 
+from .base import build_extension
+
 
 def blender_command(blender, command):
     path = "test_func.py"

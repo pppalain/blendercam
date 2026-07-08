@@ -475,9 +475,9 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
 
             newsample = get_sample_bullet_n_axis(cutter, startp, endp, rotation, cutterdepth)
 
-            ################################
-            # handling samples
-            ############################################
+            ####################
+            # handling samples #
+            ####################
             # this is weird, but will leave it this way now.. just prototyping here.
             if newsample is not None:
                 sampled = True
@@ -522,7 +522,13 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                                 # this probably doesn't work at all!!!! check this algoritm>
                                 betweenrotation = tuple_add(
                                     lastrotation,
-                                    tuple_multiply(tuple_subtract(rotation, lastrotation), ratio),
+                                    tuple_multiply(
+                                        tuple_subtract(
+                                            rotation,
+                                            lastrotation,
+                                        ),
+                                        ratio,
+                                    ),
                                 )
                                 # startpoint = retract point, it has to be always available...
                                 betweenstartpoint = (
@@ -810,7 +816,12 @@ async def sample_chunks(o, pathSamples, layers):
                     if lastsample is not None:  # this is an optimalization,
                         # search only for near depths to the last sample. Saves about 30% of sampling time.
                         z = get_sample_bullet(
-                            cutter, x, y, cutterdepth, 1, lastsample[2] - o.distance_along_paths
+                            cutter,
+                            x,
+                            y,
+                            cutterdepth,
+                            1,
+                            lastsample[2] - o.distance_along_paths,
                         )  # first try to the last sample
 
                         if z < minz - 1:

@@ -326,7 +326,8 @@ async def _calc_path(operator, context):
     log.info(f"Flutes: {o.cutter_flutes}")
     log.info(f"Tool Number: {o.cutter_id}")
     log.info(heading("~"))
-    # Set source object as active 
+
+    # Set source object as active
     if o.geometry_source == "OBJECT" and o.object_name in bpy.data.objects:
         source_ob = bpy.data.objects[o.object_name]
         bpy.ops.object.select_all(action="DESELECT")
