@@ -103,15 +103,15 @@ jobs:
         fi 
         uv run pytest --ignore=blender --verbosity=2
 
-    # - name: Run Advanced tests
-    #   shell: bash
-    #   run: |
-    #     if [ "${{ runner.os }}" != "macOS" ]; then
-    #       export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
-    #       export PATH=$PATH:${BLENDER_BIN_PATH}
-    #     fi
-    #     cd fabex/tests
-    #     python test_suite.py -vvv
+    - name: Run Advanced tests
+      shell: bash
+      run: |
+        if [ "${{ runner.os }}" != "macOS" ]; then
+          export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
+          export PATH=$PATH:${BLENDER_BIN_PATH}
+        fi
+        cd fabex/tests
+        python test_suite.py -vvv
 
     - uses: actions/upload-artifact@v4
       if: always()
