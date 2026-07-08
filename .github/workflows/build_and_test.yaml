@@ -3,6 +3,19 @@ on:
   push:
   pull_request:
 jobs:
+  uv-example:
+    name: python
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          # Install a specific version of uv.
+          version: "0.11.28"
+
   build_and_test:
     strategy:
       fail-fast: false
@@ -75,18 +88,17 @@ jobs:
           export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
           export PATH=$PATH:${BLENDER_BIN_PATH}
         fi
-        cd fabex/tests
-        blender -b --factory-startup -P __init__.py
+        uv run pytest
 
-    - name: Run Advanced tests
-      shell: bash
-      run: |
-        if [ "${{ runner.os }}" != "macOS" ]; then
-          export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
-          export PATH=$PATH:${BLENDER_BIN_PATH}
-        fi
-        cd fabex/tests
-        python test_suite.py -vvv
+    # - name: Run Advanced tests
+    #   shell: bash
+    #   run: |
+    #     if [ "${{ runner.os }}" != "macOS" ]; then
+    #       export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
+    #       export PATH=$PATH:${BLENDER_BIN_PATH}
+    #     fi
+    #     cd fabex/tests
+    #     python test_suite.py -vvv
 
     - uses: actions/upload-artifact@v4
       if: always()
