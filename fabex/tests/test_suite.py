@@ -6,14 +6,6 @@ import unittest
 import shutil
 from pathlib import Path
 
-from .base import build_extension, install_extension, activate_engine
-
-blender = (
-    "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
-    if shutil.which("blender") is None
-    else "blender"
-)
-
 # G-code Generator script, stripped down
 GCODE_SCRIPT = """
 import sys
@@ -35,6 +27,52 @@ for i, operation in enumerate(operations):
 
 sys.exit(0)
 """
+
+path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
+
+blender = path_to_blender_executable if shutil.which("blender") is None else "blender"
+
+
+def build_extension(blender):
+    source_dir = str(Path(__file__).parent.parent)
+    output_dir = str(Path(__file__).parent.parent.parent)
+
+    subprocess.run(
+        [
+            blender,
+            "--background",
+            "--factory-startup",
+            "--command",
+            "extension",
+            "build",
+            "--source-dir",
+            source_dir,
+            "--output-dir",
+            output_dir,
+            # "--split-platforms",
+        ],
+    )
+
+
+def install_extension():
+    import bpy
+
+    version_file = Path(__file__).parent.parent / "version.py"
+    with open(version_file) as f:
+        lines = f.readlines()
+        version = lines[0].split("(")[1].replace(",", "")
+    major, minor, patch = version[0], version[1], version[2]
+    path = str(Path(__file__).parent.parent.parent / f"fabex-{major}.{minor}.{patch}.zip")
+    bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
+
+
+def activate_engine(self):
+    import bpy
+
+    # Set the Render Engine to Fabex
+    scene = bpy.context.scene
+    scene.render.engine = "FABEX_RENDER"
+    self.engine = scene.render.engine
 
 
 # @unittest.skip("Old Gcode Test")
