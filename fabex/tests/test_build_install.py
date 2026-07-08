@@ -115,7 +115,7 @@ class FabexInstallTest(unittest.TestCase):
     """Test Installation of addon, uses the zip created in the __init__"""
 
     def setUp(self):
-        build_extension()
+        build_extension("blender")
         install_extension()
         get_modules(self)
 
