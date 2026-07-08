@@ -6,6 +6,8 @@ import unittest
 import shutil
 from pathlib import Path
 
+from .base import build_extension, install_extension, activate_engine
+
 blender = (
     "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
     if shutil.which("blender") is None
@@ -127,6 +129,9 @@ class FabexGcodeTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    build_extension(blender)
+    install_extension()
+    activate_engine(self)
     # # Add a test method for each test case to the TestCase class
     for test_case in FabexGcodeTest.get_test_cases():
 
