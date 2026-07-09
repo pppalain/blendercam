@@ -11,8 +11,28 @@ GCODE_SCRIPT = """
 import sys
 import warnings
 from pathlib import Path
+import subprocess
 
 import bpy
+
+source_dir = str(Path(__file__).parent.parent.parent.parent)
+output_dir = str(Path(__file__).parent.parent.parent.parent.parent)
+
+subprocess.run(
+    [
+        blender,
+        "--background",
+        "--factory-startup",
+        "--command",
+        "extension",
+        "build",
+        "--source-dir",
+        source_dir,
+        "--output-dir",
+        output_dir,
+        # "--split-platforms",
+    ],
+)
 
 path = str(Path(__file__).parent.parent.parent.parent.parent / "fabex-3.1.6.zip")
 bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
