@@ -126,7 +126,7 @@ class FabexGcodeTest(unittest.TestCase):
     def execute_blender(self, blend_file):
         path = "test_func.py"
         Path(path).write_text(GCODE_SCRIPT)
-        command = f'{blender} -noaudio -b "{blend_file}" -P "{path}"'
+        command = f'blender -noaudio -b "{blend_file}" -P "{path}"'
         print(f"Executing: {command}")
         subprocess.run(command, shell=True, check=True)
         Path.unlink(path)
