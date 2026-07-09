@@ -79,6 +79,9 @@ jobs:
     - name: Install the project
       run: uv sync --locked --all-extras --dev
 
+    - name: Activate Environment
+      run: source .venv/bin/activate
+
     - name: Run tests
       run:  |
         if [ "${{ runner.os }}" != "macOS" ]; then
