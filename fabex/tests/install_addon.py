@@ -82,7 +82,7 @@ with tempfile.TemporaryDirectory() as td:
                 text=True,
             )
             print("Addon Install: Success!")
-            sys.exit(0)
+            # sys.exit(0)
 
         except subprocess.CalledProcessError as e:
             print("Addon Install: Failed!")
