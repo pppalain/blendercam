@@ -126,6 +126,7 @@ class FabexGcodeTest(unittest.TestCase):
         return "".join(list(diff)[:num_lines])
 
     def execute_blender(self, blend_file):
+        install_extension()
         path = "test_func.py"
         Path(path).write_text(GCODE_SCRIPT)
         command = f'{blender} -noaudio -b "{blend_file}" -P "{path}"'
