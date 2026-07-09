@@ -861,7 +861,7 @@ class CamCurveRemoveDoubles(Operator):
     """Remove Duplicate Points from the Selected Curve"""
 
     bl_idname = "object.curve_remove_doubles"
-    bl_label = "Remove Curve Doubles"
+    bl_label = "Validate/Remove Curve Doubles"
     bl_options = {"REGISTER", "UNDO"}
 
     validateCurve: BoolProperty(
