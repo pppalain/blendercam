@@ -10,12 +10,17 @@ from pathlib import Path
 GCODE_SCRIPT = """
 import sys
 import warnings
+from pathlib import Path
 
 import bpy
+
+path = str(Path(__file__).parent.parent.parent.parent.parent / "fabex-3.1.6.zip")
+bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
 
 # Set the Render Engine to Fabex
 scene = bpy.context.scene
 scene.render.engine = "FABEX_RENDER"
+
 operations = scene.cam_operations
 
 for i, operation in enumerate(operations):
@@ -78,7 +83,6 @@ def activate_engine():
 class FabexGcodeTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        install_extension()
         cls.original_dir = os.getcwd()
         # cls.generator_path = os.path.join(cls.original_dir, "gcode_generator.py")
         cls.blend_test_cases = cls.get_test_cases()
@@ -126,7 +130,7 @@ class FabexGcodeTest(unittest.TestCase):
     def execute_blender(self, blend_file):
         path = "test_func.py"
         Path(path).write_text(GCODE_SCRIPT)
-        command = f'{blender} -noaudio -b "{blend_file}" -P "{path}"'
+        command = f'{blender} -noaudio -b "{blend_file}" -P "{path}" --factory-startup'
         print(f"Executing: {command}")
         subprocess.run(command, shell=True, check=True)
         Path.unlink(path)
