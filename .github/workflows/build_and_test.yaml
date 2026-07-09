@@ -91,7 +91,7 @@ jobs:
         uv run pytest --ignore=blender -vvv
         cd fabex/tests
         uv run install_addon.py
-        uv run test_suite.py -vvv
+        uv run pytest test_suite.py -vvv
 
     # - name: Run Advanced tests
     #   shell: bash
