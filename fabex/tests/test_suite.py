@@ -76,7 +76,7 @@ def activate_engine():
 
 # @unittest.skip("Old Gcode Test")
 class FabexGcodeTest(unittest.TestCase):
-    def setUp():
+    def setUp(self):
         install_extension()
 
     @classmethod
