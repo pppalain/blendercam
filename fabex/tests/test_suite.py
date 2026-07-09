@@ -76,8 +76,8 @@ def activate_engine():
 
 # @unittest.skip("Old Gcode Test")
 class FabexGcodeTest(unittest.TestCase):
-    def setUp(self):
-        install_extension()
+    # def setUp(self):
+    #     install_extension()
 
     @classmethod
     def setUpClass(cls):
@@ -126,6 +126,7 @@ class FabexGcodeTest(unittest.TestCase):
         return "".join(list(diff)[:num_lines])
 
     def execute_blender(self, blend_file):
+        install_extension()
         path = "test_func.py"
         Path(path).write_text(GCODE_SCRIPT)
         command = f'{blender} -noaudio -b "{blend_file}" -P "{path}"'
