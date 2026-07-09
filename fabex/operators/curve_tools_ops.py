@@ -19,10 +19,12 @@ from bpy.props import (
     BoolProperty,
     EnumProperty,
     FloatProperty,
+    IntProperty,
 )
 from bpy.types import Operator
 from mathutils import Vector
 
+from ..utilities.curve_utils import curve_validate
 from ..utilities.geom_utils import circle
 from ..utilities.logging_utils import log, heading
 from ..utilities.polygon_utils import (
@@ -37,7 +39,8 @@ from ..utilities.silhouette_utils import (
 )
 from ..utilities.simple_utils import (
     remove_multiple,
-    join_multiple,
+    join_multiple, active_name, remove_doubles, deselect,
+    move, duplicate, make_active, difference, extrude_curve2mesh, mesh_difference, rename,
 )
 
 
@@ -91,6 +94,25 @@ class CamCurveConvexHull(Operator):
         polygon_convex_hull(context)
         return {"FINISHED"}
 
+def simple_intarsion(context, radius=0.0):
+    """
+    Rounds sharp corners of a curve with radius
+    Args:
+        context: bpy.context
+        radius: Radius of rounding
+
+    Returns:  Renames result to original curve name
+
+    """
+    active_name("_intar_temp")
+    silhouette_offset(context, -radius, style=1)
+    active_name("_intar_temp")
+    silhouette_offset(context, radius*2, style=1)
+    active_name("_intar_temp")
+    silhouette_offset(context, -radius, style=1)
+    active_name("simple_intarsion")
+    remove_multiple("_intar_temp")
+    make_active("simple_intarsion")
 
 # intarsion or joints
 class CamCurveIntarsion(Operator):
@@ -102,9 +124,9 @@ class CamCurveIntarsion(Operator):
 
     diameter: FloatProperty(
         name="Cutter Diameter",
-        default=0.001,
+        default=0.003175,
         min=0,
-        max=0.025,
+        max=0.500,
         precision=4,
         unit="LENGTH",
     )
@@ -146,16 +168,90 @@ class CamCurveIntarsion(Operator):
         min=0,
         max=0.100,
         precision=4,
-        unit="LENGTH",
-    )
-    backlight_depth_from_top: FloatProperty(
-        name="Backlight Well Depth",
+        unit="LENGTH",)
+
+    backlight_depth_from_bottom: FloatProperty(
+        name="Backlight distance from bottom",
         default=0.000,
         min=0,
         max=0.100,
         precision=4,
-        unit="LENGTH",
-    )
+        unit="LENGTH",)
+
+    resolution: IntProperty(
+        name="Curve Resolution",
+        default=100,
+        min=12,
+        max=500,)
+
+    keep_outer: BoolProperty(
+        name="Keep outer sharp angles",
+        default=False,)
+
+    includeStandoff: BoolProperty(
+        name="Block Standoff",
+        default=False,)
+
+    standoffHeight: FloatProperty(
+        name="Standoff Height",
+        default=0.01,
+        min=0.0,
+        max=0.100,
+        precision=4,
+        unit="LENGTH", )
+
+    standoffSilhouette: FloatProperty(
+        name="Standoff Offset",
+        default=-0.001,
+        min=-0.100,
+        max=0.100,
+        precision=4,
+        unit="LENGTH", )
+
+
+    includeBacklightInsert: BoolProperty(
+        name="backlight insert",
+        default=False,)
+
+    includeDiffuser: BoolProperty(
+        name="Diffuser",
+        default=False,)
+
+    diffuserTopThickness: FloatProperty(
+            name="diffuser top thickness",
+            default=0.0006,
+            min=0,
+            max=0.100,
+            precision=4,
+            unit="LENGTH", )
+
+    stripPerimetre: BoolProperty(
+        name="Strip glued around Perimetre",
+        default=False,)
+
+    stripWidth: FloatProperty(
+            name="LED strip width",
+            default=0.004,
+            min=0,
+            max=0.100,
+            precision=4,
+            unit="LENGTH", )
+
+    stripThickness: FloatProperty(
+            name="LED thickness",
+            default=0.002,
+            min=0,
+            max=0.100,
+            precision=4,
+            unit="LENGTH", )
+
+    stripBendRadius: FloatProperty(
+            name="LED strip bend radius",
+            default=0.0015,
+            min=0,
+            max=0.100,
+            precision=4,
+            unit="LENGTH", )
 
     @classmethod
     def poll(cls, context):
@@ -163,37 +259,95 @@ class CamCurveIntarsion(Operator):
             context.active_object.type in ["CURVE", "FONT"]
         )
 
+    def draw(self, context):
+        """Draws the user interface layout for interlock type properties.
+
+        This method is responsible for creating and displaying the layout of
+        various properties related to different interlock types in the user
+        interface. It dynamically adjusts the layout based on the selected
+        interlock type, allowing users to input relevant parameters such as
+        dimensions, tolerances, and other characteristics specific to the chosen
+        interlock type.
+
+        Args:
+            context: The context in which the layout is being drawn, typically
+                provided by the user interface framework.
+
+        Returns:
+            None: This method does not return any value; it modifies the layout
+                directly.
+        """
+
+        layout = self.layout
+        layout.prop(self, "diameter")
+        layout.prop(self, "tolerance")
+        layout.prop(self, "backlight")
+        layout.prop(self, "perimeter_cut")
+        layout.prop(self, "base_thickness")
+        layout.prop(self, "intarsion_thickness")
+        layout.prop(self, "backlight_depth_from_bottom")
+        layout.prop(self, "resolution")
+        layout.prop(self, "keep_outer")
+        if self.keep_outer:
+            layout.prop(self, "includeStandoff")
+            if self.includeStandoff:
+                layout.prop(self, "standoffHeight")
+                layout.prop(self, "standoffSilhouette")
+            layout.prop(self, "includeBacklightInsert")
+            layout.prop(self, "includeDiffuser")
+            if self.includeDiffuser:
+                layout.prop(self, "diffuserTopThickness")
+                layout.prop(self,"stripPerimetre")
+                if self.stripPerimetre:
+                    layout.prop(self, "stripWidth")
+                layout.prop(self, "stripThickness")
+                layout.prop(self, "stripBendRadius")
+
     def execute(self, context):
         selected = context.selected_objects  # save original selected items
 
-        remove_multiple("intarsion_")
+        remove_multiple("intarsion_")   # Clear previous intarsion
 
         for ob in selected:
             ob.select_set(True)  # select original curves
+            bpy.ops.object.duplicate()
+            bpy.ops.object.convert(target='CURVE')
+            bpy.context.object.data.resolution_u = self.resolution
+            remove_doubles()
+            bpy.context.object.data.dimensions = '2D'
+            original_copy = bpy.context.active_object
+
 
         #  Perimeter cut largen then intarsion pocket externally, optional
 
-        # make the diameter 5% larger and compensate for backlight
-        diam = self.diameter * 1.05 + self.backlight * 2
-        silhouette_offset(context, -diam / 2)
+        # make the diameter 2.5% larger and compensate for backlight
+        diam = self.diameter * 1.025 + self.backlight * 2
 
+        silhouette_offset(context, -diam / 2)
         o1 = bpy.context.active_object
+
         silhouette_offset(context, diam)
         o2 = bpy.context.active_object
+
         silhouette_offset(context, -diam / 2)
         o3 = bpy.context.active_object
+        o3.name = "intarsion_pocket"  # this is the pocket for intarsion
+
+
+        #        delete o1 and o2 temporary working curves
         o1.select_set(True)
         o2.select_set(True)
         o3.select_set(False)
-        # delete o1 and o2 temporary working curves
         bpy.ops.object.delete(use_global=False)
-        o3.name = "intarsion_pocket"  # this is the pocket for intarsion
+
         bpy.context.object.location[2] = -self.intarsion_thickness
 
-        if self.perimeter_cut > 0.0:
+        if self.perimeter_cut > 0.0 and not self.keep_outer:
             silhouette_offset(context, self.perimeter_cut)
-            bpy.context.active_object.name = "intarsion_perimeter"
-            bpy.context.object.location[2] = -self.base_thickness
+            extrude_curve2mesh(self.base_thickness)
+            active_name("intarsion_perimeter")
+            move(z=-self.base_thickness)
+            o6 = bpy.context.active_object
             bpy.ops.object.select_all(action="DESELECT")  # deselect new curve
 
         o3.select_set(True)
@@ -202,18 +356,117 @@ class CamCurveIntarsion(Operator):
         # make smaller curve for material profile
         silhouette_offset(context, -self.tolerance / 2)
         bpy.context.object.location[2] = self.intarsion_thickness
-        o4 = bpy.context.active_object
-        bpy.context.active_object.name = "intarsion_profil"
-        o4.select_set(False)
+        intarsion_profile = bpy.context.active_object
+        active_name("intarsion_profile")
 
-        if self.backlight > 0.0:  # Make a smaller curve for backlighting purposes
+
+        if self.backlight > 0.0 and not self.keep_outer:  # Make a smaller curve for backlighting purposes
             silhouette_offset(context, (-self.tolerance / 2) - self.backlight)
-            bpy.context.active_object.name = "intarsion_backlight"
-            bpy.context.object.location[2] = (
-                -self.backlight_depth_from_top - self.intarsion_thickness
-            )
-            o4.select_set(True)
+            _intarsion_backlight = active_name("_intarsion_backlight")
+            extrude_curve2mesh(self.base_thickness - self.backlight_depth_from_bottom)
+
+            intarsion_profile.select_set(True)
         o3.select_set(True)
+
+        if self.keep_outer:    #keep outer angles sharp.  Special case.
+            rename("intarsion_pocket","_intarsion_pocket" )
+            rename("intarsion_profile","_intarsion_profile")
+            o3.select_set(True)
+            original_copy.select_set(True)
+            bpy.ops.object.curve_boolean(boolean_type="UNION")
+            intarsion_sharp = active_name("intarsion_sharp")
+            extrude_curve2mesh(self.intarsion_thickness)
+            move(z=-self.intarsion_thickness)
+            duplicate()
+            active_name("_intarsion_sharp")
+            silhouette_offset(context, (-self.tolerance / 2) - self.backlight)
+            _intarsion_backlight = active_name("_intarsion_backlight")
+            extrude_curve2mesh(self.base_thickness - self.backlight_depth_from_bottom)
+            move(z=-(self.base_thickness - self.backlight_depth_from_bottom))
+
+            if self.perimeter_cut > 0.0:
+                make_active("intarsion_sharp")
+                silhouette_offset(context, self.perimeter_cut)
+                active_name("intarsion_block")
+                extrude_curve2mesh(self.base_thickness)
+                move(z=-self.base_thickness)
+                mesh_difference(intarsion_sharp)
+                mesh_difference(_intarsion_backlight)
+
+
+            if self.includeBacklightInsert:
+                remove_multiple("_intartion_backlight")
+                make_active("intarsion_sharp")
+                silhouette_offset(context, -self.backlight/2)
+                active_name("_insert_cavity")
+                _insert_cavity = extrude_curve2mesh(self.base_thickness - self.backlight_depth_from_bottom)
+                move(z=-(self.base_thickness - self.backlight_depth_from_bottom))
+                make_active("intarsion_block")
+                mesh_difference(_insert_cavity)
+                make_active("_insert_cavity")
+                radius=0.0003
+                tolerance=0.0004
+                silhouette_offset(context, -tolerance, style=1)
+                active_name("_tmp")
+                simple_intarsion(context, radius)
+                extrude_curve2mesh(self.base_thickness - self.backlight_depth_from_bottom-self.intarsion_thickness)
+                active_name("intarsion_insert")
+                silhouette_offset(context, -self.backlight/2)
+                active_name("_intarsion_backlight")
+                _intarsion_backlight = extrude_curve2mesh(self.base_thickness)
+                move(z=(0.0006))
+                make_active("intarsion_insert")
+                mesh_difference(_intarsion_backlight)
+
+
+            deselect()
+
+
+            if self.includeDiffuser:
+                make_active("_intarsion_backlight")
+                radius=0.0003
+                tolerance=0.0002
+                silhouette_offset(context, -tolerance, style=1)
+                simple_intarsion(context, radius)
+                active_name("_diffuser_outer")
+                duplicate()
+                active_name("_copy_diffuser")
+
+                outerWallThickness=0.00075 #0.75 mm
+                silhouette_offset(context, -outerWallThickness)
+                if self.stripPerimetre:
+                    simple_intarsion(context,self.stripBendRadius)
+                active_name("_led_outer")
+
+                ledthickness=self.stripThickness+0.0001
+
+                if self.stripPerimetre:
+                    silhouette_offset(context, -self.stripThickness)
+                    active_name("_led_inner")
+                    difference("_led","_led_outer")
+                    ledthickness = self.stripWidth + 0.0001
+
+                diffuser_slot = extrude_curve2mesh(self.base_thickness)
+                move(z=0.0004)
+                active_name("_diffuser_slot")
+                make_active("_copy_diffuser")
+                diffuserThickness = self.base_thickness
+                diffuserThickness -= self.intarsion_thickness
+                diffuserThickness -= self.backlight_depth_from_bottom
+                diffuserThickness -= ledthickness
+                diffuserThickness -= 0.0006
+                extrude_curve2mesh(diffuserThickness)
+                mesh_difference(diffuser_slot)
+                active_name("finished_diffuser")
+
+                make_active("_diffuser_slot")
+                move(z=0.0004)
+                make_active("_diffuser_outer")
+                extrude_curve2mesh(ledthickness)
+                mesh_difference(diffuser_slot)
+                active_name("finished_LED-carrier")
+
+        remove_multiple("_")
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -611,6 +864,11 @@ class CamCurveRemoveDoubles(Operator):
     bl_label = "Remove Curve Doubles"
     bl_options = {"REGISTER", "UNDO"}
 
+    validateCurve: BoolProperty(
+        name="Validate curve",
+        default=False,
+    )
+
     merge_distance: FloatProperty(
         name="Merge distance",
         default=0.0001,
@@ -629,30 +887,33 @@ class CamCurveRemoveDoubles(Operator):
 
     def execute(self, context):
         obj = bpy.context.selected_objects
-        for ob in obj:
-            if ob.type == "CURVE":
-                if self.keep_bezier:
-                    if ob.data.splines and ob.data.splines[0].type == "BEZIER":
-                        # Switch to Curve Edit Mode
-                        bpy.ops.object.mode_set(mode="EDIT")
-                        # Curve Operators should now Poll correctly
-                        bpy.ops.curvetools.operatorsplinesremoveshort()
-                        bpy.context.view_layer.objects.active = ob
-                        ob.data.resolution_u = 64
-                        bpy.ops.curve.select_all()
-                        bpy.ops.curve.remove_double(distance=self.merge_distance)
-                        # Switch back to OBJECT mode only after finishing curve ops
-                        bpy.ops.object.mode_set(mode="OBJECT")
+        if self.validateCurve:  # validate curve
+            curve_validate()
+        else:
+            for ob in obj:
+                if ob.type == "CURVE":
+                    if self.keep_bezier:
+                        if ob.data.splines and ob.data.splines[0].type == "BEZIER":
+                            # Switch to Curve Edit Mode
+                            bpy.ops.object.mode_set(mode="EDIT")
+                            # Curve Operators should now Poll correctly
+                            bpy.ops.curvetools.operatorsplinesremoveshort()
+                            bpy.context.view_layer.objects.active = ob
+                            ob.data.resolution_u = 64
+                            bpy.ops.curve.select_all()
+                            bpy.ops.curve.remove_double(distance=self.merge_distance)
+                            # Switch back to OBJECT mode only after finishing curve ops
+                            bpy.ops.object.mode_set(mode="OBJECT")
 
-                else:
-                    self.merge_distance = 0
-                    bpy.ops.object.mode_set(mode="OBJECT")
-                    bpy.ops.object.convert(target="MESH")
-                    bpy.ops.object.mode_set(mode="EDIT")
-                    bpy.ops.mesh.select_all(action="SELECT")
-                    bpy.ops.mesh.remove_doubles(threshold=self.merge_distance)
-                    bpy.ops.object.mode_set(mode="OBJECT")
-                    bpy.ops.object.convert(target="CURVE")
+                    else:
+                        self.merge_distance = 0
+                        bpy.ops.object.mode_set(mode="OBJECT")
+                        bpy.ops.object.convert(target="MESH")
+                        bpy.ops.object.mode_set(mode="EDIT")
+                        bpy.ops.mesh.select_all(action="SELECT")
+                        bpy.ops.mesh.remove_doubles(threshold=self.merge_distance)
+                        bpy.ops.object.mode_set(mode="OBJECT")
+                        bpy.ops.object.convert(target="CURVE")
 
         return {"FINISHED"}
 
@@ -662,7 +923,9 @@ class CamCurveRemoveDoubles(Operator):
         if obj.type == "CURVE":
             if obj.data.splines and obj.data.splines[0].type == "BEZIER":
                 layout.prop(self, "keep_bezier", text="Keep Bezier")
-        layout.prop(self, "merge_distance", text="Merge Distance")
+        layout.prop(self, "validateCurve",text="Validate Curve")
+        if not self.validateCurve:
+            layout.prop(self, "merge_distance", text="Merge Distance")
 
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
