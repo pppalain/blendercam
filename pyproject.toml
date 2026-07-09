@@ -94,4 +94,5 @@ include = '\.py'
 dev = [
     "bpy>=5.1.2",
     "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
 ]
