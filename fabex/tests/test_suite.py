@@ -90,13 +90,13 @@ def activate_engine():
 
 # @unittest.skip("Old Gcode Test")
 class FabexGcodeTest(unittest.TestCase):
-    def setUp(self):
-        path = "test_func.py"
-        Path(path).write_text(INSTALL_CODE)
-        command = f'{blender} -noaudio -b -P "{path}"'
-        print(f"Executing: {command}")
-        subprocess.run(command, shell=True, check=True)
-        Path.unlink(path)
+    # def setUp(self):
+    # path = "test_func.py"
+    # Path(path).write_text(INSTALL_CODE)
+    # command = f'{blender} -noaudio -b -P "{path}"'
+    # print(f"Executing: {command}")
+    # subprocess.run(command, shell=True, check=True)
+    # Path.unlink(path)
 
     #     install_extension()
 
@@ -105,6 +105,12 @@ class FabexGcodeTest(unittest.TestCase):
         cls.original_dir = os.getcwd()
         # cls.generator_path = os.path.join(cls.original_dir, "gcode_generator.py")
         cls.blend_test_cases = cls.get_test_cases()
+        path = "test_func.py"
+        Path(path).write_text(INSTALL_CODE)
+        command = f'{blender} -noaudio -b -P "{path}"'
+        print(f"Executing: {command}")
+        subprocess.run(command, shell=True, check=True)
+        Path.unlink(path)
 
     @staticmethod
     def get_test_cases():
