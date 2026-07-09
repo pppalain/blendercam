@@ -93,7 +93,7 @@ class FabexGcodeTest(unittest.TestCase):
     def setUp(self):
         path = "test_func.py"
         Path(path).write_text(INSTALL_CODE)
-        command = f'{blender} -noaudio -b "{blend_file}" -P "{path}"'
+        command = f'{blender} -noaudio -b -P "{path}"'
         print(f"Executing: {command}")
         subprocess.run(command, shell=True, check=True)
         Path.unlink(path)
