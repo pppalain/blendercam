@@ -89,8 +89,8 @@ jobs:
           export PATH=$PATH:${BLENDER_BIN_PATH}
         fi 
         cd fabex/tests
-        python install_addon.py
-        python test_suite.py -vvv
+        uv run install_addon.py
+        uv run test_suite.py -vvv
 
     # - name: Run Advanced tests
     #   shell: bash
