@@ -887,7 +887,7 @@ class CamCurveRemoveDoubles(Operator):
 
     def execute(self, context):
         obj = bpy.context.selected_objects
-        if self.validateCurve:
+        if self.validateCurve:  # validate curve
             curve_validate()
         else:
             for ob in obj:

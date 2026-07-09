@@ -877,7 +877,7 @@ def active_to_shapely_poly():
     Returns:
         Polygon: A Shapely Polygon object created from the active object's coordinates.
     """
-    # convert coordinates to shapely Polygon datastructure
+    # convert coordinates to shapely Polygon data structure
     return Polygon(active_to_coords())
 
 
