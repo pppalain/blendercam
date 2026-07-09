@@ -20,7 +20,7 @@ output_dir = str(Path(__file__).parent.parent.parent.parent.parent)
 
 subprocess.run(
     [
-        blender,
+        "blender",
         "--background",
         "--factory-startup",
         "--command",
