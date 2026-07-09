@@ -87,6 +87,7 @@ jobs:
         fi 
         uv run pytest --ignore=blender --verbosity=2
         cd fabex/tests
+        uv run install_addon.py
         uv run test_suite.py -vvv
 
     # - name: Run Advanced tests

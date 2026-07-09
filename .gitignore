@@ -12,6 +12,7 @@
 .pydevproject
 # profiler output files
 *.prof
+.idea
 
 __pycache__/
 .DS_Store
