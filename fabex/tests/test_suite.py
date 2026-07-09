@@ -28,6 +28,20 @@ for i, operation in enumerate(operations):
 sys.exit(0)
 """
 
+INSTALL_CODE = f"""
+import bpy
+bpy.context.preferences.system.use_online_access = True
+bpy.ops.extensions.repo_sync_all(use_active_only=False)
+bpy.ops.extensions.package_install(repo_index=0, pkg_id="stl_format_legacy")
+bpy.ops.extensions.package_install(repo_index=0, pkg_id="simplify_curves_plus")
+bpy.ops.extensions.package_install(repo_index=0, pkg_id="curve_tools")
+bpy.ops.extensions.package_install_files(filepath='{sys.argv[1]}', repo='user_default')
+bpy.ops.wm.save_userpref()
+bpy.ops.wm.read_homefile(app_template="")
+bpy.ops.script.reload()
+bpy.ops.wm.quit_blender()
+"""
+
 path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
 
 blender = path_to_blender_executable if shutil.which("blender") is None else "blender"
@@ -76,7 +90,14 @@ def activate_engine():
 
 # @unittest.skip("Old Gcode Test")
 class FabexGcodeTest(unittest.TestCase):
-    # def setUp(self):
+    def setUp(self):
+        path = "test_func.py"
+        Path(path).write_text(INSTALL_CODE)
+        command = f'{blender} -noaudio -b "{blend_file}" -P "{path}"'
+        print(f"Executing: {command}")
+        subprocess.run(command, shell=True, check=True)
+        Path.unlink(path)
+
     #     install_extension()
 
     @classmethod
@@ -126,7 +147,7 @@ class FabexGcodeTest(unittest.TestCase):
         return "".join(list(diff)[:num_lines])
 
     def execute_blender(self, blend_file):
-        install_extension()
+        # install_extension()
         path = "test_func.py"
         Path(path).write_text(GCODE_SCRIPT)
         command = f'{blender} -noaudio -b "{blend_file}" -P "{path}"'
