@@ -30,7 +30,7 @@ sys.exit(0)
 
 path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
 
-blender = path_to_blender_executable if shutil.which("blender") is None else "blender"
+blender = path_to_blender_executable if shutil.which("blender") is None else shutil.which("blender")
 
 
 def build_extension(blender):
