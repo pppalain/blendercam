@@ -83,10 +83,17 @@ jobs:
     #   run: source .venv/bin/activate
 
     - name: Run tests
-      if: runner.os != 'macOS'
+      if: runner.os == 'Linux'
       run:  |
         export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
         export PATH=$PATH:${BLENDER_BIN_PATH}
+        uv run pytest --ignore=blender -vvv
+
+    - name: Run tests
+      if: runner.os == 'Windows'
+      run:  |
+        set BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
+        set PATH=${BLENDER_BIN_PATH};%PATH%
         uv run pytest --ignore=blender -vvv
 
     # - name: Run Advanced tests
@@ -97,7 +104,7 @@ jobs:
     #       export PATH=$PATH:${BLENDER_BIN_PATH}
     #     fi
     #     cd fabex/tests
-    #     uv run test_suite.py -vvv # 
+    #     uv run test_suite.py -vvv  
 
     - uses: actions/upload-artifact@v4
       if: always()
