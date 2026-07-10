@@ -76,6 +76,7 @@ required-environments = [
     # "sys_platform == 'linux' and platform_machine == 'aarch64'",
     "sys_platform == 'win32' and platform_machine == 'AMD64'",
 ]
+required-version = "0.11.28"
 
 [tool.black]
 line-length = 100
