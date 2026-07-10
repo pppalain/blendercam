@@ -66,7 +66,13 @@ class FabexAddOpTest(unittest.TestCase):
         activate_engine(self)
         import bpy
 
-        bpy.context.view_layer.objects["Cube"].select_set(True)
+        s = bpy.context.scene
+        bpy.ops.object.select_all(action="DESELECT")
+        bpy.context.view_layer.objects["Cube"].select_set(state=True)
+        # s.objects[o.name].select_set(state=True)
+        bpy.context.view_layer.objects.active = bpy.context.view_layer.objects["Cube"]
+
+        # bpy.context.view_layer.objects["Cube"].select_set(True)
         bpy.ops.scene.cam_operation_add()
 
     def test_path(self):
@@ -104,7 +110,11 @@ class FabexSilhouetteTest(unittest.TestCase):
         install_extension()
         import bpy
 
-        bpy.context.view_layer.objects["Cube"].select_set(True)
+        s = bpy.context.scene
+        bpy.ops.object.select_all(action="DESELECT")
+        bpy.context.view_layer.objects["Cube"].select_set(state=True)
+        # s.objects[o.name].select_set(state=True)
+        bpy.context.view_layer.objects.active = bpy.context.view_layer.objects["Cube"]
 
         bpy.ops.object.silhouette()
 
@@ -124,7 +134,11 @@ class FabexSilhouetteOffsetTest(unittest.TestCase):
         install_extension()
         import bpy
 
-        bpy.context.view_layer.objects["Cube"].select_set(True)
+        s = bpy.context.scene
+        bpy.ops.object.select_all(action="DESELECT")
+        bpy.context.view_layer.objects["Cube"].select_set(state=True)
+        # s.objects[o.name].select_set(state=True)
+        bpy.context.view_layer.objects.active = bpy.context.view_layer.objects["Cube"]
 
         bpy.ops.object.silhouette_offset()
 
