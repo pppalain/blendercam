@@ -10,6 +10,31 @@ import asyncio
 
 from .test_install import activate_dependencies
 
+path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
+
+blender = path_to_blender_executable if shutil.which("blender") is None else "blender"
+
+
+def build_extension(blender):
+    source_dir = str(Path(__file__).parent.parent)
+    output_dir = str(Path(__file__).parent.parent.parent)
+
+    subprocess.run(
+        [
+            blender,
+            "--background",
+            "--factory-startup",
+            "--command",
+            "extension",
+            "build",
+            "--source-dir",
+            source_dir,
+            "--output-dir",
+            output_dir,
+            # "--split-platforms",
+        ],
+    )
+
 
 def install_extension():
     import bpy
@@ -36,6 +61,7 @@ class FabexAddOpTest(unittest.TestCase):
     """Test that a Fabex operation can be added."""
 
     def setUp(self):
+        build_extension(blender)
         install_extension()
         activate_engine(self)
         import bpy
@@ -56,6 +82,7 @@ class FabexAddSignPlateTest(unittest.TestCase):
     """Test that a Fabex operation can be added."""
 
     def setUp(self):
+        build_extension(blender)
         install_extension()
         import bpy
 
@@ -73,6 +100,7 @@ class FabexSilhouetteTest(unittest.TestCase):
     """Test that a Fabex operation can be added."""
 
     def setUp(self):
+        build_extension(blender)
         install_extension()
         import bpy
 
@@ -92,6 +120,7 @@ class FabexSilhouetteOffsetTest(unittest.TestCase):
     """Test that a Fabex operation can be added."""
 
     def setUp(self):
+        build_extension(blender)
         install_extension()
         import bpy
 
