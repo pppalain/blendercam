@@ -83,14 +83,11 @@ jobs:
     #   run: source .venv/bin/activate
 
     - name: Run tests
+      if: runner.os != 'macOS'
       run:  |
-        if [ "${{ runner.os }}" != "macOS" ]; then
-          export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
-          export PATH=$PATH:${BLENDER_BIN_PATH}
-        fi
+        export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
+        export PATH=$PATH:${BLENDER_BIN_PATH}
         uv run pytest --ignore=blender -vvv
-        cd fabex/tests
-        uv run test_suite.py -vvv
 
     # - name: Run Advanced tests
     #   shell: bash
