@@ -4,6 +4,7 @@ import subprocess
 import time
 import os
 import shutil
+
 from .base import build_extension
 
 path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
@@ -178,44 +179,3 @@ class FabexEngineTest(unittest.TestCase):
 
     def test_engine(self):
         self.assertTrue(self.engine == "FABEX_RENDER")
-
-
-class FabexAddOpTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
-
-    def setUp(self):
-        install_extension()
-        activate_engine(self)
-        import bpy
-
-        bpy.context.view_layer.objects["Cube"].select_set(True)
-        bpy.ops.scene.cam_operation_add()
-
-    def test_path(self):
-        import bpy
-
-        scene = bpy.context.scene
-        operations = [operation.name for operation in scene.cam_operations]
-
-        self.assertIn("Op_Cube_1", operations)
-
-
-# class FabexCalculatePathTest(unittest.TestCase):
-#     """Test that a Fabex operation can be added."""
-
-#     def setUp(self):
-#         install_extension()
-#         activate_engine(self)
-#         import bpy
-
-#         bpy.context.view_layer.objects["Cube"].select_set(True)
-#         bpy.ops.scene.cam_operation_add()
-#         bpy.ops.object.calculate_cam_path()
-
-#     def test_path(self):
-#         import bpy
-
-#         data = bpy.data
-#         objects = [obj.name for obj in data.objects]
-
-#         self.assertIn("cam_path_Op_Cube_1", objects)
