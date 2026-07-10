@@ -9,52 +9,12 @@ import shutil
 # import asyncio
 
 from .test_install import activate_dependencies
-
-path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
-
-blender = path_to_blender_executable if shutil.which("blender") is None else "blender"
-
-
-def build_extension(blender):
-    source_dir = str(Path(__file__).parent.parent)
-    output_dir = str(Path(__file__).parent.parent.parent)
-
-    subprocess.run(
-        [
-            blender,
-            "--background",
-            "--factory-startup",
-            "--command",
-            "extension",
-            "build",
-            "--source-dir",
-            source_dir,
-            "--output-dir",
-            output_dir,
-            # "--split-platforms",
-        ],
-    )
-
-
-def install_extension():
-    import bpy
-
-    version_file = Path(__file__).parent.parent / "version.py"
-    with open(version_file) as f:
-        lines = f.readlines()
-        version = lines[0].split("(")[1].replace(",", "")
-    major, minor, patch = version[0], version[1], version[2]
-    path = str(Path(__file__).parent.parent.parent / f"fabex-{major}.{minor}.{patch}.zip")
-    bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
-
-
-def activate_engine(self):
-    import bpy
-
-    # Set the Render Engine to Fabex
-    scene = bpy.context.scene
-    scene.render.engine = "FABEX_RENDER"
-    self.engine = scene.render.engine
+from .utils import (
+    build_extension,
+    install_extension,
+    activate_engine,
+    blender,
+)
 
 
 class FabexAddOpTest(unittest.TestCase):
@@ -160,28 +120,86 @@ class FabexSilhouetteOffsetTest(unittest.TestCase):
         self.assertIn("Cube_offset_0.003", objects)
 
 
-# class FabexAddDrawerTest(unittest.TestCase):
-#     """Test that a Fabex operation can be added."""
+class FabexAddDrawerTest(unittest.TestCase):
+    """Test that a Fabex operation can be added."""
 
-#     def setUp(self):
-#         install_extension()
-#         import bpy
+    def setUp(self):
+        activate_dependencies(self)
+        install_extension()
+        import bpy
 
-#         bpy.ops.object.curve_drawer()
+        bpy.ops.object.curve_drawer()
 
-#     def test_sign_plate(self):
-#         import bpy
+    def test_sign_plate(self):
+        import bpy
 
-#         objects = [obj.name for obj in bpy.data.objects]
-#         drawers = [
-#             "drawer_back",
-#             "drawer_bottom",
-#             "drawer_front",
-#             "drawer_side",
-#         ]
+        objects = [obj.name for obj in bpy.data.objects]
+        drawers = [
+            "drawer_back",
+            "drawer_bottom",
+            "drawer_front",
+            "drawer_side",
+        ]
 
-#         # for drawer in drawers:
-#         self.assertIn(drawer[0], objects)
+        for drawer in drawers:
+            self.assertIn(drawer, objects)
+
+
+class FabexAddInterlockTest(unittest.TestCase):
+    """Test that a Fabex operation can be added."""
+
+    def setUp(self):
+        # build_extension(blender)
+        activate_dependencies(self)
+        install_extension()
+        import bpy
+
+        bpy.ops.object.curve_interlock()
+
+    def test_interlock(self):
+        import bpy
+
+        objects = [obj.name for obj in bpy.data.objects]
+
+        self.assertIn("_groove", objects)
+
+
+class FabexAddPuzzleJointsTest(unittest.TestCase):
+    """Test that a Fabex operation can be added."""
+
+    def setUp(self):
+        # build_extension(blender)
+        activate_dependencies(self)
+        install_extension()
+        import bpy
+
+        bpy.ops.object.curve_puzzle()
+
+    def test_puzzle_joints(self):
+        import bpy
+
+        objects = [obj.name for obj in bpy.data.objects]
+
+        self.assertIn("curved_t", objects)
+
+
+class FabexAddGearTest(unittest.TestCase):
+    """Test that a Fabex operation can be added."""
+
+    def setUp(self):
+        # build_extension(blender)
+        activate_dependencies(self)
+        install_extension()
+        import bpy
+
+        bpy.ops.object.curve_gear()
+
+    def test_interlock(self):
+        import bpy
+
+        objects = [obj.name for obj in bpy.data.objects]
+
+        self.assertTrue([obj.startswith("gear") for obj in objects])
 
 
 # class FabexCalculatePathTest(unittest.IsolatedAsyncioTestCase):

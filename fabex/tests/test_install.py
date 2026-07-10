@@ -5,85 +5,14 @@ import time
 import os
 import shutil
 
-from .base import build_extension
-
-path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
-
-blender = path_to_blender_executable if shutil.which("blender") is None else "blender"
-
-
-def blender_command(blender, command):
-    path = "test_func.py"
-    Path(path).write_text(command)
-
-    subprocess.run(
-        [
-            "blender",
-            "--background",
-            "--factory-startup",
-            "--python",
-            path,
-        ],
-        shell=False,
-        check=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-    )
-
-    Path.unlink(path)
-
-
-def activate_dependencies(self):
-    import bpy
-
-    bpy.context.preferences.system.use_online_access = True
-    bpy.ops.extensions.repo_sync_all(use_active_only=False)
-
-    dependencies = [
-        "curve_tools",
-        "simplify_curves_plus",
-        "stl_format_legacy",
-    ]
-
-    addons = bpy.context.preferences.addons
-
-    for dependency in dependencies:
-        if dependency in addons:
-            bpy.ops.preferences.addon_enable(module=f"bl_ext.blender_org.{dependency}")
-        else:
-            bpy.ops.extensions.package_install(repo_index=0, pkg_id=dependency)
-
-    addons = bpy.context.preferences.addons
-    self.modules = [addon.module for addon in addons]
-
-
-def get_modules(self):
-    import bpy
-
-    addons = bpy.context.preferences.addons
-    self.modules = [addon.module for addon in addons]
-
-
-def install_extension():
-    import bpy
-
-    version_file = Path(__file__).parent.parent / "version.py"
-    with open(version_file) as f:
-        lines = f.readlines()
-        version = lines[0].split("(")[1].replace(",", "")
-    major, minor, patch = version[0], version[1], version[2]
-    path = str(Path(__file__).parent.parent.parent / f"fabex-{major}.{minor}.{patch}.zip")
-    bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
-
-
-def activate_engine(self):
-    import bpy
-
-    # Set the Render Engine to Fabex
-    scene = bpy.context.scene
-    scene.render.engine = "FABEX_RENDER"
-    self.engine = scene.render.engine
+from .utils import (
+    build_extension,
+    activate_dependencies,
+    activate_engine,
+    install_extension,
+    get_modules,
+    blender,
+)
 
 
 class FabexDependencyTest(unittest.TestCase):
@@ -116,6 +45,12 @@ class FabexDependencyTest(unittest.TestCase):
             self.modules,
         )
 
+    def test_extra_curve_objectes(self):
+        self.assertIn(
+            "bl_ext.blender_org.extra_curve_objectes",
+            self.modules,
+        )
+
 
 class FabexInstallTest(unittest.TestCase):
     """Test Installation of addon, uses the zip created in the __init__"""
@@ -137,7 +72,6 @@ class FabexInstallTest(unittest.TestCase):
         bpy.ops.wm.quit_blender()
 
 
-# @unittest.skip("Disable")
 class FabexDisableTest(unittest.TestCase):
     """Test Disabling the addon"""
 
@@ -154,7 +88,6 @@ class FabexDisableTest(unittest.TestCase):
         )
 
 
-# @unittest.skip("Enable")
 class FabexEnableTest(unittest.TestCase):
     """Test Enabling the addon"""
 

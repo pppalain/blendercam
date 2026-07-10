@@ -4,10 +4,13 @@ Operators to create a number of predefined curve objects.
 """
 
 from math import (
+    cos,
     degrees,
     hypot,
     pi,
     radians,
+    sin,
+    sqrt,
 )
 
 from shapely import affinity
@@ -1137,7 +1140,7 @@ class CamCurveInterlock(Operator):
             shapes = curve_to_shapely(o1)
 
             for s in shapes.geoms:
-                if s.boundary.type == "LineString":
+                if s.boundary.geom_type == "LineString":
                     loops = [s.boundary]
                 else:
                     loops = s.boundary

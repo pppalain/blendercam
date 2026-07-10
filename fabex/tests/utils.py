@@ -1,5 +1,10 @@
 from pathlib import Path
 import subprocess
+import shutil
+
+path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
+
+blender = path_to_blender_executable if shutil.which("blender") is None else "blender"
 
 
 def build_extension(blender):
@@ -55,6 +60,9 @@ def activate_dependencies(self):
         "curve_tools",
         "simplify_curves_plus",
         "stl_format_legacy",
+        "extra_mesh_objects",
+        "extra_curve_objectes",
+        "print3d_toolbox",
     ]
 
     for dependency in dependencies:
