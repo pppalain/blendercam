@@ -5,8 +5,8 @@ import time
 import os
 import shutil
 
-import pytest
-import asyncio
+# import pytest
+# import asyncio
 
 from .test_install import activate_dependencies
 
@@ -83,6 +83,11 @@ class FabexAddOpTest(unittest.TestCase):
 
         self.assertIn("Op_Cube_1", operations)
 
+    def tearDown(self):
+        import bpy
+
+        bpy.ops.wm.quit_blender()
+
 
 class FabexAddSignPlateTest(unittest.TestCase):
     """Test that a Fabex operation can be added."""
@@ -100,6 +105,11 @@ class FabexAddSignPlateTest(unittest.TestCase):
         objects = [obj.name for obj in bpy.data.objects]
 
         self.assertIn("plate", objects)
+
+    def tearDown(self):
+        import bpy
+
+        bpy.ops.wm.quit_blender()
 
 
 class FabexSilhouetteTest(unittest.TestCase):
