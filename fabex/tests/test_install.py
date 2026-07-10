@@ -18,7 +18,7 @@ def blender_command(blender, command):
 
     subprocess.run(
         [
-            blender,
+            "blender",
             "--background",
             "--factory-startup",
             "--python",
