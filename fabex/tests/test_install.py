@@ -175,6 +175,8 @@ class FabexEngineTest(unittest.TestCase):
     """Test that the Fabex Engine is available in the Scene."""
 
     def setUp(self):
+        build_extension(blender)
+        install_extension()
         activate_engine(self)
 
     def test_engine(self):

@@ -92,7 +92,7 @@ jobs:
     - name: Run Winodws tests
       if: runner.os == 'Windows'
       run:  |
-        setx BLENDER_BIN_PATH=${PWD}/blender/
+        set BLENDER_BIN_PATH=${PWD}/blender/
         setx PATH "%PATH%;${BLENDER_BIN_PATH}"
         uv run pytest --ignore=blender -vvv
 
