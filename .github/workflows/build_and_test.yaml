@@ -92,7 +92,7 @@ jobs:
     - name: Run tests
       if: runner.os == 'Windows'
       run:  |
-        set BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
+        set BLENDER_BIN_PATH=${PWD}/blender/blender.exe
         set PATH=${BLENDER_BIN_PATH};%PATH%
         uv run pytest --ignore=blender -vvv
 
