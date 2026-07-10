@@ -82,20 +82,19 @@ jobs:
     # - name: Activate Environment
     #   run: source .venv/bin/activate
 
-    - name: Add blender to Linux PATH
+    - name: Run Linux tests
       if: runner.os == 'Linux'
       run:  |
         export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
         export PATH=$PATH:${BLENDER_BIN_PATH}
+        uv run pytest --ignore=blender -vvv
 
-    - name: Add blender to Windows PATH
+    - name: Run Winodws tests
       if: runner.os == 'Windows'
       run:  |
         set BLENDER_BIN_PATH=${PWD}/blender/
         setx PATH "%PATH%;${BLENDER_BIN_PATH}"
-
-    - name: Run Tests
-      run: uv run pytest --ignore=blender -vvv
+        uv run pytest --ignore=blender -vvv
 
     # - name: Run Advanced tests
     #   shell: bash
