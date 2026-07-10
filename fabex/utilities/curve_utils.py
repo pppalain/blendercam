@@ -1,6 +1,7 @@
 import bpy
 import re
 
+from mathutils import Vector
 
 from ..chunk_builder import (
     CamPathChunkBuilder,
@@ -29,7 +30,8 @@ the problem error message
 """
 
 def curve_validate():
-    poly=active_to_shapely_poly()
+    obj = bpy.context.active_object
+    poly = active_to_shapely_poly()
     error_msg = explain_validity(poly)
     remove_multiple("Self-intersection[")  #remove old errors
 
@@ -40,8 +42,13 @@ def curve_validate():
     # Convert to appropriate types (float if '.' is present, else int)
     coordinates = [float(n) if '.' in n else int(n) for n in numbers_str]
     if coordinates:
-        bpy.ops.curve.primitive_bezier_circle_add(radius=0.003, align='WORLD',
-                                                  location=(coordinates[0], coordinates[1], 0))
+        world_origin = obj.matrix_world @ Vector((coordinates[0], coordinates[1], 0.0))
+        marker_location = (world_origin.x, world_origin.y, world_origin.z)
+        bpy.ops.curve.primitive_bezier_circle_add(
+            radius=0.003,
+            align='WORLD',
+            location=marker_location,
+        )
         active_name(error_msg)
         bpy.ops.view3d.view_selected()
 
