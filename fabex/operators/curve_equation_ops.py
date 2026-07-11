@@ -7,6 +7,7 @@ from math import (
     cos,
     pi,
     sin,
+    sqrt,
 )
 
 import numpy as np
@@ -239,6 +240,7 @@ class CamSineCurve(Operator):
             angle_off = self.wave_angle_offset * period * i / (2 * pi)
             create_parametric_curve(
                 f,
+                curve_name="Periodic Wave",
                 offset=self.wave_distance * i,
                 min=self.min_t,
                 max=self.max_t,
@@ -390,6 +392,7 @@ class CamLissajousCurve(Operator):
 
         create_parametric_curve(
             f,
+            curve_name="Lissajous",
             offset=0.0,
             min=self.min_t,
             max=self.max_t,
@@ -491,6 +494,7 @@ class CamHypotrochoidCurve(Operator):
             iter = 10000
         create_parametric_curve(
             f,
+            curve_name="Hypotrochoid",
             offset=0.0,
             min=0,
             max=maxangle,
@@ -569,6 +573,7 @@ class CamCustomCurve(Operator):
 
         create_parametric_curve(
             f,
+            curve_name="Custom",
             offset=0.0,
             min=self.min_t,
             max=self.max_t,

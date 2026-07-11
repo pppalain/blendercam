@@ -161,6 +161,74 @@ class FabexAddGearTest(unittest.TestCase):
         self.assertTrue([obj.startswith("gear") for obj in self.objects])
 
 
+class FabexAddSineTest(unittest.TestCase):
+    """Test that a Fabex operation can be added."""
+
+    def setUp(self):
+        # build_extension(blender)
+        activate_dependencies(self)
+        install_extension()
+        import bpy
+
+        bpy.ops.wm.read_homefile()
+        bpy.ops.object.sine()
+        self.objects = [obj.name for obj in bpy.data.objects]
+
+    def test_sine(self):
+        self.assertIn("Periodic Wave", self.objects)
+
+
+class FabexAddLissajousTest(unittest.TestCase):
+    """Test that a Fabex operation can be added."""
+
+    def setUp(self):
+        # build_extension(blender)
+        activate_dependencies(self)
+        install_extension()
+        import bpy
+
+        bpy.ops.wm.read_homefile()
+        bpy.ops.object.lissajous()
+        self.objects = [obj.name for obj in bpy.data.objects]
+
+    def test_lissajous(self):
+        self.assertIn("Lissajous", self.objects)
+
+
+class FabexAddHypotrochoidTest(unittest.TestCase):
+    """Test that a Fabex operation can be added."""
+
+    def setUp(self):
+        # build_extension(blender)
+        activate_dependencies(self)
+        install_extension()
+        import bpy
+
+        bpy.ops.wm.read_homefile()
+        bpy.ops.object.hypotrochoid()
+        self.objects = [obj.name for obj in bpy.data.objects]
+
+    def test_puzzle_joints(self):
+        self.assertIn("Hypotrochoid", self.objects)
+
+
+class FabexAddCustomTest(unittest.TestCase):
+    """Test that a Fabex operation can be added."""
+
+    def setUp(self):
+        # build_extension(blender)
+        activate_dependencies(self)
+        install_extension()
+        import bpy
+
+        bpy.ops.wm.read_homefile()
+        bpy.ops.object.customcurve()
+        self.objects = [obj.name for obj in bpy.data.objects]
+
+    def test_puzzle_joints(self):
+        self.assertIn("Custom", self.objects)
+
+
 # class FabexCalculatePathTest(unittest.IsolatedAsyncioTestCase):
 #     """Test that a Fabex operation can be added."""
 
