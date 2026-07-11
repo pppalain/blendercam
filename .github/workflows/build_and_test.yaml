@@ -68,10 +68,10 @@ jobs:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
 
-    # - name: "Set up Python"
-    #   uses: actions/setup-python@v6
-    #   with:
-    #     python-version-file: ".python-version"
+    - name: "Set up Python"
+      uses: actions/setup-python@v6
+      with:
+        python-version-file: ".python-version"
 
     - name: Install uv
       uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b 
