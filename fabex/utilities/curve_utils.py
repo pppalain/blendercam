@@ -37,6 +37,13 @@ def curve_validate():
         bool: True if curve is valid, False if invalid (has self-intersections).
     """
     obj = bpy.context.active_object
+    if obj is None or obj.type != 'CURVE':
+        return True
+
+    # Open curves are always considered valid.
+    for spline in obj.data.splines:
+        if not spline.use_cyclic_u:
+            return True
     poly = active_to_shapely_poly()
     error_msg = explain_validity(poly)
     remove_multiple("Self-intersection[")  #remove old errors
