@@ -31,7 +31,7 @@ jobs:
     - name: Install and Test
       run: |
         uv sync --locked --all-extras --dev
-        uv run pytest --ignore=blender -vvv -rA
+        uv run pytest -vvv -rA --ignore=blender --capture=sys
 
     - uses: actions/upload-artifact@v4
       if: always()
