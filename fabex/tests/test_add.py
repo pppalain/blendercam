@@ -194,7 +194,7 @@ class FabexAddGearTest(unittest.TestCase):
 
         bpy.ops.object.curve_gear()
 
-    def test_interlock(self):
+    def test_gear(self):
         import bpy
 
         objects = [obj.name for obj in bpy.data.objects]
