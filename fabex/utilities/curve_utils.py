@@ -26,10 +26,16 @@ import bpy
 """Validates a curve and checks for self intersections using
 Shapely.  
 Upon error detection, it creates a circle at the problem coordinates named with
-the problem error message
+the problem error message.
+Returns True if valid, False if invalid.
 """
 
 def curve_validate():
+    """Validate active curve object for self-intersections.
+    
+    Returns:
+        bool: True if curve is valid, False if invalid (has self-intersections).
+    """
     obj = bpy.context.active_object
     poly = active_to_shapely_poly()
     error_msg = explain_validity(poly)
@@ -41,7 +47,9 @@ def curve_validate():
 
     # Convert to appropriate types (float if '.' is present, else int)
     coordinates = [float(n) if '.' in n else int(n) for n in numbers_str]
-    if coordinates:
+    is_valid = len(coordinates) == 0
+    
+    if not is_valid:
         world_origin = obj.matrix_world @ Vector((coordinates[0], coordinates[1], 0.0))
         marker_location = (world_origin.x, world_origin.y, world_origin.z)
         bpy.ops.curve.primitive_bezier_circle_add(
@@ -53,6 +61,7 @@ def curve_validate():
         bpy.ops.view3d.view_selected()
 
     print(error_msg)
+    return is_valid
 
 def curve_to_shapely(cob, use_modifiers=False):
     """Convert a curve object to Shapely polygons.

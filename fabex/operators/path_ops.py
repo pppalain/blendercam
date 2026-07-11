@@ -34,6 +34,7 @@ from ..gcode.gcode_export import export_gcode_path
 from ..toolpath import get_path
 
 from ..utilities.async_utils import progress_async
+from ..utilities.curve_utils import curve_validate
 from ..utilities.logging_utils import log, heading, LOG_WIDTH
 from ..utilities.shapely_utils import (
     shapely_to_curve,
@@ -344,26 +345,49 @@ async def _calc_path(operator, context):
     log.info(f"Flutes: {o.cutter_flutes}")
     log.info(f"Tool Number: {o.cutter_id}")
     log.info(heading("~"))
-    # Set source object as active 
+
+    # Set source object as active
     if o.geometry_source == "OBJECT" and o.object_name in bpy.data.objects:
         source_ob = bpy.data.objects[o.object_name]
-        bpy.ops.object.select_all(action="DESELECT")
-        source_ob.select_set(True)
-        bpy.context.view_layer.objects.active = source_ob
+        source_ob.hide_set(False)
+        activate(source_ob)
         log.info(f"Active Object (Source Mesh): {o.object_name}")
 
-    if o.geometry_source == "OBJECT":
-        ob = bpy.data.objects[o.object_name]
-        ob.hide_set(False)
+        if source_ob.type == 'CURVE':
+            if not curve_validate():
+                log.info(f"Curve '{o.object_name}' has self-intersections. Please fix the curve geometry.")
+                return {"FINISHED", False}
+            log.info(f"Curve Validation: '{o.object_name}' is valid")
 
-    if o.geometry_source == "COLLECTION":
+    elif o.geometry_source == "COLLECTION":
         obc = bpy.data.collections[o.collection_name]
         for ob in obc.objects:
             ob.hide_set(False)
+            if ob.type == 'CURVE':
+                activate(ob)
+                if not curve_validate():
+                    log.info(f"Curve '{o.object_name}' has self-intersections. Please fix the curve geometry.")
+                    return {"FINISHED", False}
+                log.info(f"Curve Validation: '{ob.name}' is valid")
+        # Restore first object as active after validation loop
+        if obc.objects:
+            activate(obc.objects[0])
 
-    if o.strategy == "CARVE":
-        curvob = bpy.data.objects[o.curve_source]
-        curvob.hide_set(False)
+    # --- Validate limit curve ---
+    if o.use_limit_curve and o.limit_curve:
+        if o.limit_curve.name in bpy.data.objects:
+            curve_ob = bpy.data.objects[o.limit_curve.name]
+            curve_ob.hide_set(False)
+            activate(curve_ob)
+            if not curve_validate():
+                log.info(f"Limit Curve '{o.limit_curve.name}' has self-intersections. Please fix the curve geometry.")
+                return {"FINISHED", False}
+            log.info(f"Limit Curve Validation: '{o.limit_curve.name}' is valid")
+
+    # Restore source object as active after limit curve validation
+    if o.geometry_source == "OBJECT" and o.object_name in bpy.data.objects:
+        source_ob = bpy.data.objects[o.object_name]
+        activate(source_ob)
 
     # if o.strategy == 'WATERLINE':
     #     ob = bpy.data.objects[o.object_name]
