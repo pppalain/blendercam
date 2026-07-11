@@ -82,6 +82,9 @@ wheels = [
   "./wheels/shapely-2.1.2-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
   "./wheels/shapely-2.1.2-cp313-cp313-win_amd64.whl",
   "./wheels/shapely-2.1.2-cp313-cp313-win32.whl",
+
+  # pytest
+  "./wheels/pytest-9.1.1-py3-none-any.whl"
 ]
 
 [permissions]

@@ -154,6 +154,8 @@ class FabexAddInterlockTest(unittest.TestCase):
         install_extension()
         import bpy
 
+        bpy.ops.object.select_all(action="SELECT")
+        bpy.ops.object.delete()
         bpy.ops.object.curve_interlock()
 
     def test_interlock(self):
@@ -173,6 +175,8 @@ class FabexAddPuzzleJointsTest(unittest.TestCase):
         install_extension()
         import bpy
 
+        bpy.ops.object.select_all(action="SELECT")
+        bpy.ops.object.delete()
         bpy.ops.object.curve_puzzle()
 
     def test_puzzle_joints(self):
@@ -192,6 +196,8 @@ class FabexAddGearTest(unittest.TestCase):
         install_extension()
         import bpy
 
+        bpy.ops.object.select_all(action="SELECT")
+        bpy.ops.object.delete()
         bpy.ops.object.curve_gear()
 
     def test_gear(self):
