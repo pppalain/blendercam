@@ -1,12 +1,9 @@
-import unittest
+from unittest import TestCase
 from pathlib import Path
 import subprocess
 import time
 import os
 import shutil
-
-# import pytest
-# import asyncio
 
 from .test_install import activate_dependencies
 from .utils import (
@@ -17,7 +14,7 @@ from .utils import (
 )
 
 
-class FabexAddOpTest(unittest.TestCase):
+class FabexAddOpTest(TestCase):
     """Test that a Fabex operation can be added."""
 
     def setUp(self):
@@ -36,8 +33,8 @@ class FabexAddOpTest(unittest.TestCase):
         self.assertIn("Op_Cube_1", self.operations)
 
 
-class FabexSignPlateTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
+class FabexSignPlateTest(TestCase):
+    """Test that a Sign Plate Curve can be added."""
 
     def setUp(self):
         build_extension(blender)
@@ -52,8 +49,8 @@ class FabexSignPlateTest(unittest.TestCase):
         self.assertIn("plate", self.objects)
 
 
-class FabexSilhouetteTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
+class FabexSilhouetteTest(TestCase):
+    """Test that a Silhouette Curve can be added."""
 
     def setUp(self):
         build_extension(blender)
@@ -69,8 +66,8 @@ class FabexSilhouetteTest(unittest.TestCase):
         self.assertIn("Cube_silhouette", self.objects)
 
 
-class FabexSilhouetteOffsetTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
+class FabexSilhouetteOffsetTest(TestCase):
+    """Test that an Offset Silhouette can be added."""
 
     def setUp(self):
         build_extension(blender)
@@ -86,8 +83,8 @@ class FabexSilhouetteOffsetTest(unittest.TestCase):
         self.assertIn("Cube_offset_0.003", self.objects)
 
 
-class FabexDrawerTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
+class FabexDrawerTest(TestCase):
+    """Test that a Drawer Curve can be added."""
 
     def setUp(self):
         activate_dependencies(self)
@@ -109,11 +106,10 @@ class FabexDrawerTest(unittest.TestCase):
             self.assertIn(drawer, self.objects)
 
 
-class FabexInterlockTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
+class FabexInterlockTest(TestCase):
+    """Test that an Interlock Curve can be added."""
 
     def setUp(self):
-        # build_extension(blender)
         activate_dependencies(self)
         install_extension()
         import bpy
@@ -126,11 +122,10 @@ class FabexInterlockTest(unittest.TestCase):
         self.assertIn("_groove", self.objects)
 
 
-class FabexPuzzleJointsTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
+class FabexPuzzleJointsTest(TestCase):
+    """Test that a Puzzle Joint can be added."""
 
     def setUp(self):
-        # build_extension(blender)
         activate_dependencies(self)
         install_extension()
         import bpy
@@ -143,11 +138,10 @@ class FabexPuzzleJointsTest(unittest.TestCase):
         self.assertIn("curved_t", self.objects)
 
 
-class FabexGearTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
+class FabexGearTest(TestCase):
+    """Test that a Gear can be added."""
 
     def setUp(self):
-        # build_extension(blender)
         activate_dependencies(self)
         install_extension()
         import bpy
@@ -161,11 +155,10 @@ class FabexGearTest(unittest.TestCase):
         self.assertTrue([obj.startswith("gear") for obj in self.objects])
 
 
-class FabexSineTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
+class FabexSineTest(TestCase):
+    """Test that a Sine Curve can be added."""
 
     def setUp(self):
-        # build_extension(blender)
         activate_dependencies(self)
         install_extension()
         import bpy
@@ -178,11 +171,10 @@ class FabexSineTest(unittest.TestCase):
         self.assertIn("Periodic Wave", self.objects)
 
 
-class FabexLissajousTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
+class FabexLissajousTest(TestCase):
+    """Test that a Lissajous Curve can be added."""
 
     def setUp(self):
-        # build_extension(blender)
         activate_dependencies(self)
         install_extension()
         import bpy
@@ -195,11 +187,10 @@ class FabexLissajousTest(unittest.TestCase):
         self.assertIn("Lissajous", self.objects)
 
 
-class FabexHypotrochoidTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
+class FabexHypotrochoidTest(TestCase):
+    """Test that a Hypotrochoid Curve can be added."""
 
     def setUp(self):
-        # build_extension(blender)
         activate_dependencies(self)
         install_extension()
         import bpy
@@ -212,11 +203,10 @@ class FabexHypotrochoidTest(unittest.TestCase):
         self.assertIn("Hypotrochoid", self.objects)
 
 
-class FabexCustomTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
+class FabexCustomTest(TestCase):
+    """Test that a Custom Curve can be added."""
 
     def setUp(self):
-        # build_extension(blender)
         activate_dependencies(self)
         install_extension()
         import bpy
@@ -229,11 +219,10 @@ class FabexCustomTest(unittest.TestCase):
         self.assertIn("Custom", self.objects)
 
 
-class FabexFlatConeTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
+class FabexFlatConeTest(TestCase):
+    """Test that a Flat Cone can be added."""
 
     def setUp(self):
-        # build_extension(blender)
         activate_dependencies(self)
         install_extension()
         import bpy
@@ -246,11 +235,10 @@ class FabexFlatConeTest(unittest.TestCase):
         self.assertIn("flat_cone", self.objects)
 
 
-class FabexCrosshatchTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
+class FabexCrosshatchTest(TestCase):
+    """Test that a Crosshatch Curve can be added."""
 
     def setUp(self):
-        # build_extension(blender)
         activate_dependencies(self)
         install_extension()
         import bpy
@@ -264,11 +252,10 @@ class FabexCrosshatchTest(unittest.TestCase):
         self.assertIn("BézierCircle_crosshatch", self.objects)
 
 
-class FabexBasReliefTest(unittest.TestCase):
-    """Test that a Fabex operation can be added."""
+class FabexBasReliefTest(TestCase):
+    """Test that a Bas Relief Mesh can be added."""
 
     def setUp(self):
-        # build_extension(blender)
         activate_dependencies(self)
         install_extension()
         import bpy
@@ -281,7 +268,7 @@ class FabexBasReliefTest(unittest.TestCase):
         self.assertIn("BasReliefMesh", self.objects)
 
 
-# class FabexCalculatePathTest(unittest.IsolatedAsyncioTestCase):
+# class FabexCalculatePathTest(IsolatedAsyncioTestCase):
 #     """Test that a Fabex operation can be added."""
 
 #     def setUp(self):

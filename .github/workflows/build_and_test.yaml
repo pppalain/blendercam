@@ -28,12 +28,10 @@ jobs:
       uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
 
       # uv lockfile ensures we use the custom opencamlib wheel
-    - name: Install the project with lockfile dev dependencies
-      run: uv sync --locked --all-extras --dev
-
-      # uv allows the use of pytest
-    - name: Run tests
-      run: uv run pytest --ignore=blender -vvv
+    - name: Install and Test
+      run: |
+        uv sync --locked --all-extras --dev
+        uv run pytest --ignore=blender -vvv -rA
 
     - uses: actions/upload-artifact@v4
       if: always()
