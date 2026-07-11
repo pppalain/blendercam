@@ -9,20 +9,17 @@ jobs:
       matrix:
         os: ['ubuntu-latest','windows-latest']
         version: ['5.1.2']
-        # include:
-        #   - os: 'macos-latest'
-        #     blender_version: '4.2.1'
     runs-on: ${{ matrix.os }}
     steps:
 
-    - name: Checkout repository
-      uses: actions/checkout@v4.1.1
-    # - name: Install bash 4(macOS)
-    #   if: runner.os == 'macOS'
-    #   run: brew install bash
-    # - name: Install blender (macOS)
-    #   if: runner.os == 'macOS'
-    #   run: brew install --cask blender
+    # - name: Checkout repository
+    #   uses: actions/checkout@v4.1.1
+    # # - name: Install bash 4(macOS)
+    # #   if: runner.os == 'macOS'
+    # #   run: brew install bash
+    # # - name: Install blender (macOS)
+    # #   if: runner.os == 'macOS'
+    # #   run: brew install --cask blender
 
     - uses: actions/checkout@v5
     - name: Install Blender
@@ -32,72 +29,15 @@ jobs:
     - name: Run tests in Blender
       run: blender --version
 
-    # - name: Cache blender
-    #   id: cache-blender
-    #   if: runner.os != 'macOS'
-    #   uses:  actions/cache/restore@v4
-    #   with:
-    #     path: blender
-    #     key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
-
-    # - name: Download blender
-    #   id: download
-    #   if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
-    #   shell: bash
-    #   run: |
-    #     declare -A os_suffixes
-    #     os_suffixes["ubuntu-latest"]="linux-x64.tar.xz"
-    #     os_suffixes["macos-latest"]="macos-x64.dmg"
-    #     os_suffixes["windows-latest"]="windows-x64.zip"
-    #     export OS_SUFFIX=${os_suffixes["${{ matrix.os }}"]}
-    #     IFS='.' read -ra BLENDER_SPLIT <<< "${{ matrix.blender_version }}"
-    #     export BLENDER_MAJOR=${BLENDER_SPLIT[0]}.${BLENDER_SPLIT[1]}
-    #     export BLENDER_MINOR=${BLENDER_SPLIT[2]}
-    #     export BLENDER_ARCHIVE="blender-${BLENDER_MAJOR}.${BLENDER_MINOR}-${OS_SUFFIX}"
-    #     echo Major version: $BLENDER_MAJOR
-    #     echo Minor version: $BLENDER_MINOR
-    #     echo Archive name: $BLENDER_ARCHIVE
-    #     curl -O -L https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
-    #     echo "BLENDER_ARCHIVE=${BLENDER_ARCHIVE}" >> "$GITHUB_OUTPUT"
-
-    # - name: Extract blender
-    #   if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
-    #   run: |
-    #     import shutil
-    #     import os
-    #     os.makedirs("blender",exist_ok=True)
-    #     shutil.unpack_archive("${{ steps.download.outputs.BLENDER_ARCHIVE }}","blender")
-    #   shell: python
-
-    # - name: Save blender
-    #   uses:  actions/cache/save@v4
-    #   if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
-    #   with:
-    #     path: blender
-    #     key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
-
-    # - name: "Set up Python"
-    #   uses: actions/setup-python@v6
-    #   with:
-    #     python-version-file: ".python-version"
-
     - name: Install uv
       uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b 
 
     - name: Install the project
       run: uv sync --locked --all-extras --dev
 
-    # - name: Activate Environment
-    #   run: source .venv/bin/activate
-
     - name: Run tests
       run:  |
         uv run pytest --ignore=blender -vvv
-
-    # - name: Run Winodws tests
-    #   if: runner.os == 'Windows'
-    #   run:  |
-    #     uv run pytest --ignore=blender -vvv
 
     # - name: Run Advanced tests
     #   shell: bash
