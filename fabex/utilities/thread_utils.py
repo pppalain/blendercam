@@ -61,7 +61,7 @@ def timer_update(context):
         context: The context in which the function is called, typically
             containing information about the current scene and operations.
     """
-    text = ""
+    # text = ""
     s = bpy.context.scene
     if hasattr(bpy.ops.object.calculate_cam_paths_background.__class__, "cam_processes"):
         processes = bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes

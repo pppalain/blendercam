@@ -9,14 +9,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-      # Enter the OS to use
-      # And the version of Blender to install
+        # Enter the OS to use
+        # And the version of Blender to install
         os: ['ubuntu-latest','windows-latest', 'macos-latest']
         blender_version: ['5.1.2']
     runs-on: ${{ matrix.os }}
 
     steps:
-      # Brady's Blender Install
+      # Blender Install Action
     - uses: actions/checkout@v5
     - name: Install Blender
       uses: bradyajohnston/setup-blender@v5
@@ -28,7 +28,7 @@ jobs:
       uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
 
       # uv lockfile ensures we use the custom opencamlib wheel
-    - name: Install and Test
+    - name: Test
       run: |
         uv sync --locked --all-extras --dev
         uv run pytest -vvv -rA --ignore=blender --capture=sys

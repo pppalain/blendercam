@@ -154,8 +154,8 @@ class Parser:
                                 p0 = area.Point(self.oldx, self.oldy)
                                 p1 = area.Point(x, y)
                                 v = p1 - p0
-                                l = v.length()
-                                h = l / 2
+                                length = v.length()
+                                h = length / 2
                                 d = math.sqrt(r * r - h * h)
                                 n = area.Point(-v.y, v.x)
                                 n.normalize()

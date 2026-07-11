@@ -225,6 +225,7 @@ def make_edge_loops(*objects):
         vertex_groups.append(vertex_group)
 
         # Link our new object
+        link_object = scene.collection.objects.link
         link_object(new_object)
 
         # Add it to our list

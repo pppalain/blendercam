@@ -1,12 +1,7 @@
 from unittest import TestCase
-from pathlib import Path
-import subprocess
-import time
-import os
-import shutil
 
-from .test_install import activate_dependencies
 from .utils import (
+    activate_dependencies,
     build_extension,
     install_extension,
     activate_engine,

@@ -182,9 +182,6 @@ class Redirector(nc.Creator):
         if z is not None:
             self.z = z * units
 
-    def cut_path(self):
-        pass
-
     def z2(self, z):
         return z
 
@@ -192,7 +189,7 @@ class Redirector(nc.Creator):
         px = self.x
         py = self.y
         pz = self.z
-        if x != None:
+        if x is not None:
             self.x = x * units
         if y is not None:
             self.y = y * units
@@ -214,7 +211,7 @@ class Redirector(nc.Creator):
         px = self.x
         py = self.y
         pz = self.z
-        if x != None:
+        if x is not None:
             self.x = x * units
         if y is not None:
             self.y = y * units

@@ -10,7 +10,6 @@
 from . import nc
 from . import iso
 from .format import Format
-from .format import *
 
 
 class Creator(iso.Creator):

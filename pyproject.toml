@@ -53,14 +53,15 @@ shapely = [
     { marker = "platform_machine == 'AMD64' and sys_platform == 'win32'", path = "fabex/wheels/shapely-2.1.2-cp313-cp313-win_amd64.whl" },
 ]
 
-# [tool.uv.workspace]
-# members = [
-#     "fabex",
-# ]
-
 [tool.pytest.ini_options]
 pythonpath = [
     "fabex/tests"
+]
+addopts = [
+    "-vvv",
+    "-ra",
+    "--capture=sys",
+    "--ignore=blender",
 ]
 
 [tool.uv]
@@ -83,13 +84,6 @@ line-length = 100
 exclude = "/fabex/presets/"
 target-version = ['py313']
 include = '\.py'
-
-# [tool.unittest]
-# discover = true
-# start-directory = "./fabex/tests"
-# pattern = "test*.py"
-# top-level-directory = "./fabex"
-# verbosity=2
 
 [dependency-groups]
 dev = [

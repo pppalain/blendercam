@@ -1,9 +1,4 @@
-import unittest
-from pathlib import Path
-import subprocess
-import time
-import os
-import shutil
+from unittest import TestCase
 
 from .utils import (
     build_extension,
@@ -15,7 +10,7 @@ from .utils import (
 )
 
 
-class FabexDependencyTest(unittest.TestCase):
+class FabexDependencyTest(TestCase):
     """Test Addon Dependencies - Curve Tools, Simplify Curves+, STL Format (Legacy), Extra Curve Objectes
     Sets Online Access to True and downloads the required addons.
     Individual test functions check for each addon in Preferences.
@@ -52,7 +47,7 @@ class FabexDependencyTest(unittest.TestCase):
         )
 
 
-class FabexInstallTest(unittest.TestCase):
+class FabexInstallTest(TestCase):
     """Test Installation of addon, uses the zip created in the __init__"""
 
     def setUp(self):
@@ -67,7 +62,7 @@ class FabexInstallTest(unittest.TestCase):
         )
 
 
-class FabexDisableTest(unittest.TestCase):
+class FabexDisableTest(TestCase):
     """Test Disabling the addon"""
 
     def setUp(self):
@@ -83,7 +78,7 @@ class FabexDisableTest(unittest.TestCase):
         )
 
 
-class FabexEnableTest(unittest.TestCase):
+class FabexEnableTest(TestCase):
     """Test Enabling the addon"""
 
     def setUp(self):
@@ -99,7 +94,7 @@ class FabexEnableTest(unittest.TestCase):
         )
 
 
-class FabexEngineTest(unittest.TestCase):
+class FabexEngineTest(TestCase):
     """Test that the Fabex Engine is available in the Scene."""
 
     def setUp(self):

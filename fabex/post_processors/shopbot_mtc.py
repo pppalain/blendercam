@@ -13,7 +13,6 @@
 
 from . import nc
 from .format import Format
-from .format import *
 
 # to allow access to other CAM data:
 import bpy

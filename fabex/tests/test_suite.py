@@ -3,16 +3,11 @@ import os
 import subprocess
 import sys
 import unittest
-import shutil
 from pathlib import Path
 
 from .utils import (
     GCODE_SCRIPT,
-    path_to_blender_executable,
     blender,
-    build_extension,
-    install_extension,
-    activate_engine,
 )
 
 # G-code Generator script, stripped down

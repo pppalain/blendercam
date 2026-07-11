@@ -7,8 +7,7 @@
 
 from . import nc
 import math
-from .format import Format
-from .format import *
+from .format import Address, AddressPlusMinus, Format
 import bpy
 
 ################################################################################
@@ -694,12 +693,14 @@ class Creator(nc.Creator):
     #         self.s.set(s, self.SPINDLE_CW(), self.SPINDLE_CCW())
     #     else:
     #         self.s.set(s, self.SPINDLE_CCW(), self.SPINDLE_CW())
-    def spindle(self, s, clockwise): # EXPERIMENTAL -- grbl only
+    def spindle(self, s, clockwise):  # EXPERIMENTAL -- grbl only
         # Get machine settings
         machine = bpy.context.scene.cam_machine
 
-        if (machine.spindle_slow_start_enable and
-                s > machine.spindle_min + machine.spindle_slow_start_skip_threshold):
+        if (
+            machine.spindle_slow_start_enable
+            and s > machine.spindle_min + machine.spindle_slow_start_skip_threshold
+        ):
 
             # Generate slow start sequence
             steps = machine.spindle_slow_start_steps

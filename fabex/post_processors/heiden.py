@@ -17,8 +17,7 @@
 
 from . import nc
 import math
-from .format import Format
-from .format import *
+from .format import Address, AddressPlusMinus, Format
 
 ################################################################################
 

@@ -8,7 +8,6 @@ import recreator
 
 try:
     import ocl
-    import ocl_funcs
 except ImportError:
     import opencamlib as ocl
 import nc
