@@ -26,27 +26,14 @@ class FabexAddOpTest(unittest.TestCase):
         activate_engine(self)
         import bpy
 
-        s = bpy.context.scene
-        bpy.ops.object.select_all(action="DESELECT")
-        bpy.context.view_layer.objects["Cube"].select_set(state=True)
-        # s.objects[o.name].select_set(state=True)
-        bpy.context.view_layer.objects.active = bpy.context.view_layer.objects["Cube"]
-
-        # bpy.context.view_layer.objects["Cube"].select_set(True)
+        bpy.ops.wm.read_homefile()
         bpy.ops.scene.cam_operation_add()
 
-    def test_path(self):
-        import bpy
-
         scene = bpy.context.scene
-        operations = [operation.name for operation in scene.cam_operations]
+        self.operations = [operation.name for operation in scene.cam_operations]
 
-        self.assertIn("Op_Cube_1", operations)
-
-    def tearDown(self):
-        import bpy
-
-        bpy.ops.wm.quit_blender()
+    def test_path(self):
+        self.assertIn("Op_Cube_1", self.operations)
 
 
 class FabexAddSignPlateTest(unittest.TestCase):
@@ -57,19 +44,12 @@ class FabexAddSignPlateTest(unittest.TestCase):
         install_extension()
         import bpy
 
+        bpy.ops.wm.read_homefile()
         bpy.ops.object.curve_plate()
+        self.objects = [obj.name for obj in bpy.data.objects]
 
     def test_sign_plate(self):
-        import bpy
-
-        objects = [obj.name for obj in bpy.data.objects]
-
-        self.assertIn("plate", objects)
-
-    def tearDown(self):
-        import bpy
-
-        bpy.ops.wm.quit_blender()
+        self.assertIn("plate", self.objects)
 
 
 class FabexSilhouetteTest(unittest.TestCase):
@@ -80,20 +60,13 @@ class FabexSilhouetteTest(unittest.TestCase):
         install_extension()
         import bpy
 
-        s = bpy.context.scene
-        bpy.ops.object.select_all(action="DESELECT")
+        bpy.ops.wm.read_homefile()
         bpy.context.view_layer.objects["Cube"].select_set(state=True)
-        # s.objects[o.name].select_set(state=True)
-        bpy.context.view_layer.objects.active = bpy.context.view_layer.objects["Cube"]
-
         bpy.ops.object.silhouette()
+        self.objects = [obj.name for obj in bpy.data.objects]
 
     def test_silhouette(self):
-        import bpy
-
-        objects = [obj.name for obj in bpy.data.objects]
-
-        self.assertIn("Cube_silhouette", objects)
+        self.assertIn("Cube_silhouette", self.objects)
 
 
 class FabexSilhouetteOffsetTest(unittest.TestCase):
@@ -104,20 +77,13 @@ class FabexSilhouetteOffsetTest(unittest.TestCase):
         install_extension()
         import bpy
 
-        s = bpy.context.scene
-        bpy.ops.object.select_all(action="DESELECT")
+        bpy.ops.wm.read_homefile()
         bpy.context.view_layer.objects["Cube"].select_set(state=True)
-        # s.objects[o.name].select_set(state=True)
-        bpy.context.view_layer.objects.active = bpy.context.view_layer.objects["Cube"]
-
         bpy.ops.object.silhouette_offset()
+        self.objects = [obj.name for obj in bpy.data.objects]
 
     def test_silhouette_offset(self):
-        import bpy
-
-        objects = [obj.name for obj in bpy.data.objects]
-
-        self.assertIn("Cube_offset_0.003", objects)
+        self.assertIn("Cube_offset_0.003", self.objects)
 
 
 class FabexAddDrawerTest(unittest.TestCase):
@@ -128,21 +94,19 @@ class FabexAddDrawerTest(unittest.TestCase):
         install_extension()
         import bpy
 
+        bpy.ops.wm.read_homefile()
         bpy.ops.object.curve_drawer()
-
-    def test_sign_plate(self):
-        import bpy
-
-        objects = [obj.name for obj in bpy.data.objects]
-        drawers = [
+        self.objects = [obj.name for obj in bpy.data.objects]
+        self.drawers = [
             "drawer_back",
             "drawer_bottom",
             "drawer_front",
             "drawer_side",
         ]
 
-        for drawer in drawers:
-            self.assertIn(drawer, objects)
+    def test_sign_plate(self):
+        for drawer in self.drawers:
+            self.assertIn(drawer, self.objects)
 
 
 class FabexAddInterlockTest(unittest.TestCase):
@@ -154,16 +118,12 @@ class FabexAddInterlockTest(unittest.TestCase):
         install_extension()
         import bpy
 
-        bpy.ops.object.select_all(action="SELECT")
-        bpy.ops.object.delete()
+        bpy.ops.wm.read_homefile()
         bpy.ops.object.curve_interlock()
+        self.objects = [obj.name for obj in bpy.data.objects]
 
     def test_interlock(self):
-        import bpy
-
-        objects = [obj.name for obj in bpy.data.objects]
-
-        self.assertIn("_groove", objects)
+        self.assertIn("_groove", self.objects)
 
 
 class FabexAddPuzzleJointsTest(unittest.TestCase):
@@ -175,16 +135,12 @@ class FabexAddPuzzleJointsTest(unittest.TestCase):
         install_extension()
         import bpy
 
-        bpy.ops.object.select_all(action="SELECT")
-        bpy.ops.object.delete()
+        bpy.ops.wm.read_homefile()
         bpy.ops.object.curve_puzzle()
+        self.objects = [obj.name for obj in bpy.data.objects]
 
     def test_puzzle_joints(self):
-        import bpy
-
-        objects = [obj.name for obj in bpy.data.objects]
-
-        self.assertIn("curved_t", objects)
+        self.assertIn("curved_t", self.objects)
 
 
 class FabexAddGearTest(unittest.TestCase):
@@ -199,13 +155,10 @@ class FabexAddGearTest(unittest.TestCase):
         bpy.ops.object.select_all(action="SELECT")
         bpy.ops.object.delete()
         bpy.ops.object.curve_gear()
+        self.objects = [obj.name for obj in bpy.data.objects]
 
     def test_gear(self):
-        import bpy
-
-        objects = [obj.name for obj in bpy.data.objects]
-
-        self.assertTrue([obj.startswith("gear") for obj in objects])
+        self.assertTrue([obj.startswith("gear") for obj in self.objects])
 
 
 # class FabexCalculatePathTest(unittest.IsolatedAsyncioTestCase):

@@ -6,97 +6,106 @@ import unittest
 import shutil
 from pathlib import Path
 
-# G-code Generator script, stripped down
-GCODE_SCRIPT = """
-import sys
-import warnings
-from pathlib import Path
-import subprocess
-
-import bpy
-
-source_dir = str(Path(__file__).parent.parent.parent.parent)
-output_dir = str(Path(__file__).parent.parent.parent.parent.parent)
-
-subprocess.run(
-    [
-        "blender",
-        "--background",
-        "--factory-startup",
-        "--command",
-        "extension",
-        "build",
-        "--source-dir",
-        source_dir,
-        "--output-dir",
-        output_dir,
-        # "--split-platforms",
-    ],
+from .utils import (
+    GCODE_SCRIPT,
+    path_to_blender_executable,
+    blender,
+    build_extension,
+    install_extension,
+    activate_engine,
 )
 
-path = str(Path(__file__).parent.parent.parent.parent.parent / "fabex-3.1.6.zip")
-bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
+# G-code Generator script, stripped down
+# GCODE_SCRIPT = """
+# import sys
+# import warnings
+# from pathlib import Path
+# import subprocess
 
-# Set the Render Engine to Fabex
-scene = bpy.context.scene
-scene.render.engine = "FABEX_RENDER"
+# import bpy
 
-operations = scene.cam_operations
+# source_dir = str(Path(__file__).parent.parent.parent.parent)
+# output_dir = str(Path(__file__).parent.parent.parent.parent.parent)
 
-for i, operation in enumerate(operations):
-    # Set the active operation using the index
-    scene.cam_active_operation = i
+# subprocess.run(
+#     [
+#         "blender",
+#         "--background",
+#         "--factory-startup",
+#         "--command",
+#         "extension",
+#         "build",
+#         "--source-dir",
+#         source_dir,
+#         "--output-dir",
+#         output_dir,
+#         # "--split-platforms",
+#     ],
+# )
 
-    # Run the calculate_cam_path() operator
-    bpy.ops.object.calculate_cam_path()
+# path = str(Path(__file__).parent.parent.parent.parent.parent / "fabex-3.1.6.zip")
+# bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
 
-sys.exit(0)
-"""
+# # Set the Render Engine to Fabex
+# scene = bpy.context.scene
+# scene.render.engine = "FABEX_RENDER"
 
-path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
+# operations = scene.cam_operations
 
-blender = path_to_blender_executable if shutil.which("blender") is None else shutil.which("blender")
+# for i, operation in enumerate(operations):
+#     # Set the active operation using the index
+#     scene.cam_active_operation = i
 
+#     # Run the calculate_cam_path() operator
+#     bpy.ops.object.calculate_cam_path()
 
-def build_extension(blender):
-    source_dir = str(Path(__file__).parent.parent)
-    output_dir = str(Path(__file__).parent.parent.parent)
+# sys.exit(0)
+# """
 
-    subprocess.run(
-        [
-            blender,
-            "--background",
-            "--factory-startup",
-            "--command",
-            "extension",
-            "build",
-            "--source-dir",
-            source_dir,
-            "--output-dir",
-            output_dir,
-            # "--split-platforms",
-        ],
-    )
+# path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
 
-
-def install_extension():
-    import bpy
-
-    version_file = Path(__file__).parent.parent / "version.py"
-    with open(version_file) as f:
-        lines = f.readlines()
-        version = lines[0].split("(")[1].replace(",", "")
-    major, minor, patch = version[0], version[1], version[2]
-    path = str(Path(__file__).parent.parent.parent / f"fabex-{major}.{minor}.{patch}.zip")
-    bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
+# blender = path_to_blender_executable if shutil.which("blender") is None else shutil.which("blender")
 
 
-def activate_engine():
-    import bpy
+# def build_extension(blender):
+#     source_dir = str(Path(__file__).parent.parent)
+#     output_dir = str(Path(__file__).parent.parent.parent)
 
-    # Set the Render Engine to Fabex
-    scene = bpy.context.scene
-    scene.render.engine = "FABEX_RENDER"
+#     subprocess.run(
+#         [
+#             blender,
+#             "--background",
+#             "--factory-startup",
+#             "--command",
+#             "extension",
+#             "build",
+#             "--source-dir",
+#             source_dir,
+#             "--output-dir",
+#             output_dir,
+#             # "--split-platforms",
+#         ],
+#     )
+
+
+# def install_extension():
+#     import bpy
+
+#     version_file = Path(__file__).parent.parent / "version.py"
+#     with open(version_file) as f:
+#         lines = f.readlines()
+#         version = lines[0].split("(")[1].replace(",", "")
+#     major, minor, patch = version[0], version[1], version[2]
+#     path = str(Path(__file__).parent.parent.parent / f"fabex-{major}.{minor}.{patch}.zip")
+#     bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
+
+
+# def activate_engine():
+#     import bpy
+
+#     # Set the Render Engine to Fabex
+#     scene = bpy.context.scene
+#     scene.render.engine = "FABEX_RENDER"
 
 
 # @unittest.skip("Old Gcode Test")

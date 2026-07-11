@@ -6,6 +6,53 @@ path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.
 
 blender = path_to_blender_executable if shutil.which("blender") is None else "blender"
 
+# G-code Generator script, stripped down
+GCODE_SCRIPT = """
+import sys
+import warnings
+from pathlib import Path
+import subprocess
+
+import bpy
+
+source_dir = str(Path(__file__).parent.parent.parent.parent)
+output_dir = str(Path(__file__).parent.parent.parent.parent.parent)
+
+subprocess.run(
+    [
+        "blender",
+        "--background",
+        "--factory-startup",
+        "--command",
+        "extension",
+        "build",
+        "--source-dir",
+        source_dir,
+        "--output-dir",
+        output_dir,
+        # "--split-platforms",
+    ],
+)
+
+path = str(Path(__file__).parent.parent.parent.parent.parent / "fabex-3.1.6.zip")
+bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
+
+# Set the Render Engine to Fabex
+scene = bpy.context.scene
+scene.render.engine = "FABEX_RENDER"
+
+operations = scene.cam_operations
+
+for i, operation in enumerate(operations):
+    # Set the active operation using the index
+    scene.cam_active_operation = i
+
+    # Run the calculate_cam_path() operator
+    bpy.ops.object.calculate_cam_path()
+
+sys.exit(0)
+"""
+
 
 def build_extension(blender):
     source_dir = str(Path(__file__).parent.parent)
