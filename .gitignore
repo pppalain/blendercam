@@ -10,6 +10,8 @@
 .vscode
 .project
 .pydevproject
+.pytest_cache
+.ruff_cache
 # profiler output files
 *.prof
 .idea

@@ -32,8 +32,11 @@ def _get_preset_path(subdir):
 # Operation Presets #
 #####################
 operation_presets = []
-operation_preset_path = _get_preset_path("cam_operations")
-# operation_preset_path = bpy.utils.preset_paths("cam_operations")[0]
+try:
+    operation_preset_path = bpy.utils.preset_paths("cam_operations")[0]
+except IndexError:
+    operation_preset_path = _get_preset_path("cam_operations")
+
 if operation_preset_path:
     operation_presets = sorted(listdir(operation_preset_path))
 
@@ -102,8 +105,12 @@ def update_user_operation(self, context):
 # Cutter Presets #
 ##################
 cutter_presets = []
-cutter_preset_path = _get_preset_path("cam_cutters")
-# cutter_preset_path = bpy.utils.preset_paths("cam_cutters")[0]
+
+try:
+    cutter_preset_path = bpy.utils.preset_paths("cam_cutters")[0]
+except IndexError:
+    cutter_preset_path = _get_preset_path("cam_cutters")
+
 if cutter_preset_path:
     cutter_presets = sorted(listdir(cutter_preset_path))
 
@@ -176,8 +183,12 @@ def update_user_cutter(self, context):
 # Machine Presets #
 ###################
 machine_presets = []
-machine_preset_path = _get_preset_path("cam_machines")
-# machine_preset_path = bpy.utils.preset_paths("cam_machines")[0]
+
+try:
+    machine_preset_path = bpy.utils.preset_paths("cam_machines")[0]
+except:
+    machine_preset_path = _get_preset_path("cam_machines")
+
 if machine_preset_path:
     machine_presets = sorted(listdir(machine_preset_path))
 

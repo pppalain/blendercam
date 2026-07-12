@@ -848,7 +848,7 @@ def bore(
         zretract,
         depth,
         standoff,
-        dwell_Bottom,
+        dwell_bottom,
         feed_in,
         feed_out,
         stoppos,

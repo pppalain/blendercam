@@ -289,6 +289,9 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
     for i, p in enumerate(coords):
         if i == 0:
             p_start = p
+            oldp = None
+        else:
+            oldp = coords[i - 1]
 
         if p != p_start:
             not_start = True

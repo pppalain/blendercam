@@ -1,6 +1,7 @@
 from . import nc
 from . import iso_codes
 from . import emc2
+from . import iso
 
 
 class CodesEMC2(iso_codes.Codes):

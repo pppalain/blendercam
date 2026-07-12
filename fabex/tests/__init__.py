@@ -1,6 +1,8 @@
 import unittest
 from pathlib import Path
 
+import bpy
+
 # Path to tests
 test_path = str(Path(__file__).parent)
 

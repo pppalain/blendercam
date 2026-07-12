@@ -28,15 +28,16 @@ def slope_array(loop):
     #    pnt_amount = round(length / resolution)
     sarray = []
     dsarray = []
+    oldp = None
     for i, p in enumerate(coords):
         distance = loop.project(Point(p))
-        if i != 0:
+        if i != 0 and oldp is not None:
             slope = find_slope(p, oldp)
             sarray.append((distance, slope * -0.001))
         oldp = p
     for i, p in enumerate(sarray):
         distance = p[0]
-        if i != 0:
+        if i != 0 and oldp is not None:
             slope = find_slope(p, oldp)
             if abs(slope) > 10:
                 log.info(distance)

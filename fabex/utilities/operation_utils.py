@@ -394,8 +394,8 @@ def update_image_size_y(self, context):
         if i is not None:
             size_x = self.source_image_size_x / i.size[0]
             size_y = int(size_x * i.size[1] * 1000000) / 1000
-            col.label(text="Image Size on Y Axis: " + unit_value_to_string(size_y, 8))
-            col.separator()
+            # col.label(text="Image Size on Y Axis: " + unit_value_to_string(size_y, 8))
+            # col.separator()
 
 
 def update_bridges(o, context):

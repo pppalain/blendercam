@@ -809,9 +809,9 @@ def image_edge_search_on_line(o, ar, zimage):
                     log.info("Status: Success")
                     log.info(f"X: {xs}")
                     log.info(f"Y: {ys}")
-                    log.info(f"Length: {testlength}")
-                    log.info(f"Angle: {testangle}")
-                    log.info(f"Last Vector: {lastvect}")
+                    # log.info(f"Length: {testlength}")
+                    # log.info(f"Angle: {testangle}")
+                    # log.info(f"Last Vector: {lastvect}")
                     log.info(f"Test Vector: {testvect}")
                     log.info(f"Test Count: {itests}")
             else:
