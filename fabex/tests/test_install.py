@@ -6,7 +6,6 @@ from .utils import (
     activate_engine,
     install_extension,
     get_modules,
-    blender,
 )
 
 
@@ -18,6 +17,7 @@ class FabexDependencyTest(TestCase):
 
     def setUp(self):
         activate_dependencies(self)
+        get_modules(self)
 
     def test_curve_tools(self):
         """Check for Curve Tools addon"""

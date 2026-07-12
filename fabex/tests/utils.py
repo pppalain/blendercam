@@ -55,49 +55,6 @@ def zip_extension():
     shutil.make_archive(extension_name, "zip", path)
 
 
-# def build_extension(blender):
-#     source_dir = str(Path(__file__).parent.parent)
-#     output_dir = str(Path(__file__).parent.parent.parent)
-
-#     subprocess.run(
-#         [
-#             blender,
-#             "--background",
-#             "--factory-startup",
-#             "--command",
-#             "extension",
-#             "build",
-#             "--source-dir",
-#             source_dir,
-#             "--output-dir",
-#             output_dir,
-#             # "--split-platforms",
-#         ],
-#     )
-
-
-# def blender_command(blender, command):
-#     path = "test_func.py"
-#     Path(path).write_text(command)
-
-#     subprocess.run(
-#         [
-#             blender,
-#             "--background",
-#             "--factory-startup",
-#             "--python",
-#             path,
-#         ],
-#         shell=False,
-#         check=True,
-#         stdout=subprocess.PIPE,
-#         stderr=subprocess.STDOUT,
-#         text=True,
-#     )
-
-#     Path.unlink(path)
-
-
 def activate_dependencies(self):
     import bpy
 

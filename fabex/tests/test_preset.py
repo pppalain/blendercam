@@ -4,7 +4,6 @@ from .utils import (
     zip_extension,
     install_extension,
     activate_engine,
-    blender,
 )
 
 
@@ -45,7 +44,7 @@ class FabexCutterPresetTest(TestCase):
         activate_engine(self)
         import bpy
 
-        self.cutter_preset = len(bpy.utils.preset_paths("cam_machines"))
+        self.cutter_preset = len(bpy.utils.preset_paths("cam_cutters"))
 
     def test_cutter_preset(self):
         self.assertTrue(self.cutter_preset == 1)
