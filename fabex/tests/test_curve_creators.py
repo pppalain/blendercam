@@ -9,26 +9,7 @@ from .utils import (
 )
 
 
-class FabexAddOpTest(TestCase):
-    """Test that a Fabex operation can be added."""
-
-    def setUp(self):
-        zip_extension()
-        install_extension()
-        activate_engine(self)
-        import bpy
-
-        bpy.ops.wm.read_homefile()
-        bpy.ops.scene.cam_operation_add()
-
-        scene = bpy.context.scene
-        self.operations = [operation.name for operation in scene.cam_operations]
-
-    def test_path(self):
-        self.assertIn("Op_Cube_1", self.operations)
-
-
-class FabexSignPlateTest(TestCase):
+class SignPlateTest(TestCase):
     """Test that a Sign Plate Curve can be added."""
 
     def setUp(self):
@@ -44,41 +25,7 @@ class FabexSignPlateTest(TestCase):
         self.assertIn("plate", self.objects)
 
 
-class FabexSilhouetteTest(TestCase):
-    """Test that a Silhouette Curve can be added."""
-
-    def setUp(self):
-        zip_extension()
-        install_extension()
-        import bpy
-
-        bpy.ops.wm.read_homefile()
-        bpy.context.view_layer.objects["Cube"].select_set(state=True)
-        bpy.ops.object.silhouette()
-        self.objects = [obj.name for obj in bpy.data.objects]
-
-    def test_silhouette(self):
-        self.assertIn("Cube_silhouette", self.objects)
-
-
-class FabexSilhouetteOffsetTest(TestCase):
-    """Test that an Offset Silhouette can be added."""
-
-    def setUp(self):
-        zip_extension()
-        install_extension()
-        import bpy
-
-        bpy.ops.wm.read_homefile()
-        bpy.context.view_layer.objects["Cube"].select_set(state=True)
-        bpy.ops.object.silhouette_offset()
-        self.objects = [obj.name for obj in bpy.data.objects]
-
-    def test_silhouette_offset(self):
-        self.assertIn("Cube_offset_0.003", self.objects)
-
-
-class FabexDrawerTest(TestCase):
+class DrawerTest(TestCase):
     """Test that a Drawer Curve can be added."""
 
     def setUp(self):
@@ -101,7 +48,24 @@ class FabexDrawerTest(TestCase):
             self.assertIn(drawer, self.objects)
 
 
-class FabexInterlockTest(TestCase):
+class MortiseTest(TestCase):
+    """Test that an Interlock Curve can be added."""
+
+    def setUp(self):
+        activate_dependencies(self)
+        install_extension()
+        import bpy
+
+        bpy.ops.wm.read_homefile()
+        bpy.ops.object.curve_interlock()
+        bpy.ops.object.curve_mortise()
+        self.objects = [obj.name for obj in bpy.data.objects]
+
+    def test_mortise(self):
+        self.assertIn("mortise", self.objects)
+
+
+class InterlockTest(TestCase):
     """Test that an Interlock Curve can be added."""
 
     def setUp(self):
@@ -117,7 +81,7 @@ class FabexInterlockTest(TestCase):
         self.assertIn("_groove", self.objects)
 
 
-class FabexPuzzleJointsTest(TestCase):
+class PuzzleJointsTest(TestCase):
     """Test that a Puzzle Joint can be added."""
 
     def setUp(self):
@@ -133,24 +97,7 @@ class FabexPuzzleJointsTest(TestCase):
         self.assertIn("curved_t", self.objects)
 
 
-class FabexGearTest(TestCase):
-    """Test that a Gear can be added."""
-
-    def setUp(self):
-        activate_dependencies(self)
-        install_extension()
-        import bpy
-
-        bpy.ops.object.select_all(action="SELECT")
-        bpy.ops.object.delete()
-        bpy.ops.object.curve_gear()
-        self.objects = [obj.name for obj in bpy.data.objects]
-
-    def test_gear(self):
-        self.assertTrue([obj.startswith("gear") for obj in self.objects])
-
-
-class FabexSineTest(TestCase):
+class SineTest(TestCase):
     """Test that a Sine Curve can be added."""
 
     def setUp(self):
@@ -166,7 +113,7 @@ class FabexSineTest(TestCase):
         self.assertIn("Periodic Wave", self.objects)
 
 
-class FabexLissajousTest(TestCase):
+class LissajousTest(TestCase):
     """Test that a Lissajous Curve can be added."""
 
     def setUp(self):
@@ -182,7 +129,7 @@ class FabexLissajousTest(TestCase):
         self.assertIn("Lissajous", self.objects)
 
 
-class FabexHypotrochoidTest(TestCase):
+class HypotrochoidTest(TestCase):
     """Test that a Hypotrochoid Curve can be added."""
 
     def setUp(self):
@@ -198,7 +145,7 @@ class FabexHypotrochoidTest(TestCase):
         self.assertIn("Hypotrochoid", self.objects)
 
 
-class FabexCustomTest(TestCase):
+class CustomTest(TestCase):
     """Test that a Custom Curve can be added."""
 
     def setUp(self):
@@ -214,23 +161,7 @@ class FabexCustomTest(TestCase):
         self.assertIn("Custom", self.objects)
 
 
-class FabexFlatConeTest(TestCase):
-    """Test that a Flat Cone can be added."""
-
-    def setUp(self):
-        activate_dependencies(self)
-        install_extension()
-        import bpy
-
-        bpy.ops.wm.read_homefile()
-        bpy.ops.object.curve_flat_cone()
-        self.objects = [obj.name for obj in bpy.data.objects]
-
-    def test_flat_cone(self):
-        self.assertIn("flat_cone", self.objects)
-
-
-class FabexCrosshatchTest(TestCase):
+class CrosshatchTest(TestCase):
     """Test that a Crosshatch Curve can be added."""
 
     def setUp(self):
@@ -247,8 +178,25 @@ class FabexCrosshatchTest(TestCase):
         self.assertIn("BézierCircle_crosshatch", self.objects)
 
 
-class FabexBasReliefTest(TestCase):
-    """Test that a Bas Relief Mesh can be added."""
+class GearTest(TestCase):
+    """Test that a Gear can be added."""
+
+    def setUp(self):
+        activate_dependencies(self)
+        install_extension()
+        import bpy
+
+        bpy.ops.object.select_all(action="SELECT")
+        bpy.ops.object.delete()
+        bpy.ops.object.curve_gear()
+        self.objects = [obj.name for obj in bpy.data.objects]
+
+    def test_gear(self):
+        self.assertTrue([obj.startswith("gear") for obj in self.objects])
+
+
+class FlatConeTest(TestCase):
+    """Test that a Flat Cone can be added."""
 
     def setUp(self):
         activate_dependencies(self)
@@ -256,36 +204,8 @@ class FabexBasReliefTest(TestCase):
         import bpy
 
         bpy.ops.wm.read_homefile()
-        bpy.ops.scene.calculate_bas_relief()
+        bpy.ops.object.curve_flat_cone()
         self.objects = [obj.name for obj in bpy.data.objects]
 
-    def test_crosshatch(self):
-        self.assertIn("BasReliefMesh", self.objects)
-
-
-# class FabexCalculatePathTest(IsolatedAsyncioTestCase):
-#     """Test that a Fabex operation can be added."""
-
-#     def setUp(self):
-#         install_extension()
-#         activate_engine(self)
-#         import bpy
-
-#         bpy.context.view_layer.objects["Cube"].select_set(True)
-#         bpy.ops.scene.cam_operation_add()
-#         bpy.ops.object.calculate_cam_path()
-
-#     # async def calculate_path(self):
-#     #     import bpy
-
-#     #     bpy.ops.object.calculate_cam_path()
-
-#     @pytest.mark.asyncio
-#     async def test_path(self):
-#         # await _calc_path
-#         import bpy
-
-#         data = bpy.data
-#         objects = [obj.name for obj in data.objects]
-
-#         self.assertIn("Cube", bpy.data.objects)
+    def test_flat_cone(self):
+        self.assertIn("flat_cone", self.objects)

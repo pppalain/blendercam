@@ -9,7 +9,7 @@ from .utils import (
 )
 
 
-class FabexDependencyTest(TestCase):
+class AddonDependencyTest(TestCase):
     """Test Addon Dependencies - Curve Tools, Simplify Curves+, STL Format (Legacy), Extra Curve Objectes
     Sets Online Access to True and downloads the required addons.
     Individual test functions check for each addon in Preferences.
@@ -60,6 +60,11 @@ class FabexInstallTest(TestCase):
             "bl_ext.user_default.fabex",
             self.modules,
         )
+
+    def tearDown(self):
+        import bpy
+
+        bpy.ops.wm.quit_blender()
 
 
 class FabexDisableTest(TestCase):

@@ -7,8 +7,8 @@ from .utils import (
 )
 
 
-class FabexOpPresetTest(TestCase):
-    """Test that a Fabex operation can be added."""
+class OperationPresetTest(TestCase):
+    """Test that a  operation can be added."""
 
     def setUp(self):
         install_extension()
@@ -20,8 +20,8 @@ class FabexOpPresetTest(TestCase):
         self.assertTrue(self.op_preset == 1)
 
 
-class FabexMachinePresetTest(TestCase):
-    """Test that a Fabex operation can be added."""
+class MachinePresetTest(TestCase):
+    """Test that a  operation can be added."""
 
     def setUp(self):
         zip_extension()
@@ -35,8 +35,8 @@ class FabexMachinePresetTest(TestCase):
         self.assertTrue(self.machine_preset == 1)
 
 
-class FabexCutterPresetTest(TestCase):
-    """Test that a Fabex operation can be added."""
+class CutterPresetTest(TestCase):
+    """Test that a  operation can be added."""
 
     def setUp(self):
         zip_extension()
