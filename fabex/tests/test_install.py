@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from .utils import (
-    build_extension,
+    zip_extension,
     activate_dependencies,
     activate_engine,
     install_extension,
@@ -51,7 +51,7 @@ class FabexInstallTest(TestCase):
     """Test Installation of addon, uses the zip created in the __init__"""
 
     def setUp(self):
-        build_extension(blender)
+        zip_extension()
         install_extension()
         get_modules(self)
 
@@ -98,7 +98,7 @@ class FabexEngineTest(TestCase):
     """Test that the Fabex Engine is available in the Scene."""
 
     def setUp(self):
-        build_extension(blender)
+        zip_extension()
         install_extension()
         activate_engine(self)
 

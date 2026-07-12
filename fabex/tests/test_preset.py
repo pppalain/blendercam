@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from .utils import (
-    build_extension,
+    zip_extension,
     install_extension,
     activate_engine,
     blender,
@@ -25,7 +25,7 @@ class FabexMachinePresetTest(TestCase):
     """Test that a Fabex operation can be added."""
 
     def setUp(self):
-        build_extension(blender)
+        zip_extension()
         install_extension()
         activate_engine(self)
         import bpy
@@ -40,7 +40,7 @@ class FabexCutterPresetTest(TestCase):
     """Test that a Fabex operation can be added."""
 
     def setUp(self):
-        build_extension(blender)
+        zip_extension()
         install_extension()
         activate_engine(self)
         import bpy

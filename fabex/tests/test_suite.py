@@ -62,7 +62,7 @@ from .utils import (
 # blender = path_to_blender_executable if shutil.which("blender") is None else shutil.which("blender")
 
 
-# def build_extension(blender):
+# def zip_extension():
 #     source_dir = str(Path(__file__).parent.parent)
 #     output_dir = str(Path(__file__).parent.parent.parent)
 
@@ -201,7 +201,7 @@ class FabexGcodeTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    # build_extension(blender)
+    # zip_extension()
     # install_extension()
     # activate_engine()
     # # Add a test method for each test case to the TestCase class

@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from .utils import (
     activate_dependencies,
-    build_extension,
+    zip_extension,
     install_extension,
     activate_engine,
     blender,
@@ -13,7 +13,7 @@ class FabexAddOpTest(TestCase):
     """Test that a Fabex operation can be added."""
 
     def setUp(self):
-        build_extension(blender)
+        zip_extension()
         install_extension()
         activate_engine(self)
         import bpy
@@ -32,7 +32,7 @@ class FabexSignPlateTest(TestCase):
     """Test that a Sign Plate Curve can be added."""
 
     def setUp(self):
-        build_extension(blender)
+        zip_extension()
         install_extension()
         import bpy
 
@@ -48,7 +48,7 @@ class FabexSilhouetteTest(TestCase):
     """Test that a Silhouette Curve can be added."""
 
     def setUp(self):
-        build_extension(blender)
+        zip_extension()
         install_extension()
         import bpy
 
@@ -65,7 +65,7 @@ class FabexSilhouetteOffsetTest(TestCase):
     """Test that an Offset Silhouette can be added."""
 
     def setUp(self):
-        build_extension(blender)
+        zip_extension()
         install_extension()
         import bpy
 

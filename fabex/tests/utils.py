@@ -11,30 +11,19 @@ GCODE_SCRIPT = """
 import sys
 import warnings
 from pathlib import Path
-import subprocess
+import os
+import zipfile
 
-import bpy
+version_file = Path(__file__).parent.parent / "version.py"
+with open(version_file) as f:
+    lines = f.readlines()
+    version = lines[0].split("(")[1].replace(",", "")
+major, minor, patch = version[0], version[1], version[2]
 
-source_dir = str(Path(__file__).parent.parent.parent.parent)
-output_dir = str(Path(__file__).parent.parent.parent.parent.parent)
-
-subprocess.run(
-    [
-        "blender",
-        "--background",
-        "--factory-startup",
-        "--command",
-        "extension",
-        "build",
-        "--source-dir",
-        source_dir,
-        "--output-dir",
-        output_dir,
-        # "--split-platforms",
-    ],
-)
-
-path = str(Path(__file__).parent.parent.parent.parent.parent / "fabex-3.1.6.zip")
+extension_name = f"fabex-{major}.{minor}.{patch}.zip"
+path = Path(__file__).parent.parent.parent / extension_name
+file = zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED)
+file.close()
 bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
 
 # Set the Render Engine to Fabex
@@ -54,47 +43,59 @@ sys.exit(0)
 """
 
 
-def build_extension(blender):
-    source_dir = str(Path(__file__).parent.parent)
-    output_dir = str(Path(__file__).parent.parent.parent)
+def zip_extension():
+    version_file = Path(__file__).parent.parent / "version.py"
+    with open(version_file) as f:
+        lines = f.readlines()
+        version = lines[0].split("(")[1].replace(",", "")
+    major, minor, patch = version[0], version[1], version[2]
 
-    subprocess.run(
-        [
-            blender,
-            "--background",
-            "--factory-startup",
-            "--command",
-            "extension",
-            "build",
-            "--source-dir",
-            source_dir,
-            "--output-dir",
-            output_dir,
-            # "--split-platforms",
-        ],
-    )
+    extension_name = f"fabex-{major}.{minor}.{patch}"
+    path = Path(__file__).parent.parent
+    shutil.make_archive(extension_name, "zip", path)
 
 
-def blender_command(blender, command):
-    path = "test_func.py"
-    Path(path).write_text(command)
+# def build_extension(blender):
+#     source_dir = str(Path(__file__).parent.parent)
+#     output_dir = str(Path(__file__).parent.parent.parent)
 
-    subprocess.run(
-        [
-            blender,
-            "--background",
-            "--factory-startup",
-            "--python",
-            path,
-        ],
-        shell=False,
-        check=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-    )
+#     subprocess.run(
+#         [
+#             blender,
+#             "--background",
+#             "--factory-startup",
+#             "--command",
+#             "extension",
+#             "build",
+#             "--source-dir",
+#             source_dir,
+#             "--output-dir",
+#             output_dir,
+#             # "--split-platforms",
+#         ],
+#     )
 
-    Path.unlink(path)
+
+# def blender_command(blender, command):
+#     path = "test_func.py"
+#     Path(path).write_text(command)
+
+#     subprocess.run(
+#         [
+#             blender,
+#             "--background",
+#             "--factory-startup",
+#             "--python",
+#             path,
+#         ],
+#         shell=False,
+#         check=True,
+#         stdout=subprocess.PIPE,
+#         stderr=subprocess.STDOUT,
+#         text=True,
+#     )
+
+#     Path.unlink(path)
 
 
 def activate_dependencies(self):
