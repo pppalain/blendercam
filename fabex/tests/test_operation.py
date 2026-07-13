@@ -24,9 +24,30 @@ class AddOperationTest(TestCase):
 
         scene = bpy.context.scene
         self.operations = [operation.name for operation in scene.cam_operations]
+        self.operation = scene.cam_operations[scene.cam_active_operation]
 
     def test_path(self):
         self.assertIn("Op_Cube_1", self.operations)
+
+        # strategies = [
+        #     'CUTOUT',
+        #     'POCKET',
+        #     'DRILL',
+        #     'PARALLEL',
+        #     'CROSS',
+        #     'BLOCK',
+        #     'SPIRAL',
+        #     'CIRCLES',
+        #     'OUTLINEFILL',
+        #     'CARVE',
+        #     'WATERLINE',
+        #     'CURVE',
+        #     'MEDIAL_AXIS',
+        # ]
+
+    def test_cutout_available(self):
+        self.operation.strategy = "CUTOUT"
+        self.assertTrue(self.operation.strategy == "CUTOUT")
 
 
 # class CalculatePathTest(TestCase):
