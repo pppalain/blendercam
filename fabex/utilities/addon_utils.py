@@ -23,8 +23,7 @@ def addon_dependencies():
     """
     preferences = bpy.context.preferences
     addons = preferences.addons
-    online_access = preferences.system.use_online_access
-    online_access = True
+    preferences.system.use_online_access = True
 
     modules = [
         # Objects & Tools
@@ -39,14 +38,13 @@ def addon_dependencies():
         "export_autocad_dxf_format_dxf",
     ]
 
-    # if online_access:
-    for module in modules:
-        if module not in addons:
+    try:
+        for module in modules:
             try:
-                addons[f"bl_ext.blender_org.{module}"]
+                bpy.ops.preferences.addon_enable(module=f"bl_ext.blender_org.{module}")
             except KeyError:
                 bpy.ops.extensions.package_install(repo_index=0, pkg_id=module)
-    else:
+    except:
         log.debug("Could not Access Online Addon Repository!")
         raise CamException(
             "Fabex couldn't install required addons - 'Enable Online Access' in 'Preferences > System'"

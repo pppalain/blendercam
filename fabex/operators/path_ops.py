@@ -25,6 +25,7 @@ from ..exception import CamException
 from ..gcode.gcode_export import export_gcode_path
 from ..toolpath import get_path
 
+# from ..utilities.addon_utils import add_collections
 from ..utilities.async_utils import progress_async
 from ..utilities.logging_utils import log, heading
 from ..utilities.simple_utils import (
