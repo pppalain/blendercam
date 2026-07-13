@@ -24,6 +24,7 @@ def addon_dependencies():
     preferences = bpy.context.preferences
     addons = preferences.addons
     online_access = preferences.system.use_online_access
+    online_access = True
 
     modules = [
         # Objects & Tools
@@ -38,13 +39,13 @@ def addon_dependencies():
         "export_autocad_dxf_format_dxf",
     ]
 
-    if online_access:
-        for module in modules:
-            if module not in addons:
-                try:
-                    addons[f"bl_ext.blender_org.{module}"]
-                except KeyError:
-                    bpy.ops.extensions.package_install(repo_index=0, pkg_id=module)
+    # if online_access:
+    for module in modules:
+        if module not in addons:
+            try:
+                addons[f"bl_ext.blender_org.{module}"]
+            except KeyError:
+                bpy.ops.extensions.package_install(repo_index=0, pkg_id=module)
     else:
         log.debug("Could not Access Online Addon Repository!")
         raise CamException(
@@ -141,8 +142,6 @@ def copy_presets(addon_prefs):
         copy_function=copy_if_not_exists,
         dirs_exist_ok=True,
     )
-
-    bpy.ops.wm.save_userpref()
 
     if not addon_prefs.op_preset_update:
         # Update the Operation presets
