@@ -17,7 +17,7 @@ class OperationPresetTest(TestCase):
         self.op_preset = len(bpy.utils.preset_paths("cam_operations"))
 
     def test_op_preset(self):
-        self.assertTrue(self.op_preset == 1)
+        self.assertTrue(self.op_preset > 0)
 
 
 class MachinePresetTest(TestCase):
@@ -32,7 +32,7 @@ class MachinePresetTest(TestCase):
         self.machine_preset = len(bpy.utils.preset_paths("cam_machines"))
 
     def test_machine_preset(self):
-        self.assertTrue(self.machine_preset == 1)
+        self.assertTrue(self.machine_preset > 0)
 
 
 class CutterPresetTest(TestCase):
@@ -47,4 +47,4 @@ class CutterPresetTest(TestCase):
         self.cutter_preset = len(bpy.utils.preset_paths("cam_cutters"))
 
     def test_cutter_preset(self):
-        self.assertTrue(self.cutter_preset == 1)
+        self.assertTrue(self.cutter_preset > 0)

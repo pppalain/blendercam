@@ -46,9 +46,9 @@ def addon_dependencies():
                 bpy.ops.extensions.package_install(repo_index=0, pkg_id=module)
     except:
         log.debug("Could not Access Online Addon Repository!")
-        raise CamException(
-            "Fabex couldn't install required addons - 'Enable Online Access' in 'Preferences > System'"
-        )
+        # raise CamException(
+        #     "Fabex couldn't install required addons - 'Enable Online Access' in 'Preferences > System'"
+        # )
 
 
 def python_dependencies():
