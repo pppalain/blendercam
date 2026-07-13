@@ -4,10 +4,13 @@ Functions to handle shapely operations and conversions - curve, coords, polygon
 """
 
 import shapely
+import bpy
+import re
 from shapely.geometry import (
     Polygon,
     MultiPolygon,
 )
+from shapely.validation import explain_validity
 
 from mathutils import Vector
 
@@ -17,8 +20,9 @@ except ImportError:
     pass
 
 from ..chunk_builder import CamPathChunkBuilder
-
+from .simple_utils import remove_multiple
 from .logging_utils import log
+from ..exception import CamException
 
 
 def shapely_remove_doubles(p, optimize_threshold):
@@ -206,12 +210,29 @@ def shapely_to_curve(name, p, z, cyclic=True):
 # this does more cleve chunks to Poly with hierarchies... ;)
 def chunks_to_shapely(chunks):
     # print ('analyzing paths')
+    remove_multiple("Invalid_geometry_Marker")  #remove old errors
     for ch in chunks:  # first convert chunk to poly
         if len(ch.points) > 2:
-            # pchunk=[]
-            ch.poly = Polygon(ch.points[:, 0:2])
+            try:
+                ch.poly = Polygon(ch.points[:, 0:2])
+            except Exception as exc:
+                raise CamException("Invalid curve geometry") from exc
+
             if not ch.poly.is_valid:
-                ch.poly = Polygon()
+                validity_error = explain_validity(ch.poly)
+                if validity_error != "Valid Geometry":
+                    numbers = re.findall(r'-?\d+\.?\d*', validity_error)
+                    if len(numbers) >= 2:
+                        x = float(numbers[0])
+                        y = float(numbers[1])
+                    bpy.ops.curve.primitive_bezier_circle_add(
+                        radius=0.003,
+                        align='WORLD',
+                        location=(x, y, 0.0),
+                    )
+                    bpy.context.active_object.name = "Invalid_geometry_Marker"
+                    raise CamException(f"Invalid curve geometry: {validity_error}")
+                raise CamException("Invalid curve geometry")
         else:
             ch.poly = Polygon()
 
