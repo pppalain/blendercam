@@ -210,6 +210,7 @@ def shapely_to_curve(name, p, z, cyclic=True):
 # this does more cleve chunks to Poly with hierarchies... ;)
 def chunks_to_shapely(chunks):
     # print ('analyzing paths')
+    remove_multiple("Invalid_geometry_Marker")  #remove old errors
     for ch in chunks:  # first convert chunk to poly
         if len(ch.points) > 2:
             try:
@@ -219,8 +220,7 @@ def chunks_to_shapely(chunks):
 
             if not ch.poly.is_valid:
                 validity_error = explain_validity(ch.poly)
-                if validity_error and validity_error != "Valid Geometry":
-                    remove_multiple("Invalid_geometry_Marker")  #remove old errors
+                if validity_error != "Valid Geometry":
                     numbers = re.findall(r'-?\d+\.?\d*', validity_error)
                     if len(numbers) >= 2:
                         x = float(numbers[0])
