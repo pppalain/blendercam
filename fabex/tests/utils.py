@@ -1,5 +1,4 @@
 from pathlib import Path
-import subprocess
 import shutil
 
 path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"

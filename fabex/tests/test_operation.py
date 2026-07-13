@@ -1,12 +1,9 @@
 from unittest import TestCase
-import asyncio
 
 from .utils import (
-    activate_dependencies,
     zip_extension,
     install_extension,
     activate_engine,
-    blender,
     add_collections,
     blend_filepath,
 )

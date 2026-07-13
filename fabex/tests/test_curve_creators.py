@@ -4,8 +4,6 @@ from .utils import (
     activate_dependencies,
     zip_extension,
     install_extension,
-    activate_engine,
-    blender,
 )
 
 
