@@ -106,3 +106,70 @@ def activate_engine(self):
     scene = bpy.context.scene
     scene.render.engine = "FABEX_RENDER"
     self.engine = scene.render.engine
+
+
+def add_collections():
+    """Adds color-coded Collection folders to the scene.
+
+    This function adds three collections to aid in scene management.
+    Bridges, Paths and Simulations are now auto-sorted into their
+    own collections upon creation, which can be shown or hidden as
+    groups.
+    """
+    import bpy
+
+    context = bpy.context
+    data = bpy.data
+    collections = data.collections
+    cam_names = context.scene.cam_names
+    path_prefix = cam_names.path_prefix
+    simulation_prefix = cam_names.simulation_prefix
+
+    scene_collection = context.scene.collection
+    default_collection = collections["Collection"]
+    fabex_collections = [
+        ("Bridges (Tabs)", "COLOR_06"),
+        ("Paths", "COLOR_04"),
+        ("Simulations", "COLOR_05"),
+    ]
+
+    for collection, color in fabex_collections:
+        if collection not in collections:
+            collections.new(collection)
+            scene_collection.children.link(collections[collection])
+            collections[collection].color_tag = color
+
+    bridges_collection = collections["Bridges (Tabs)"]
+    paths_collection = collections["Paths"]
+    simulations_collection = collections["Simulations"]
+
+    children = default_collection.children
+    for child in children:
+        prefix = child.name.startswith
+        if prefix("bridge"):
+            bridges_collection.children.link(child)
+            default_collection.children.unlink(child)
+
+    objects = default_collection.objects
+    for obj in objects:
+        prefix = obj.name.startswith
+        if prefix(path_prefix):
+            try:
+                paths_collection.objects[obj.name]
+            except RuntimeError:
+                paths_collection.objects.link(obj)
+        if prefix(simulation_prefix):
+            try:
+                simulations_collection.objects[obj.name]
+            except RuntimeError:
+                simulations_collection.objects.link(obj)
+        if prefix in ["bridge", path_prefix, simulation_prefix]:
+            default_collection.objects.unlink(obj)
+
+
+def blend_filepath(test):
+    from pathlib import Path
+
+    path = str(Path(__file__).parent / "test_data" / test / f"{test}.blend")
+
+    return path

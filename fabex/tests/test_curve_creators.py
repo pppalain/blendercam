@@ -43,7 +43,7 @@ class DrawerTest(TestCase):
             "drawer_side",
         ]
 
-    def test_sign_plate(self):
+    def test_drawer(self):
         for drawer in self.drawers:
             self.assertIn(drawer, self.objects)
 
