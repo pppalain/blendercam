@@ -7,44 +7,29 @@ from .utils import (
 )
 
 
-class OperationPresetTest(TestCase):
+class FabexPresetTest(TestCase):
     """Test that a  operation can be added."""
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
+        zip_extension()
         install_extension()
+        activate_engine(self)
+
+    def test_op_preset(self):
         import bpy
 
         self.op_preset = len(bpy.utils.preset_paths("cam_operations"))
-
-    def test_op_preset(self):
         self.assertTrue(self.op_preset > 0)
 
-
-class MachinePresetTest(TestCase):
-    """Test that a  operation can be added."""
-
-    def setUp(self):
-        zip_extension()
-        install_extension()
-        activate_engine(self)
+    def test_machine_preset(self):
         import bpy
 
         self.machine_preset = len(bpy.utils.preset_paths("cam_machines"))
-
-    def test_machine_preset(self):
         self.assertTrue(self.machine_preset > 0)
 
-
-class CutterPresetTest(TestCase):
-    """Test that a  operation can be added."""
-
-    def setUp(self):
-        zip_extension()
-        install_extension()
-        activate_engine(self)
+    def test_cutter_preset(self):
         import bpy
 
         self.cutter_preset = len(bpy.utils.preset_paths("cam_cutters"))
-
-    def test_cutter_preset(self):
         self.assertTrue(self.cutter_preset > 0)

@@ -15,7 +15,8 @@ class AddonDependencyTest(TestCase):
     Individual test functions check for each addon in Preferences.
     """
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         activate_dependencies(self)
         get_modules(self)
 
@@ -50,7 +51,8 @@ class AddonDependencyTest(TestCase):
 class FabexInstallTest(TestCase):
     """Test Installation of addon, uses the zip created in the __init__"""
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         zip_extension()
         install_extension()
         get_modules(self)
@@ -61,51 +63,28 @@ class FabexInstallTest(TestCase):
             self.modules,
         )
 
-    def tearDown(self):
-        import bpy
-
-        bpy.ops.wm.quit_blender()
-
-
-class FabexDisableTest(TestCase):
-    """Test Disabling the addon"""
-
-    def setUp(self):
+    def test_disable(self):
         import bpy
 
         bpy.ops.preferences.addon_disable(module="bl_ext.user_default.fabex")
         get_modules(self)
-
-    def test_disable(self):
         self.assertNotIn(
             "bl_ext.user_default.fabex",
             self.modules,
         )
 
-
-class FabexEnableTest(TestCase):
-    """Test Enabling the addon"""
-
-    def setUp(self):
+    def test_enable(self):
         import bpy
 
         bpy.ops.preferences.addon_enable(module="bl_ext.user_default.fabex")
         get_modules(self)
-
-    def test_enable(self):
         self.assertIn(
             "bl_ext.user_default.fabex",
             self.modules,
         )
 
-
-class FabexEngineTest(TestCase):
-    """Test that the Fabex Engine is available in the Scene."""
-
-    def setUp(self):
-        zip_extension()
-        install_extension()
-        activate_engine(self)
-
     def test_engine(self):
+        import bpy
+
+        activate_engine(self)
         self.assertTrue(self.engine == "FABEX_RENDER")

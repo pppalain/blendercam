@@ -12,7 +12,8 @@ from .utils import (
 class AddOperationTest(TestCase):
     """Test that a  operation can be added."""
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         import bpy
 
         zip_extension()
@@ -49,24 +50,11 @@ class AddOperationTest(TestCase):
             self.operation.strategy = strat
             self.assertTrue(self.operation.strategy == strat)
 
-
-class CalculatePathTest(TestCase):
-    """Test that a  operation can be added."""
-
-    def setUp(self):
-        import bpy
-
-        install_extension()
-        activate_engine(self)
-        bpy.ops.wm.read_homefile()
-        add_collections()
-        bpy.ops.scene.cam_operation_add()
-        bpy.ops.object.calculate_cam_path()
-
     def test_calculate_path(self):
         import bpy
 
-        data = bpy.data
-        objects = [obj.name for obj in data.objects]
+        self.operation.strategy = "CUTOUT"
+        bpy.ops.object.calculate_cam_path()
+        objects = [obj.name for obj in bpy.data.objects]
 
         self.assertIn("cam_path_Op_Cube_1", objects)

@@ -10,7 +10,8 @@ from .utils import (
 class FabexTypeTest(TestCase):
     """Test that a  operation can be added."""
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         zip_extension()
         install_extension()
         activate_engine(self)

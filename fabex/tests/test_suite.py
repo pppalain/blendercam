@@ -5,8 +5,6 @@ import sys
 import unittest
 from pathlib import Path
 
-from .utils import blender
-
 
 # @unittest.skip("Old Gcode Test")
 class FabexGcodeTest(unittest.TestCase):
@@ -14,7 +12,7 @@ class FabexGcodeTest(unittest.TestCase):
     def setUpClass(cls):
         path = "test_func.py"
         Path(path).write_text(GCODE_SCRIPT)
-        command = f'{blender} -noaudio -b -P "{path}" --factory-startup'
+        command = f'blender -noaudio -b -P "{path}" --factory-startup'
         print(f"Executing: {command}")
         subprocess.run(command, shell=True, check=True)
         Path.unlink(path)
@@ -64,7 +62,7 @@ class FabexGcodeTest(unittest.TestCase):
     def execute_blender(self, blend_file):
         path = "test_func.py"
         Path(path).write_text(GCODE_SCRIPT)
-        command = f'{blender} -noaudio -b "{blend_file}" -P "{path}" --factory-startup'
+        command = f'blender -noaudio -b "{blend_file}" -P "{path}" --factory-startup'
         print(f"Executing: {command}")
         subprocess.run(command, shell=True, check=True)
         Path.unlink(path)

@@ -1,10 +1,6 @@
 from pathlib import Path
 import shutil
 
-path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
-
-blender = path_to_blender_executable if shutil.which("blender") is None else "blender"
-
 
 def zip_extension():
     version_file = Path(__file__).parent.parent / "version.py"
