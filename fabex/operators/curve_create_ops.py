@@ -336,9 +336,17 @@ class CamCurvePlate(Operator):
         precision=4,
         unit="LENGTH",
     )
-    hole_tolerance: FloatProperty(
+    holev_tolerance: FloatProperty(
         name="Hole V Tolerance",
-        default=0.005,
+        default=0.0,
+        min=0,
+        max=3.0,
+        precision=4,
+        unit="LENGTH",
+    )
+    holeh_tolerance: FloatProperty(
+        name="Hole H Tolerance",
+        default=0.0,
         min=0,
         max=3.0,
         precision=4,
@@ -402,7 +410,10 @@ class CamCurvePlate(Operator):
         layout.prop(self, "width")
         layout.prop(self, "height")
         layout.prop(self, "hole_diameter")
-        layout.prop(self, "hole_tolerance")
+        if self.holeh_tolerance == 0.0:
+            layout.prop(self, "holev_tolerance")
+        if self.holev_tolerance == 0.0:
+            layout.prop(self, "holeh_tolerance")
         layout.prop(self, "hole_vdist")
         layout.prop(self, "hole_hdist")
         layout.prop(self, "hole_hamount")
@@ -626,17 +637,17 @@ class CamCurvePlate(Operator):
                 radius=self.hole_diameter / 2,
                 enter_editmode=False,
                 align="WORLD",
-                location=(0, self.hole_tolerance / 2, 0),
+                location=(self.holeh_tolerance / 2, self.holev_tolerance / 2, 0),
                 scale=(1, 1, 1),
             )
             active_name("_hole_Top")
             bpy.context.object.data.resolution_u = int(self.resolution / 4)
-            if self.hole_tolerance > 0:
+            if self.holev_tolerance > 0.0 or self.holeh_tolerance > 0.0:
                 bpy.ops.curve.primitive_bezier_circle_add(
                     radius=self.hole_diameter / 2,
                     enter_editmode=False,
                     align="WORLD",
-                    location=(0, -self.hole_tolerance / 2, 0),
+                    location=(-self.holeh_tolerance / 2, -self.holev_tolerance / 2, 0),
                     scale=(1, 1, 1),
                 )
                 active_name("_hole_Bottom")

@@ -53,6 +53,7 @@ def curve_validate():
         bpy.ops.view3d.view_selected()
 
     print(error_msg)
+    return error_msg
 
 def curve_to_shapely(cob, use_modifiers=False):
     """Convert a curve object to Shapely polygons.
