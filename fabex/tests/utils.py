@@ -4,18 +4,8 @@ import shutil
 import bpy
 
 
-def zip_extension():
-    version_file = Path(__file__).parent.parent / "version.py"
-    with open(version_file) as f:
-        lines = f.readlines()
-        version = lines[0].split("(")[1].replace(",", "")
-    major, minor, patch = version[0], version[1], version[2]
-    extension_name = f"fabex-{major}.{minor}.{patch}"
-    path = Path(__file__).parent.parent
-    shutil.make_archive(extension_name, "zip", path)
-
-
 def activate_dependencies(self):
+    """Install / Enable Addon Dependencies"""
     bpy.context.preferences.system.use_online_access = True
     bpy.ops.extensions.repo_sync_all(use_active_only=False)
     dependencies = [
@@ -28,9 +18,14 @@ def activate_dependencies(self):
     ]
     for dependency in dependencies:
         try:
-            bpy.ops.preferences.addon_enable(module=f"bl_ext.blender_org.{dependency}")
+            bpy.ops.preferences.addon_enable(
+                module=f"bl_ext.blender_org.{dependency}",
+            )
         except RuntimeError:
-            bpy.ops.extensions.package_install(repo_index=0, pkg_id=dependency)
+            bpy.ops.extensions.package_install(
+                repo_index=0,
+                pkg_id=dependency,
+            )
     addons = bpy.context.preferences.addons
     self.modules = [addon.module for addon in addons]
 
@@ -41,6 +36,7 @@ def get_modules(self):
 
 
 def install_extension():
+    """Identify the version and install the matching zip file"""
     version_file = Path(__file__).parent.parent / "version.py"
     with open(version_file) as f:
         lines = f.readlines()
@@ -51,6 +47,7 @@ def install_extension():
 
 
 def activate_engine(self):
+    """Activate the Fabex Engine and store the name"""
     # Set the Render Engine to Fabex
     scene = bpy.context.scene
     scene.render.engine = "FABEX_RENDER"
@@ -115,6 +112,7 @@ def add_collections():
 
 
 def run_test_file(test):
+    """Loads a Test Blend file and calculates all operations in order"""
     path = str(Path(__file__).parent / "test_data" / test / f"{test}.blend")
     bpy.ops.wm.open_mainfile(filepath=path)
     scene = bpy.context.scene
@@ -126,12 +124,13 @@ def run_test_file(test):
         bpy.ops.object.calculate_cam_path()
 
 
-def build_extension():
+def build_extension(blender):
+    """Build the Extension using the Blender executable specified"""
     source_dir = str(Path(__file__).parent.parent)
     output_dir = str(Path(__file__).parent.parent.parent)
     subprocess.run(
         [
-            "blender",
+            blender,
             "--background",
             "--factory-startup",
             "--command",
@@ -144,3 +143,15 @@ def build_extension():
             # "--split-platforms",
         ],
     )
+
+
+def zip_extension():
+    """Create an Extension by zipping the main folder"""
+    version_file = Path(__file__).parent.parent / "version.py"
+    with open(version_file) as f:
+        lines = f.readlines()
+        version = lines[0].split("(")[1].replace(",", "")
+    major, minor, patch = version[0], version[1], version[2]
+    extension_name = f"fabex-{major}.{minor}.{patch}"
+    path = Path(__file__).parent.parent
+    shutil.make_archive(extension_name, "zip", path)
