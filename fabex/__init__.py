@@ -3,20 +3,10 @@
 Import Modules, Register and Unregister  Classes
 """
 
-# Python Standard Library
-# import subprocess
-
-# import sys
-
-# pip Wheels
-# import opencamlib
-# import shapely
-
-# Blender Library
 import bpy
 from bpy.props import CollectionProperty
 
-# Relative Imports - from 'cam' module
+# Relative Imports - from 'fabex' module
 from .engine import (
     FABEX_ENGINE,
     get_panels,

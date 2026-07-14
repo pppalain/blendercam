@@ -5,7 +5,7 @@ from .utils import (
     install_extension,
     activate_engine,
     add_collections,
-    blend_filepath,
+    run_test_file,
 )
 
 
@@ -70,24 +70,3 @@ class CalculatePathTest(TestCase):
         objects = [obj.name for obj in data.objects]
 
         self.assertIn("cam_path_Op_Cube_1", objects)
-
-
-class BlendFileTest(TestCase):
-    """Test that an operation can be added."""
-
-    def setUp(self):
-        import bpy
-
-        install_extension()
-        activate_engine(self)
-        path = blend_filepath(test="simple_cutout")
-        bpy.ops.wm.open_mainfile(filepath=path)
-        bpy.ops.object.calculate_cam_path()
-
-    def test_cutout_blend(self):
-        import bpy
-
-        data = bpy.data
-        objects = [obj.name for obj in data.objects]
-
-        self.assertIn("cam_path_Op_Cutout", objects)

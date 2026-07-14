@@ -5,102 +5,7 @@ import sys
 import unittest
 from pathlib import Path
 
-from .utils import (
-    GCODE_SCRIPT,
-    blender,
-)
-
-# G-code Generator script, stripped down
-# GCODE_SCRIPT = """
-# import sys
-# import warnings
-# from pathlib import Path
-# import subprocess
-
-# import bpy
-
-# source_dir = str(Path(__file__).parent.parent.parent.parent)
-# output_dir = str(Path(__file__).parent.parent.parent.parent.parent)
-
-# subprocess.run(
-#     [
-#         "blender",
-#         "--background",
-#         "--factory-startup",
-#         "--command",
-#         "extension",
-#         "build",
-#         "--source-dir",
-#         source_dir,
-#         "--output-dir",
-#         output_dir,
-#         # "--split-platforms",
-#     ],
-# )
-
-# path = str(Path(__file__).parent.parent.parent.parent.parent / "fabex-3.1.6.zip")
-# bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
-
-# # Set the Render Engine to Fabex
-# scene = bpy.context.scene
-# scene.render.engine = "FABEX_RENDER"
-
-# operations = scene.cam_operations
-
-# for i, operation in enumerate(operations):
-#     # Set the active operation using the index
-#     scene.cam_active_operation = i
-
-#     # Run the calculate_cam_path() operator
-#     bpy.ops.object.calculate_cam_path()
-
-# sys.exit(0)
-# """
-
-# path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.2-linux-x64/blender"
-
-# blender = path_to_blender_executable if shutil.which("blender") is None else shutil.which("blender")
-
-
-# def zip_extension():
-#     source_dir = str(Path(__file__).parent.parent)
-#     output_dir = str(Path(__file__).parent.parent.parent)
-
-#     subprocess.run(
-#         [
-#             blender,
-#             "--background",
-#             "--factory-startup",
-#             "--command",
-#             "extension",
-#             "build",
-#             "--source-dir",
-#             source_dir,
-#             "--output-dir",
-#             output_dir,
-#             # "--split-platforms",
-#         ],
-#     )
-
-
-# def install_extension():
-#     import bpy
-
-#     version_file = Path(__file__).parent.parent / "version.py"
-#     with open(version_file) as f:
-#         lines = f.readlines()
-#         version = lines[0].split("(")[1].replace(",", "")
-#     major, minor, patch = version[0], version[1], version[2]
-#     path = str(Path(__file__).parent.parent.parent / f"fabex-{major}.{minor}.{patch}.zip")
-#     bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
-
-
-# def activate_engine():
-#     import bpy
-
-#     # Set the Render Engine to Fabex
-#     scene = bpy.context.scene
-#     scene.render.engine = "FABEX_RENDER"
+from .utils import blender
 
 
 # @unittest.skip("Old Gcode Test")
@@ -114,7 +19,6 @@ class FabexGcodeTest(unittest.TestCase):
         subprocess.run(command, shell=True, check=True)
         Path.unlink(path)
         cls.original_dir = os.getcwd()
-        # cls.generator_path = os.path.join(cls.original_dir, "gcode_generator.py")
         cls.blend_test_cases = cls.get_test_cases()
 
     @staticmethod
@@ -201,9 +105,6 @@ class FabexGcodeTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    # zip_extension()
-    # install_extension()
-    # activate_engine()
     # # Add a test method for each test case to the TestCase class
     for test_case in FabexGcodeTest.get_test_cases():
 

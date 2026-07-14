@@ -44,6 +44,7 @@ class FabexTypeTest(TestCase):
         import bpy
 
         prop_classes = [
+            "cam_operations",
             "cam_active_chain",
             "cam_active_operation",
             "cam_chains",

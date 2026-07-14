@@ -5,42 +5,6 @@ path_to_blender_executable = "/home/spex/Documents/Blender/Releases/blender-5.1.
 
 blender = path_to_blender_executable if shutil.which("blender") is None else "blender"
 
-# G-code Generator script, stripped down
-GCODE_SCRIPT = """
-import sys
-import warnings
-from pathlib import Path
-import os
-import zipfile
-
-version_file = Path(__file__).parent.parent / "version.py"
-with open(version_file) as f:
-    lines = f.readlines()
-    version = lines[0].split("(")[1].replace(",", "")
-major, minor, patch = version[0], version[1], version[2]
-
-extension_name = f"fabex-{major}.{minor}.{patch}.zip"
-path = Path(__file__).parent.parent.parent / extension_name
-file = zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED)
-file.close()
-bpy.ops.extensions.package_install_files(filepath=path, repo="user_default")
-
-# Set the Render Engine to Fabex
-scene = bpy.context.scene
-scene.render.engine = "FABEX_RENDER"
-
-operations = scene.cam_operations
-
-for i, operation in enumerate(operations):
-    # Set the active operation using the index
-    scene.cam_active_operation = i
-
-    # Run the calculate_cam_path() operator
-    bpy.ops.object.calculate_cam_path()
-
-sys.exit(0)
-"""
-
 
 def zip_extension():
     version_file = Path(__file__).parent.parent / "version.py"
@@ -166,9 +130,39 @@ def add_collections():
             default_collection.objects.unlink(obj)
 
 
-def blend_filepath(test):
+def run_test_file(test):
     from pathlib import Path
+    import bpy
 
     path = str(Path(__file__).parent / "test_data" / test / f"{test}.blend")
+    bpy.ops.wm.open_mainfile(filepath=path)
+    scene = bpy.context.scene
+    operations = scene.cam_operations
+    # Set the active operation using the index
+    for i, operation in enumerate(operations):
+        scene.cam_active_operation = i
+        # Run the calculate_cam_path() operator
+        bpy.ops.object.calculate_cam_path()
 
-    return path
+    return [obj.name for obj in bpy.data.objects]
+
+
+# def build_extension():
+#     source_dir = str(Path(__file__).parent.parent)
+#     output_dir = str(Path(__file__).parent.parent.parent)
+
+#     subprocess.run(
+#         [
+#             "blender",
+#             "--background",
+#             "--factory-startup",
+#             "--command",
+#             "extension",
+#             "build",
+#             "--source-dir",
+#             source_dir,
+#             "--output-dir",
+#             output_dir,
+#             # "--split-platforms",
+#         ],
+#     )
