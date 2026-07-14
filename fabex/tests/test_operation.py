@@ -1,5 +1,7 @@
 from unittest import TestCase
 
+import bpy
+
 from .utils import (
     zip_extension,
     install_extension,
@@ -14,8 +16,6 @@ class AddOperationTest(TestCase):
 
     @classmethod
     def setUpClass(self):
-        import bpy
-
         zip_extension()
         install_extension()
         activate_engine(self)
@@ -51,10 +51,6 @@ class AddOperationTest(TestCase):
             self.assertTrue(self.operation.strategy == strat)
 
     def test_calculate_path(self):
-        import bpy
-
         self.operation.strategy = "CUTOUT"
         bpy.ops.object.calculate_cam_path()
-        objects = [obj.name for obj in bpy.data.objects]
-
-        self.assertIn("cam_path_Op_Cube_1", objects)
+        self.assertIn("cam_path_Op_Cube_1", bpy.data.objects)

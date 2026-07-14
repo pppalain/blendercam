@@ -1,5 +1,7 @@
 from unittest import TestCase
 
+import bpy
+
 from .utils import (
     zip_extension,
     install_extension,
@@ -18,58 +20,60 @@ class BlendFileTest(TestCase):
         activate_engine(self)
 
     def test_simple_cutout(self):
-
-        objects = run_test_file("simple_cutout")
-
+        run_test_file("simple_cutout")
         paths = [
             "cam_path_Op_Cutout",
             "cam_path_Op_Cutout_Layers",
         ]
-
         for path in paths:
-            self.assertIn(path, objects)
+            self.assertIn(
+                path,
+                bpy.data.objects,
+                msg=f"{path} not found!",
+            )
 
     def test_first_down(self):
-
-        objects = run_test_file("first_down")
-
+        run_test_file("first_down")
         paths = [
             "cam_path_first_down",
             "cam_path_no_first_down",
         ]
-
         for path in paths:
-            self.assertIn(path, objects)
+            self.assertIn(
+                path,
+                bpy.data.objects,
+                msg=f"{path} not found!",
+            )
 
     def test_min_depth(self):
-
-        objects = run_test_file("min_depth")
-
+        run_test_file("min_depth")
         paths = [
             "cam_path_min_depth_custom",
             "cam_path_min_depth_material",
             "cam_path_min_depth_object",
         ]
-
         for path in paths:
-            self.assertIn(path, objects)
+            self.assertIn(
+                path,
+                bpy.data.objects,
+                msg=f"{path} not found!",
+            )
 
     def test_parallel(self):
-
-        objects = run_test_file("parallel")
-
+        run_test_file("parallel")
         paths = [
             "cam_path_Op_Parallel_Internal_Exact",
             "cam_path_Op_Parallel_OCL",
         ]
-
         for path in paths:
-            self.assertIn(path, objects)
+            self.assertIn(
+                path,
+                bpy.data.objects,
+                msg=f"{path} not found!",
+            )
 
     def test_patterns(self):
-
-        objects = run_test_file("patterns")
-
+        run_test_file("patterns")
         paths = [
             "cam_path_Block",
             "cam_path_Circles",
@@ -77,64 +81,71 @@ class BlendFileTest(TestCase):
             "cam_path_Parallel",
             "cam_path_Spiral",
         ]
-
         for path in paths:
-            self.assertIn(path, objects)
+            self.assertIn(
+                path,
+                bpy.data.objects,
+                msg=f"{path} not found!",
+            )
 
     def test_ramps(self):
-
-        objects = run_test_file("ramps")
-
+        run_test_file("ramps")
         paths = [
             "cam_path_helix_enter",
             "cam_path_HelixEnter",
             "cam_path_RampIn",
             "cam_path_RampOut",
         ]
-
         for path in paths:
-            self.assertIn(path, objects)
+            self.assertIn(
+                path,
+                bpy.data.objects,
+                msg=f"{path} not found!",
+            )
 
     def test_simplify(self):
-
-        objects = run_test_file("simplify")
-
+        run_test_file("simplify")
         paths = [
             "cam_path_simplify",
         ]
-
         for path in paths:
-            self.assertIn(path, objects)
+            self.assertIn(
+                path,
+                bpy.data.objects,
+                msg=f"{path} not found!",
+            )
 
     def test_waterline(self):
-
-        objects = run_test_file("waterline")
-
+        run_test_file("waterline")
         paths = [
             "cam_path_Waterline_Internal",
             "cam_path_Waterline_Internal_Exact",
             "cam_path_Waterline_OCL",
         ]
-
         for path in paths:
-            self.assertIn(path, objects)
+            self.assertIn(
+                path,
+                bpy.data.objects,
+                msg=f"{path} not found!",
+            )
 
     def test_four_axis(self):
-
-        objects = run_test_file("4axistest")
-
+        run_test_file("4axistest")
         paths = [
             "cam_path_Op_Plane_1",
         ]
-
         for path in paths:
-            self.assertIn(path, objects)
+            self.assertIn(
+                path,
+                bpy.data.objects,
+                msg=f"{path} not found!",
+            )
 
     # Medial fails due to invalid curve
 
     #     def test_medial(self):
 
-    #         objects = run_test_file("medial")
+    #         run_test_file("medial")
 
     #         paths = [
     #             "cam_path_fern",
@@ -145,4 +156,4 @@ class BlendFileTest(TestCase):
     #         ]
 
     #         for path in paths:
-    #             self.assertIn(path, objects, msg=f"Could not calculate {path}")
+    #             self.assertIn(path, bpy.data.objects, msg=f"Could not calculate {path}")

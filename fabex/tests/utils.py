@@ -1,6 +1,8 @@
 from pathlib import Path
 import shutil
 
+import bpy
+
 
 def zip_extension():
     version_file = Path(__file__).parent.parent / "version.py"
@@ -8,18 +10,14 @@ def zip_extension():
         lines = f.readlines()
         version = lines[0].split("(")[1].replace(",", "")
     major, minor, patch = version[0], version[1], version[2]
-
     extension_name = f"fabex-{major}.{minor}.{patch}"
     path = Path(__file__).parent.parent
     shutil.make_archive(extension_name, "zip", path)
 
 
 def activate_dependencies(self):
-    import bpy
-
     bpy.context.preferences.system.use_online_access = True
     bpy.ops.extensions.repo_sync_all(use_active_only=False)
-
     dependencies = [
         "curve_tools",
         "simplify_curves_plus",
@@ -28,27 +26,21 @@ def activate_dependencies(self):
         "extra_curve_objectes",
         "print3d_toolbox",
     ]
-
     for dependency in dependencies:
         try:
             bpy.ops.preferences.addon_enable(module=f"bl_ext.blender_org.{dependency}")
         except RuntimeError:
             bpy.ops.extensions.package_install(repo_index=0, pkg_id=dependency)
-
     addons = bpy.context.preferences.addons
     self.modules = [addon.module for addon in addons]
 
 
 def get_modules(self):
-    import bpy
-
     addons = bpy.context.preferences.addons
     self.modules = [addon.module for addon in addons]
 
 
 def install_extension():
-    import bpy
-
     version_file = Path(__file__).parent.parent / "version.py"
     with open(version_file) as f:
         lines = f.readlines()
@@ -59,8 +51,6 @@ def install_extension():
 
 
 def activate_engine(self):
-    import bpy
-
     # Set the Render Engine to Fabex
     scene = bpy.context.scene
     scene.render.engine = "FABEX_RENDER"
@@ -75,8 +65,6 @@ def add_collections():
     own collections upon creation, which can be shown or hidden as
     groups.
     """
-    import bpy
-
     context = bpy.context
     data = bpy.data
     collections = data.collections
@@ -127,9 +115,6 @@ def add_collections():
 
 
 def run_test_file(test):
-    from pathlib import Path
-    import bpy
-
     path = str(Path(__file__).parent / "test_data" / test / f"{test}.blend")
     bpy.ops.wm.open_mainfile(filepath=path)
     scene = bpy.context.scene
@@ -140,25 +125,22 @@ def run_test_file(test):
         # Run the calculate_cam_path() operator
         bpy.ops.object.calculate_cam_path()
 
-    return [obj.name for obj in bpy.data.objects]
 
-
-# def build_extension():
-#     source_dir = str(Path(__file__).parent.parent)
-#     output_dir = str(Path(__file__).parent.parent.parent)
-
-#     subprocess.run(
-#         [
-#             "blender",
-#             "--background",
-#             "--factory-startup",
-#             "--command",
-#             "extension",
-#             "build",
-#             "--source-dir",
-#             source_dir,
-#             "--output-dir",
-#             output_dir,
-#             # "--split-platforms",
-#         ],
-#     )
+def build_extension():
+    source_dir = str(Path(__file__).parent.parent)
+    output_dir = str(Path(__file__).parent.parent.parent)
+    subprocess.run(
+        [
+            "blender",
+            "--background",
+            "--factory-startup",
+            "--command",
+            "extension",
+            "build",
+            "--source-dir",
+            source_dir,
+            "--output-dir",
+            output_dir,
+            # "--split-platforms",
+        ],
+    )

@@ -1,5 +1,7 @@
 from unittest import TestCase
 
+import bpy
+
 from .utils import (
     zip_extension,
     activate_dependencies,
@@ -64,8 +66,6 @@ class FabexInstallTest(TestCase):
         )
 
     def test_disable(self):
-        import bpy
-
         bpy.ops.preferences.addon_disable(module="bl_ext.user_default.fabex")
         get_modules(self)
         self.assertNotIn(
@@ -74,8 +74,6 @@ class FabexInstallTest(TestCase):
         )
 
     def test_enable(self):
-        import bpy
-
         bpy.ops.preferences.addon_enable(module="bl_ext.user_default.fabex")
         get_modules(self)
         self.assertIn(
@@ -84,7 +82,5 @@ class FabexInstallTest(TestCase):
         )
 
     def test_engine(self):
-        import bpy
-
         activate_engine(self)
         self.assertTrue(self.engine == "FABEX_RENDER")

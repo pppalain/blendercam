@@ -1,5 +1,7 @@
 from unittest import TestCase
 
+import bpy
+
 from .utils import (
     zip_extension,
     install_extension,
@@ -18,8 +20,6 @@ class FabexTypeTest(TestCase):
 
     def test_ui_types(self):
         """Check if UI classes exist"""
-        import bpy
-
         ui_classes = [
             "CAM_CUTTER_MT_presets",
             "CAM_OPERATION_MT_presets",
@@ -33,7 +33,6 @@ class FabexTypeTest(TestCase):
             "VIEW3D_MT_PIE_PackSliceRelief",
             "VIEW3D_MT_tools_add",
         ]
-
         for cls in ui_classes:
             self.assertTrue(
                 hasattr(bpy.types, cls),
@@ -42,8 +41,6 @@ class FabexTypeTest(TestCase):
 
     def test_scene_props(self):
         """Check if Property classes exist"""
-        import bpy
-
         prop_classes = [
             "cam_operations",
             "cam_active_chain",
@@ -75,7 +72,6 @@ class FabexTypeTest(TestCase):
             "user_operation",
             "operation_preset",
         ]
-
         for cls in prop_classes:
             self.assertTrue(
                 hasattr(bpy.context.scene, cls),
@@ -84,8 +80,6 @@ class FabexTypeTest(TestCase):
 
     def test_operator_types(self):
         """Check if Operator classes exist"""
-        import bpy
-
         op_classes = [
             # Object
             bpy.ops.object.curve_boolean.idname(),
@@ -133,7 +127,6 @@ class FabexTypeTest(TestCase):
             bpy.ops.scene.cam_operation_move.idname(),
             bpy.ops.scene.cam_bridges_add.idname(),
         ]
-
         for cls in op_classes:
             self.assertTrue(
                 hasattr(bpy.types, cls),
