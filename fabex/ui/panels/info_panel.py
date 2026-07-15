@@ -40,7 +40,7 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
         # main.label(text=f"[ Fabex v{get_fabex_version()} Info ]", icon="INFO")
         column = main.column(align=True)
         column.label(text=f"[ Info ]", icon="INFO")
-        column.label(text=f"Fabex v{get_fabex_version()}")
+        column.label(text=f"Fabex version: {get_fabex_version()}")
         if context.window_manager.progress > 0:
             col = main.column(align=True)
             col.scale_y = 2
@@ -52,7 +52,8 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
         if self.op is None:
             return
         else:
-            if not self.op.info.warnings == "":
+#            if not self.op.info.warnings == "":
+            if self.op.info.warnings:
                 # Operation Warnings
                 box = main.box()
                 col = box.column(align=True)

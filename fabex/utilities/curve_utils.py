@@ -1,3 +1,5 @@
+import warnings
+
 import bpy
 import re
 
@@ -32,13 +34,13 @@ the problem error message
 def curve_validate():
     obj = bpy.context.active_object
     poly = active_to_shapely_poly()
-    error_msg = explain_validity(poly)
     remove_multiple("Self-intersection[")  #remove old errors
+    error_msg = explain_validity(poly)
+
 
     # Find negative numbers, decimals, and integers
     pattern = r'-?\d+\.?\d*'
     numbers_str = re.findall(pattern, error_msg)
-
     # Convert to appropriate types (float if '.' is present, else int)
     coordinates = [float(n) if '.' in n else int(n) for n in numbers_str]
     if coordinates:
@@ -52,7 +54,6 @@ def curve_validate():
         active_name(error_msg)
         bpy.ops.view3d.view_selected()
 
-    print(error_msg)
     return error_msg
 
 def curve_to_shapely(cob, use_modifiers=False):

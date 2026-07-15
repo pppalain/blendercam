@@ -888,7 +888,12 @@ class CamCurveRemoveDoubles(Operator):
     def execute(self, context):
         obj = bpy.context.selected_objects
         if self.validateCurve:  # validate curve
-            curve_validate()
+            error_msg=curve_validate()
+            if error_msg == "Valid Geometry":
+                self.report({'INFO'}, error_msg)
+            else:
+                validation_error = "Validation Error\n"+error_msg
+                self.report ({'ERROR'}, validation_error)
         else:
             for ob in obj:
                 if ob.type == "CURVE":
