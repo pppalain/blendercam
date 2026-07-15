@@ -4,13 +4,13 @@ Operators to create a number of predefined curve objects.
 """
 
 from math import (
-    cos,
+    cos,  # noqa: F401
     degrees,
     hypot,
     pi,
     radians,
-    sin,
-    sqrt,
+    sin,  # noqa: F401
+    sqrt,  # noqa: F401
 )
 
 from shapely import affinity

@@ -186,7 +186,7 @@ machine_presets = []
 
 try:
     machine_preset_path = bpy.utils.preset_paths("cam_machines")[0]
-except:
+except IndexError:
     machine_preset_path = _get_preset_path("cam_machines")
 
 if machine_preset_path:

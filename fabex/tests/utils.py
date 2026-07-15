@@ -128,6 +128,8 @@ def build_extension(blender):
     """Build the Extension using the Blender executable specified"""
     source_dir = str(Path(__file__).parent.parent)
     output_dir = str(Path(__file__).parent.parent.parent)
+    import subprocess
+
     subprocess.run(
         [
             blender,

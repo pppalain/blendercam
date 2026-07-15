@@ -4,10 +4,10 @@ Operators to create a number of geometric shapes with curves.
 """
 
 from math import (
-    cos,
+    cos,  # noqa: F401
     pi,
-    sin,
-    sqrt,
+    sin,  # noqa: F401
+    sqrt,  # noqa: F401
 )
 
 import numpy as np

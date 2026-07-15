@@ -19,7 +19,6 @@ from bpy_extras import object_utils
 from mathutils import Vector
 
 
-from .addon_utils import add_collections
 from .async_utils import progress_async
 from ..chunk_builder import (
     CamPathChunk,

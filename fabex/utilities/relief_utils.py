@@ -602,7 +602,7 @@ def linear_bcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
         temp = z * rr
 
         bknum = temp.sum()  # -z[0]*rr[0]????
-
+        bkden = bknum
         if iter == 1:
             p[:] = z
             pp[:] = zz
@@ -611,7 +611,7 @@ def linear_bcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
             bk = bknum / bkden
             p = bk * p + z
             pp = bk * pp + zz
-        bkden = bknum
+        # bkden = bknum
         atimes(p, z)
         temp = z * pp
         akden = temp.sum()
