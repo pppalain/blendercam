@@ -1,3 +1,5 @@
+import warnings
+
 import bpy
 import re
 
@@ -32,7 +34,7 @@ def curve_validate():
     poly = active_to_shapely_poly()
     error_msg = explain_validity(poly)
     remove_multiple("Self-intersection[")  # remove old errors
-
+    error_msg = explain_validity(poly)
     # Find negative numbers, decimals, and integers
     pattern = r"-?\d+\.?\d*"
     numbers_str = re.findall(pattern, error_msg)

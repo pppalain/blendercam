@@ -33,7 +33,7 @@ class CAM_Popup_Panel(Operator):
     def draw(self, context):
         layout = self.layout
 
-        if not self.text == "":
+        if self.text:
             layout.label(text=self.text, icon="INFO")
 
         operations = context.scene.cam_operations
@@ -44,7 +44,7 @@ class CAM_Popup_Panel(Operator):
         if self.op is None:
             return
         else:
-            if not self.op.info.warnings == "":
+            if self.op.info.warnings:
                 # Operation Warnings
                 box = layout.box()
                 col = box.column(align=True)
