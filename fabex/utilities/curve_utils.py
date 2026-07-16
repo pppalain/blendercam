@@ -38,7 +38,6 @@ def curve_validate():
     # Find negative numbers, decimals, and integers
     pattern = r"-?\d+\.?\d*"
     numbers_str = re.findall(pattern, error_msg)
-
     # Convert to appropriate types (float if '.' is present, else int)
     coordinates = [float(n) if "." in n else int(n) for n in numbers_str]
     if coordinates:
@@ -52,7 +51,6 @@ def curve_validate():
         active_name(error_msg)
         bpy.ops.view3d.view_selected()
 
-    print(error_msg)
     return error_msg
 
 
