@@ -157,3 +157,18 @@ def zip_extension():
     extension_name = f"fabex-{major}.{minor}.{patch}"
     path = Path(__file__).parent.parent
     shutil.make_archive(extension_name, "zip", path)
+
+
+# import bpy
+
+# path_calc = bpy.data.objects['cam_path_Op_Cube_1']
+# path_file = bpy.data.objects['Gcode']
+
+# verts_calc = path_calc.data.vertices
+# verts_file = path_file.data.splines[0].points
+
+# for i, v in enumerate(verts_calc):
+#     if i < 100:
+#         print(f"Calc {i}: {verts_calc[i].co[0]}, {verts_calc[i].co[1]}, {verts_calc[i].co[2]}")
+#         print(f"File {i}: {verts_file[i].co[0]}, {verts_file[i].co[1]}, {verts_file[i].co[2]}")
+#         print("")

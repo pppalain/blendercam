@@ -1319,14 +1319,14 @@ def chunks_to_mesh(chunks, o):
     ob.color = scene.cam_machine.path_color
     o.path_object_name = path_name
 
-    # collections = bpy.data.collections
-    # if "Paths" in collections:
-    #     bpy.data.collections["Collection"].objects.unlink(ob)
-    #     collections["Paths"].objects.link(ob)
-    # else:
-    #     add_collections()
-    #     bpy.data.collections["Collection"].objects.unlink(ob)
-    #     collections["Paths"].objects.link(ob)
+    collections = bpy.data.collections
+    if "Paths" in collections:
+        bpy.data.collections["Collection"].objects.unlink(ob)
+        collections["Paths"].objects.link(ob)
+    else:
+        add_collections()
+        bpy.data.collections["Collection"].objects.unlink(ob)
+        collections["Paths"].objects.link(ob)
 
     # parent the path object to source object if object mode
     if (o.geometry_source == "OBJECT") and o.parent_path_to_object:

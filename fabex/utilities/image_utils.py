@@ -493,7 +493,7 @@ def render_sample_image(o):
                 render.resolution_y = resolution_y
                 # use cycles for everything because
                 # it renders okay on github actions
-                render.engine = "CYCLES"
+                render.engine = "EEVEE"
                 scene.cycles.samples = 1
                 view_layer.samples = 1
                 view_layer.cycles.use_denoising = False
