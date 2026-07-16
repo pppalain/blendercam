@@ -6,6 +6,7 @@ from .utils import (
     install_extension,
     activate_engine,
     run_test_file,
+    zip_extension,
 )
 
 
@@ -14,6 +15,7 @@ class BlendFileTest(TestCase):
 
     @classmethod
     def setUpClass(self):
+        zip_extension()
         install_extension()
         activate_engine(self)
 

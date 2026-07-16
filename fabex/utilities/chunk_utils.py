@@ -1321,8 +1321,11 @@ def chunks_to_mesh(chunks, o):
 
     collections = bpy.data.collections
     if "Paths" in collections:
-        bpy.data.collections["Collection"].objects.unlink(ob)
-        collections["Paths"].objects.link(ob)
+        try:
+            bpy.data.collections["Collection"].objects.unlink(ob)
+            collections["Paths"].objects.link(ob)
+        except RuntimeError:
+            pass
     else:
         add_collections()
         bpy.data.collections["Collection"].objects.unlink(ob)
