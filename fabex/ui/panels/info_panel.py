@@ -39,7 +39,7 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
         main = layout.box()
         # main.label(text=f"[ Fabex v{get_fabex_version()} Info ]", icon="INFO")
         column = main.column(align=True)
-        column.label(text=f"[ Info ]", icon="INFO")
+        column.label(text="[ Info ]", icon="INFO")
         column.label(text=f"Fabex version: {get_fabex_version()}")
         if context.window_manager.progress > 0:
             col = main.column(align=True)
@@ -52,7 +52,7 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
         if self.op is None:
             return
         else:
-#            if not self.op.info.warnings == "":
+            #            if not self.op.info.warnings == "":
             if self.op.info.warnings:
                 # Operation Warnings
                 box = main.box()
@@ -71,7 +71,7 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
                         col.label(text=line, icon=icon)
 
             # Cutter Engagement
-            if not self.op.strategy == "CUTOUT" and not self.op.cutter_type in ["LASER", "PLASMA"]:
+            if not self.op.strategy == "CUTOUT" and self.op.cutter_type not in ["LASER", "PLASMA"]:
                 box = main.box()
                 col = box.column(align=True)
                 # Warns if cutter engagement is greater than 50%
@@ -126,7 +126,7 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
             if self.op.info.chipload > 0:
                 chipload = self.op.feedrate / (self.op.spindle_rpm * self.op.cutter_flutes)
                 chipload = f"{chipload:.5f}"
-                title_col.label(text=f"Chipload:")
+                title_col.label(text="Chipload:")
                 value_col.label(
                     text=chipload,
                     icon="DRIVER_ROTATIONAL_DIFFERENCE",

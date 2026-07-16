@@ -3,7 +3,7 @@ import platform
 
 import bpy
 from bpy.types import Operator
-from bpy.props import StringProperty, BoolProperty
+from bpy.props import StringProperty
 
 
 class Fabex_Compatibility_Panel(Operator):
@@ -16,7 +16,7 @@ class Fabex_Compatibility_Panel(Operator):
     python_executable = sys.executable
     correct_python_version = "3.11.13"
 
-    string_1 = f"""Hello and welcome to Fabex!
+    string_1 = """Hello and welcome to Fabex!
 This popup will check your system for compatibility and assist with issues in the installation process."""
 
     string_2 = f"""Fabex officially supports Blender 4.2+ using Python {correct_python_version}.

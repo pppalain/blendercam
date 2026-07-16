@@ -3,9 +3,7 @@
 'CAM Info Properties'
 """
 
-from datetime import timedelta
 
-import bpy
 from bpy.props import (
     StringProperty,
     FloatProperty,

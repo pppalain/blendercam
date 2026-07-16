@@ -74,10 +74,10 @@ class Creator(iso.Creator):
     def tool_defn(self, id, name="", params=None):
         self.write(("T10%.2d" % id) + " ")
 
-        if radius != None:
+        if radius is not None:
             self.write(("X%.3f" % radius) + " ")
 
-        if length != None:
+        if length is not None:
             self.write("Z%.3f" % length)
 
         self.write("\n")

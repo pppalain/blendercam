@@ -8,7 +8,6 @@
 
 from . import nc
 from . import iso_modal
-import math
 
 import datetime
 
@@ -126,7 +125,7 @@ class Creator(iso_modal.Creator):
         self.write((self.TOOL() % id) + "\n")
         self.t = id
         self.write("M25\n")
-        if self.safe_z == None:
+        if self.safe_z is None:
             self.write("G43 H" + str(id) + " Z")
             self.write("1.0")
             self.write("\n")

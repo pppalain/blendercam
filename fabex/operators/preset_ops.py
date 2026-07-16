@@ -3,7 +3,6 @@
 Operators and Menus for CAM Machine, Cutter and Operation Presets.
 """
 
-import bpy
 from bl_operators.presets import AddPresetBase
 from bpy.types import Operator
 

@@ -1,4 +1,4 @@
-from shapely.geometry import Point
+# from shapely.geometry import Point
 from shapely.strtree import STRtree
 
 

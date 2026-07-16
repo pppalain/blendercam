@@ -23,12 +23,12 @@ class Format:
         self.round_down = round_down
 
     def string(self, number):
-        if number == None:
+        if number is None:
             return "None"
         f = float(number) * math.pow(10, self.number_of_decimal_places)
         s = format(f, "f")
 
-        if self.round_down == False:
+        if not self.round_down:
             if f < 0:
                 f = f - 0.5
             else:
@@ -61,8 +61,8 @@ class Format:
 
         s = ""
 
-        if minus == False:
-            if self.add_plus == True:
+        if not minus:
+            if self.add_plus:
                 s += "+"
         s += before_dp
         if len(after_dp):
@@ -85,7 +85,7 @@ class Address:
         self.str = self.text + self.fmt.string(number)
 
     def write(self, writer):
-        if self.str == None:
+        if self.str is None:
             return ""
         if self.modal:
             if self.str != self.previous:
@@ -111,7 +111,7 @@ class AddressPlusMinus(Address):
 
     def write(self, writer):
         Address.write(self, writer)
-        if self.str2 == None:
+        if self.str2 is None:
             return ""
         if self.modal:
             if self.str2 != self.previous2:

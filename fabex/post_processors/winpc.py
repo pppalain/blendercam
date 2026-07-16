@@ -2,7 +2,6 @@ from . import nc
 from . import iso_modal
 import math
 import datetime
-import time
 
 now = datetime.datetime.now()
 
@@ -31,7 +30,7 @@ class Creator(iso_modal.Creator):
     # Programs
 
     def program_begin(self, id, comment):
-        if self.useCrc == False:
+        if not self.useCrc:
             self.write(
                 (
                     "(Created with win-pc post processor "
@@ -133,7 +132,7 @@ class Creator(iso_modal.Creator):
         z6=None,
         xml_file_name=None,
     ):
-        if xml_file_name != None:
+        if xml_file_name is not None:
             self.comment("Generate an XML document describing the probed coordinates found")
             self.write_blocknum()
             self.write("(LOGOPEN,")
@@ -143,166 +142,166 @@ class Creator(iso_modal.Creator):
         self.write_blocknum()
         self.write("(LOG,<POINTS>)\n")
 
-        if (x1 != None) or (y1 != None) or (z1 != None):
+        if (x1 is not None) or (y1 is not None) or (z1 is not None):
             self.write_blocknum()
             self.write("(LOG,<POINT>)\n")
 
-        if x1 != None:
+        if x1 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + x1 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<X>#<_value></X>)\n")
 
-        if y1 != None:
+        if y1 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + y1 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<Y>#<_value></Y>)\n")
 
-        if z1 != None:
+        if z1 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + z1 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<Z>#<_value></Z>)\n")
 
-        if (x1 != None) or (y1 != None) or (z1 != None):
+        if (x1 is not None) or (y1 is not None) or (z1 is not None):
             self.write_blocknum()
             self.write("(LOG,</POINT>)\n")
 
-        if (x2 != None) or (y2 != None) or (z2 != None):
+        if (x2 is not None) or (y2 is not None) or (z2 is not None):
             self.write_blocknum()
             self.write("(LOG,<POINT>)\n")
 
-        if x2 != None:
+        if x2 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + x2 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<X>#<_value></X>)\n")
 
-        if y2 != None:
+        if y2 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + y2 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<Y>#<_value></Y>)\n")
 
-        if z2 != None:
+        if z2 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + z2 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<Z>#<_value></Z>)\n")
 
-        if (x2 != None) or (y2 != None) or (z2 != None):
+        if (x2 is not None) or (y2 is not None) or (z2 is not None):
             self.write_blocknum()
             self.write("(LOG,</POINT>)\n")
 
-        if (x3 != None) or (y3 != None) or (z3 != None):
+        if (x3 is not None) or (y3 is not None) or (z3 is not None):
             self.write_blocknum()
             self.write("(LOG,<POINT>)\n")
 
-        if x3 != None:
+        if x3 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + x3 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<X>#<_value></X>)\n")
 
-        if y3 != None:
+        if y3 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + y3 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<Y>#<_value></Y>)\n")
 
-        if z3 != None:
+        if z3 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + z3 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<Z>#<_value></Z>)\n")
 
-        if (x3 != None) or (y3 != None) or (z3 != None):
+        if (x3 is not None) or (y3 is not None) or (z3 is not None):
             self.write_blocknum()
             self.write("(LOG,</POINT>)\n")
 
-        if (x4 != None) or (y4 != None) or (z4 != None):
+        if (x4 is not None) or (y4 is not None) or (z4 is not None):
             self.write_blocknum()
             self.write("(LOG,<POINT>)\n")
 
-        if x4 != None:
+        if x4 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + x4 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<X>#<_value></X>)\n")
 
-        if y4 != None:
+        if y4 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + y4 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<Y>#<_value></Y>)\n")
 
-        if z4 != None:
+        if z4 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + z4 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<Z>#<_value></Z>)\n")
 
-        if (x4 != None) or (y4 != None) or (z4 != None):
+        if (x4 is not None) or (y4 is not None) or (z4 is not None):
             self.write_blocknum()
             self.write("(LOG,</POINT>)\n")
 
-        if (x5 != None) or (y5 != None) or (z5 != None):
+        if (x5 is not None) or (y5 is not None) or (z5 is not None):
             self.write_blocknum()
             self.write("(LOG,<POINT>)\n")
 
-        if x5 != None:
+        if x5 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + x5 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<X>#<_value></X>)\n")
 
-        if y5 != None:
+        if y5 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + y5 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<Y>#<_value></Y>)\n")
 
-        if z5 != None:
+        if z5 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + z5 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<Z>#<_value></Z>)\n")
 
-        if (x5 != None) or (y5 != None) or (z5 != None):
+        if (x5 is not None) or (y5 is not None) or (z5 is not None):
             self.write_blocknum()
             self.write("(LOG,</POINT>)\n")
 
-        if (x6 != None) or (y6 != None) or (z6 != None):
+        if (x6 is not None) or (y6 is not None) or (z6 is not None):
             self.write_blocknum()
             self.write("(LOG,<POINT>)\n")
 
-        if x6 != None:
+        if x6 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + x6 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<X>#<_value></X>)\n")
 
-        if y6 != None:
+        if y6 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + y6 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<Y>#<_value></Y>)\n")
 
-        if z6 != None:
+        if z6 is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + z6 + "]\n")
             self.write_blocknum()
             self.write("(LOG,<Z>#<_value></Z>)\n")
 
-        if (x6 != None) or (y6 != None) or (z6 != None):
+        if (x6 is not None) or (y6 is not None) or (z6 is not None):
             self.write_blocknum()
             self.write("(LOG,</POINT>)\n")
 
             self.write_blocknum()
             self.write("(LOG,</POINTS>)\n")
 
-        if xml_file_name != None:
+        if xml_file_name is not None:
             self.write_blocknum()
             self.write("(LOGCLOSE)\n")
 
@@ -317,29 +316,29 @@ class Creator(iso_modal.Creator):
         self.write("(LOGCLOSE)\n")
 
     def log_coordinate(self, x=None, y=None, z=None):
-        if (x != None) or (y != None) or (z != None):
+        if (x is not None) or (y is not None) or (z is not None):
             self.write_blocknum()
             self.write("(LOG,<POINT>)\n")
 
-        if x != None:
+        if x is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + x + "]\n")
             self.write_blocknum()
             self.write("(LOG,<X>#<_value></X>)\n")
 
-        if y != None:
+        if y is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + y + "]\n")
             self.write_blocknum()
             self.write("(LOG,<Y>#<_value></Y>)\n")
 
-        if z != None:
+        if z is not None:
             self.write_blocknum()
             self.write("#<_value>=[" + z + "]\n")
             self.write_blocknum()
             self.write("(LOG,<Z>#<_value></Z>)\n")
 
-        if (x != None) or (y != None) or (z != None):
+        if (x is not None) or (y is not None) or (z is not None):
             self.write_blocknum()
             self.write("(LOG,</POINT>)\n")
 

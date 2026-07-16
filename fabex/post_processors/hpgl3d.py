@@ -6,7 +6,6 @@
 
 from . import nc
 from . import hpgl2d
-import math
 
 
 class Creator(hpgl2d.Creator):
@@ -30,11 +29,11 @@ class Creator(hpgl2d.Creator):
         machine_x = self.x
         machine_y = self.y
         machine_z = self.z
-        if x != None:
+        if x is not None:
             machine_x = self.closest_int(x * self.units_to_mc_units)
-        if y != None:
+        if y is not None:
             machine_y = self.closest_int(y * self.units_to_mc_units)
-        if z != None:
+        if z is not None:
             machine_z = self.closest_int(z * self.units_to_mc_units)
         return machine_x, machine_y, machine_z
 
@@ -43,7 +42,7 @@ class Creator(hpgl2d.Creator):
         # for now, do all rapid moves at V50 ( 50 mm/s )
         mx, my, mz = self.get_machine_xyz(x, y, z)
         if mx != self.x or my != self.y or mz != self.z:
-            if self.doing_rapid == False:
+            if not self.doing_rapid:
                 self.write("V50.0;")
             self.write(("Z%i" % mx) + (",%i" % my) + (",%i;\n" % mz))
             self.x = mx
@@ -56,7 +55,7 @@ class Creator(hpgl2d.Creator):
         # for now, do all feed moves at V10 ( 10 mm/s )
         mx, my, mz = self.get_machine_xyz(x, y, z)
         if mx != self.x or my != self.y or mz != self.z:
-            if self.doing_rapid == True:
+            if self.doing_rapid:
                 self.write("V10.0;")
             self.write(("Z%i" % mx) + (",%i" % my) + (",%i;\n" % mz))
             self.x = mx

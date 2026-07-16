@@ -3,9 +3,7 @@
 'CAM Movement' properties and panel in Properties > Render
 """
 
-from math import pi
 
-import bpy
 from bpy.types import Panel
 
 from .parent_panel import CAMParentPanel

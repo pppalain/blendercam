@@ -2,6 +2,7 @@ from ..bridges import use_bridges
 
 from ..utilities.chunk_utils import (
     chunks_refine,
+    chunks_to_mesh,
     sample_chunks,
     sort_chunks,
 )

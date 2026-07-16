@@ -14,26 +14,29 @@ import bpy
 from ..utilities.logging_utils import log
 
 
-# def _get_preset_path(subdir):
-#     """Return the path to a preset subdirectory.
+def _get_preset_path(subdir):
+    """Return the path to a preset subdirectory.
 
-#     Checks the extension-local presets folder first (works in Blender 5.x
-#     extensions where bpy.utils.preset_paths() returns an empty list), then
-#     falls back to the traditional Blender preset paths.
-#     """
-#     local = Path(__file__).parent.parent / "presets" / subdir
-#     if local.is_dir():
-#         return str(local)
-#     paths = bpy.utils.preset_paths(subdir)
-#     return paths[0] if paths else None
+    Checks the extension-local presets folder first (works in Blender 5.x
+    extensions where bpy.utils.preset_paths() returns an empty list), then
+    falls back to the traditional Blender preset paths.
+    """
+    local = Path(__file__).parent.parent / "presets" / subdir
+    if local.is_dir():
+        return str(local)
+    paths = bpy.utils.preset_paths(subdir)
+    return paths[0] if paths else None
 
 
-##################
+#####################
 # Operation Presets #
-##################
+#####################
 operation_presets = []
-# _get_preset_path("cam_operations")
-operation_preset_path = bpy.utils.preset_paths("cam_operations")[0]
+try:
+    operation_preset_path = bpy.utils.preset_paths("cam_operations")[0]
+except IndexError:
+    operation_preset_path = _get_preset_path("cam_operations")
+
 if operation_preset_path:
     operation_presets = sorted(listdir(operation_preset_path))
 
@@ -102,7 +105,12 @@ def update_user_operation(self, context):
 # Cutter Presets #
 ##################
 cutter_presets = []
-cutter_preset_path = bpy.utils.preset_paths("cam_cutters")[0]
+
+try:
+    cutter_preset_path = bpy.utils.preset_paths("cam_cutters")[0]
+except IndexError:
+    cutter_preset_path = _get_preset_path("cam_cutters")
+
 if cutter_preset_path:
     cutter_presets = sorted(listdir(cutter_preset_path))
 
@@ -175,7 +183,12 @@ def update_user_cutter(self, context):
 # Machine Presets #
 ###################
 machine_presets = []
-machine_preset_path = bpy.utils.preset_paths("cam_machines")[0]
+
+try:
+    machine_preset_path = bpy.utils.preset_paths("cam_machines")[0]
+except IndexError:
+    machine_preset_path = _get_preset_path("cam_machines")
+
 if machine_preset_path:
     machine_presets = sorted(listdir(machine_preset_path))
 

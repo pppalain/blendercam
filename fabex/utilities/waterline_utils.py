@@ -69,7 +69,7 @@ async def oclGetWaterline(operation, chunks):
     oclSTL = get_oclSTL(operation)
     op_cutter_type = operation.cutter_type
     op_cutter_diameter = operation.cutter_diameter
-    op_minz = operation.min_z
+    # op_minz = operation.min_z
 
     if op_cutter_type == "VCARVE":
         op_cutter_tip_angle = operation["cutter_tip_angle"]
@@ -104,10 +104,10 @@ async def oclGetWaterline(operation, chunks):
         waterline.run2()
         wl_loops = waterline.getLoops()
 
-        for l in wl_loops:
+        for loop in wl_loops:
             inpoints = []
 
-            for p in l:
+            for p in loop:
                 inpoints.append((p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE))
 
             inpoints.append(inpoints[0])

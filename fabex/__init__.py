@@ -3,19 +3,10 @@
 Import Modules, Register and Unregister  Classes
 """
 
-# Python Standard Library
-import subprocess
-import sys
-
-# pip Wheels
-import opencamlib
-import shapely
-
-# Blender Library
 import bpy
 from bpy.props import CollectionProperty
 
-# Relative Imports - from 'cam' module
+# Relative Imports - from 'fabex' module
 from .engine import (
     FABEX_ENGINE,
     get_panels,
@@ -42,7 +33,7 @@ from .utilities.addon_utils import (
     on_blender_startup,
     keymap_register,
     keymap_unregister,
-    on_engine_change,
+    on_engine_change as on_engine_change,
 )
 from .utilities.thread_utils import timer_update
 

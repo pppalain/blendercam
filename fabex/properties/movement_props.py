@@ -5,7 +5,6 @@
 
 from math import pi
 
-import bpy
 from bpy.props import (
     BoolProperty,
     EnumProperty,
@@ -16,7 +15,6 @@ from bpy.types import PropertyGroup
 from ..utilities.operation_utils import update_operation
 from ..constants import (
     PRECISION,
-    G64_INCOMPATIBLE_MACHINES,
 )
 
 

@@ -7,8 +7,6 @@ They mostly call the functions from 'utils.py'
 import bpy
 from bpy.props import (
     BoolProperty,
-    EnumProperty,
-    StringProperty,
     FloatProperty,
 )
 from bpy.types import Operator

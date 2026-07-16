@@ -4,18 +4,11 @@ Functions to render, save, convert and analyze image data.
 """
 
 from math import (
-    acos,
     ceil,
-    cos,
     floor,
-    pi,
-    radians,
-    sin,
-    tan,
 )
 from typing import Optional
 import os
-import random
 import time
 
 import numpy as np
@@ -28,7 +21,6 @@ except ImportError:
     pass
 
 from mathutils import (
-    Euler,
     Vector,
 )
 
@@ -36,7 +28,6 @@ from .async_utils import progress_async
 from ..chunk_builder import CamPathChunkBuilder
 from .logging_utils import log, heading
 from .operation_utils import get_cutter_array
-from .parent_utils import parent_child_distance
 from .simple_utils import (
     progress,
     get_cache_path,
@@ -373,10 +364,6 @@ def _backup_render_settings(pairs):
             objects.
     """
 
-    scene = bpy.context.scene
-    view_layer = bpy.context.view_layer
-    render = scene.render
-
     properties = []
     for owner, struct_name in pairs:
         obj = getattr(owner, struct_name)
@@ -408,10 +395,6 @@ def _restore_render_settings(pairs, properties):
         properties (list): A list of dictionaries containing property names and their corresponding
             values.
     """
-
-    scene = bpy.context.scene
-    view_layer = bpy.context.view_layer
-    render = scene.render
 
     for (owner, struct_name), obj_value in zip(pairs, properties):
         obj = getattr(owner, struct_name)
@@ -471,7 +454,7 @@ def render_sample_image(o):
                 image_size_y = i.size[1]
 
                 if image_size_x != resolution_x or image_size_y != resolution_y:
-                    log.info(heading(f"Z Buffer Size Changed"))
+                    log.info(heading("Z Buffer Size Changed"))
                     log.info(f"Image Size: {i.size}")
                     log.info(f"Resolution: {resolution_x}x{resolution_y}")
                     o.update_z_buffer_image_tag = True
@@ -826,9 +809,9 @@ def image_edge_search_on_line(o, ar, zimage):
                     log.info("Status: Success")
                     log.info(f"X: {xs}")
                     log.info(f"Y: {ys}")
-                    log.info(f"Length: {testlength}")
-                    log.info(f"Angle: {testangle}")
-                    log.info(f"Last Vector: {lastvect}")
+                    # log.info(f"Length: {testlength}")
+                    # log.info(f"Angle: {testangle}")
+                    # log.info(f"Last Vector: {lastvect}")
                     log.info(f"Test Vector: {testvect}")
                     log.info(f"Test Count: {itests}")
             else:
@@ -938,10 +921,10 @@ def get_offset_image_cavities(o, i):  # for pencil operation mainly
 
     if 1:  # this is newer strategy, finds edges nicely, but pff.going exacty on edge,
         # it has tons of spikes and simply is not better than the old one
-        iname = get_cache_path(o) + "_pencilthres.exr"
+        get_cache_path(o) + "_pencilthres.exr"
         # numpysave(ar,iname)#save for comparison before
         chunks = image_edge_search_on_line(o, ar, i)
-        iname = get_cache_path(o) + "_pencilthres_comp.exr"
+        get_cache_path(o) + "_pencilthres_comp.exr"
 
         log.info("Status: New Pencil Strategy")
 

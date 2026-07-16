@@ -22,7 +22,6 @@ from ..utilities.operation_utils import (
     get_move_and_spin,
 )
 from ..utilities.parent_utils import parent_child_distance
-from ..utilities.simple_utils import progress
 
 
 async def circles(o):

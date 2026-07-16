@@ -6,10 +6,8 @@ import bpy
 from mathutils import Vector
 
 from .logging_utils import log, heading
-from .shapely_utils import shapely_to_curve, shapely_to_multipolygon
 from .simple_utils import (
     activate,
-    progress,
     unit_value_to_string,
 )
 
@@ -46,7 +44,7 @@ def get_bounds_worldspace(obs, use_modifiers=False):
     maxx = maxy = maxz = -10000000
     minx = miny = minz = 10000000
     for ob in obs:
-        if not ob.type in ["LIGHT", "CAMERA"]:
+        if ob.type not in ["LIGHT", "CAMERA"]:
             mw = ob.matrix_world
             if ob.type == "MESH":
                 if use_modifiers:

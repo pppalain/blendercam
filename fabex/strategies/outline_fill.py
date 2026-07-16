@@ -15,7 +15,6 @@ from ..utilities.operation_utils import (
 from ..utilities.parent_utils import parent_child_distance
 from ..utilities.shapely_utils import shapely_to_chunks
 from ..utilities.silhouette_utils import get_operation_silhouette
-from ..utilities.simple_utils import progress
 
 
 async def outline_fill(o):

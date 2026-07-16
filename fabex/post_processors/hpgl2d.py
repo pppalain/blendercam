@@ -56,9 +56,9 @@ class Creator(nc.Creator):
     def get_machine_x_y(self, x=None, y=None):
         machine_x = self.x
         machine_y = self.y
-        if x != None:
+        if x is not None:
             machine_x = self.closest_int(x * self.units_to_mc_units)
-        if y != None:
+        if y is not None:
             machine_y = self.closest_int(y * self.units_to_mc_units)
         return machine_x, machine_y
 

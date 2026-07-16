@@ -10,7 +10,6 @@ from bpy.types import PropertyGroup
 from .. import __package__ as base_package
 
 from ..ui.panels.area_panel import CAM_AREA_Panel
-from ..ui.panels.basrelief import BASRELIEF_Panel
 from ..ui.panels.chains_panel import CAM_CHAINS_Panel
 from ..ui.panels.curve_create_panel import VIEW3D_PT_tools_create
 from ..ui.panels.curve_tools_panel import VIEW3D_PT_tools_curvetools
@@ -24,8 +23,6 @@ from ..ui.panels.movement_panel import CAM_MOVEMENT_Panel
 from ..ui.panels.op_properties_panel import CAM_OPERATION_PROPERTIES_Panel
 from ..ui.panels.operations_panel import CAM_OPERATIONS_Panel
 from ..ui.panels.optimisation_panel import CAM_OPTIMISATION_Panel
-from ..ui.panels.pack_panel import CAM_PACK_Panel
-from ..ui.panels.slice_panel import CAM_SLICE_Panel
 
 
 def update_interface(self, context):

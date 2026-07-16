@@ -310,7 +310,6 @@ class DoBasRelief(Operator):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        scene = context.scene
 
         box = layout.box()
         col = box.column(align=True)

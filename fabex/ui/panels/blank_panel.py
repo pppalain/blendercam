@@ -3,7 +3,6 @@
 Empty panel in Sidebar > CNC
 """
 
-import bpy
 from bpy.types import Panel
 
 
@@ -18,4 +17,4 @@ class CAM_BLANK_Panel(Panel):
     bl_options = {"HIDE_HEADER"}
 
     def draw(self, context):
-        layout = self.layout
+        pass

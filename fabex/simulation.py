@@ -13,8 +13,6 @@ import numpy as np
 
 import bpy
 
-from mathutils import Vector
-
 
 from . import __package__ as base_package
 
@@ -22,7 +20,7 @@ from .exception import CamException
 from .utilities.async_utils import progress_async
 from .utilities.bounds_utils import get_bounds_multiple
 from .utilities.image_utils import numpy_save
-from .utilities.logging_utils import log ,heading
+from .utilities.logging_utils import log, heading
 from .utilities.operation_utils import (
     get_operation_sources,
     get_cutter_array,
@@ -257,14 +255,14 @@ async def generate_simulation_image(operations, limits):
             if perc != int(100 * i / vtotal):
                 perc = int(100 * i / vtotal)
                 total_perc = (perc + op_count * 100) / num_operations
-                await progress_async(f"Simulation", int(total_perc))
+                await progress_async("Simulation", int(total_perc))
 
             if i > 0:
                 volume = 0
                 volume_partial = 0
                 s = vert.co
                 v = s - lasts
-                l = v.length
+                length = v.length
 
                 # only simulate inside material, and exclude lift-ups
                 if (lasts.z < maxz or s.z < maxz) and not (v.x == 0 and v.y == 0 and v.z > 0):
@@ -277,7 +275,7 @@ async def generate_simulation_image(operations, limits):
                         lastxs = xs
                         lastys = ys
 
-                        while v.length < l:
+                        while v.length < length:
                             xs = int(
                                 (lasts.x + v.x - minx) / simulation_detail
                                 + borderwidth
@@ -327,12 +325,14 @@ async def generate_simulation_image(operations, limits):
                 if o.do_simulation_feedrate:
                     volume += volume_partial
                     totalvolume += volume
-                    load = volume / l if l > 0 else 0
+                    load = volume / length if length > 0 else 0
 
                     # this will show the shapekey as debugging graph and will use same data to estimate parts
                     # with heavy load
-                    shapek.data[i].co.x = shapek.data[i - 1].co.x + l * 0.04
-                    shapek.data[i].co.y = (load) * 0.000002 if l != 0 else shapek.data[i - 1].co.y
+                    shapek.data[i].co.x = shapek.data[i - 1].co.x + length * 0.04
+                    shapek.data[i].co.y = (
+                        (load) * 0.000002 if length != 0 else shapek.data[i - 1].co.y
+                    )
                     shapek.data[i].co.z = 0
                 lasts = s
 
@@ -379,7 +379,6 @@ async def generate_simulation_image(operations, limits):
                 max_load = max(max_load, d.co.y)
 
             normal_load = total_load / len(shapek.data)
-            thres = 0.5
             scale_graph = 0.05  # warning this has to be same as in export in utils!!!!
             totverts = len(shapek.data)
 

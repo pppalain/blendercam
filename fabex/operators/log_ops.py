@@ -9,7 +9,6 @@ from platform import system
 from pathlib import Path
 from subprocess import call
 
-import bpy
 from bpy.types import Operator
 
 log_folder = str(Path(__file__).parent.parent / "logs")

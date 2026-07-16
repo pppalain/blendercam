@@ -848,7 +848,7 @@ def bore(
         zretract,
         depth,
         standoff,
-        dwell_Bottom,
+        dwell_bottom,
         feed_in,
         feed_out,
         stoppos,
@@ -866,7 +866,7 @@ def end_canned_cycle():
 def peck(count, first, last=None, step=0.0):
     pecks = []
     peck = first
-    if last == None:
+    if last is None:
         last = first
     for i in range(0, count):
         pecks.append(peck)

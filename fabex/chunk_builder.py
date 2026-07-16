@@ -216,7 +216,6 @@ class CamPathChunk:
         # finds closest chunk that can be milled, when inside sorting hierarchy.
         mind = 100000000000
         self.cango = False
-        closest = None
         testlist = tested = [child for child in self.children]
         ch = None
 
@@ -445,14 +444,14 @@ class CamPathChunk:
                 if i2 < 0:
                     i2 = len(self.points) - 1
                 s2 = self.points[i2]
-                l = distance_2d(s1, s2)
+                length = distance_2d(s1, s2)
 
-                if l < 1e-9:  # skip zero-length segment to avoid infinite loop
+                if length < 1e-9:  # skip zero-length segment to avoid infinite loop
                     i += 1
                     ramp_out_iters += 1
                     continue
 
-                znew = z + tan(o.movement.ramp_out_angle) * l
+                znew = z + tan(o.movement.ramp_out_angle) * length
 
                 if znew > o.max_z:
                     ratio = (z - o.max_z) / (z - znew)
@@ -472,7 +471,7 @@ class CamPathChunk:
 
     def ramp_zig_zag(self, zstart, zend, o):
         # TODO: convert to numpy properly
-        if zend == None:
+        if zend is None:
             zend = self.points[0][2]
 
         chunk_points = []
@@ -682,7 +681,6 @@ class CamPathChunk:
             log.info("Path Direction: Counter Clockwise")
 
         iradius = o.lead_in
-        oradius = o.lead_out
         start = self.points[0]
         nextp = self.points[1]
         rpoint = rotate_point_by_point(start, nextp, pi / 2)

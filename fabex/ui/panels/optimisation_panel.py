@@ -3,7 +3,6 @@
 'CAM Optimisation' properties and panel in Properties > Render
 """
 
-import bpy
 
 from bpy.types import Panel
 

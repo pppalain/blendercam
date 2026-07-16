@@ -14,6 +14,7 @@ from ..constants import DT
 from .finger import fingers
 from .mortise import mortise
 
+from ..utilities.compare_utils import angle
 from ..utilities.logging_utils import log
 from ..utilities.simple_utils import (
     duplicate,
@@ -304,7 +305,6 @@ def distributed_interlock(
 
                 j += 1
                 distance = j * spacing + start
-        oldp = p
 
     join_multiple("_groove")
     active_name("interlock")

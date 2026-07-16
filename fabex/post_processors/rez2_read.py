@@ -5,7 +5,6 @@
 
 import nc_read as nc
 import re
-import sys
 import math
 
 ################################################################################
@@ -59,7 +58,7 @@ class Parser(nc.Parser):
         s.replace("<", "&lt;")
         s.replace(">", "&gt;")
         s += self.SPACE + "\n"
-        if col != None:
+        if col is not None:
             self.file_out.write('\t\t<text col="' + col + '">' + s + " </text>\n")
         else:
             self.file_out.write("\t\t<text>" + s + " </text>\n")

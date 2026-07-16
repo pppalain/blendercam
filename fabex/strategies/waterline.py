@@ -1,6 +1,5 @@
 from math import (
     ceil,
-    floor,
     sqrt,
 )
 

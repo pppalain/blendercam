@@ -138,14 +138,14 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
         else:
             self.write(maker.codes.RAPID())
         self.write_preps()
-        if x != None:
+        if x is not None:
             dx = x - self.x
             if self.absolute_flag:
                 self.write(maker.codes.X() + (self.fmt % x))
             else:
                 self.write(maker.codes.X() + (self.fmt % dx))
             self.x = x
-        if y != None:
+        if y is not None:
             dy = y - self.y
             if self.absolute_flag:
                 self.write(maker.codes.Y() + (self.fmt % y))
@@ -153,7 +153,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
                 self.write(maker.codes.Y() + (self.fmt % dy))
 
             self.y = y
-        if z != None:
+        if z is not None:
             dz = z - self.z
             if self.absolute_flag:
                 self.write(maker.codes.Z() + (self.fmt % z))
@@ -162,7 +162,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
 
             self.z = z
 
-        if a != None:
+        if a is not None:
             da = a - self.a
             if self.absolute_flag:
                 self.write(maker.codes.A() + (self.fmt % a))
@@ -170,7 +170,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
                 self.write(maker.codes.A() + (self.fmt % da))
             self.a = a
 
-        if b != None:
+        if b is not None:
             db = b - self.b
             if self.absolute_flag:
                 self.write(maker.codes.B() + (self.fmt % b))
@@ -178,7 +178,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
                 self.write(maker.codes.B() + (self.fmt % db))
             self.b = b
 
-        if c != None:
+        if c is not None:
             dc = c - self.c
             if self.absolute_flag:
                 self.write(maker.codes.C() + (self.fmt % c))
@@ -201,14 +201,14 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
             self.write(maker.codes.FEED())
         self.write_preps()
         dx = dy = dz = 0
-        if x != None:
+        if x is not None:
             dx = x - self.x
             if self.absolute_flag:
                 self.write(maker.codes.X() + (self.fmt % x))
             else:
                 self.write(maker.codes.X() + (self.fmt % dx))
             self.x = x
-        if y != None:
+        if y is not None:
             dy = y - self.y
             if self.absolute_flag:
                 self.write(maker.codes.Y() + (self.fmt % y))
@@ -216,7 +216,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
                 self.write(maker.codes.Y() + (self.fmt % dy))
 
             self.y = y
-        if z != None:
+        if z is not None:
             dz = z - self.z
             if self.absolute_flag:
                 self.write(maker.codes.Z() + (self.fmt % z))
@@ -232,13 +232,13 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
         self.write("\n")
 
     def same_xyz(self, x=None, y=None, z=None):
-        if x != None:
+        if x is not None:
             if (self.fmt % x) != (self.fmt % self.x):
                 return False
-        if y != None:
+        if y is not None:
             if (self.fmt % y) != (self.fmt % self.y):
                 return False
-        if z != None:
+        if z is not None:
             if (self.fmt % z) != (self.fmt % self.z):
                 return False
 
@@ -260,34 +260,34 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
         else:
             self.write(arc_g_code)
         self.write_preps()
-        if x != None:
+        if x is not None:
             dx = x - self.x
             if self.absolute_flag:
                 self.write(maker.codes.X() + (self.fmt % x))
             else:
                 self.write(maker.codes.X() + (self.fmt % dx))
             self.x = x
-        if y != None:
+        if y is not None:
             dy = y - self.y
             if self.absolute_flag:
                 self.write(maker.codes.Y() + (self.fmt % y))
             else:
                 self.write(maker.codes.Y() + (self.fmt % dy))
             self.y = y
-        if z != None:
+        if z is not None:
             dz = z - self.z
             if self.absolute_flag:
                 self.write(maker.codes.Z() + (self.fmt % z))
             else:
                 self.write(maker.codes.Z() + (self.fmt % dz))
             self.z = z
-        if i != None:
+        if i is not None:
             self.write(maker.codes.CENTRE_X() + (self.fmt % i))
-        if j != None:
+        if j is not None:
             self.write(maker.codes.CENTRE_Y() + (self.fmt % j))
-        if k != None:
+        if k is not None:
             self.write(maker.codes.CENTRE_Z() + (self.fmt % k))
-        if r != None:
+        if r is not None:
             self.write(maker.codes.RADIUS() + (self.fmt % r))
         #       use horizontal feed rate
         if self.fhv:

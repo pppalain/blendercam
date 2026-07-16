@@ -3,6 +3,7 @@
 Functions to handle shapely operations and conversions - curve, coords, polygon
 """
 
+import numpy as np
 import shapely
 import bpy
 import re
@@ -176,10 +177,10 @@ def shapely_to_curve(name, p, z, cyclic=True):
 
     import bpy
 
-    verts = []
-    edges = []
-    vi = 0
-    ci = 0
+    # verts = []
+    # edges = []
+    # vi = 0
+    # ci = 0
 
     seq = shapely_to_coordinates(p)
     w = 1  # weight

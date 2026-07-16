@@ -3,7 +3,6 @@
 'CAM Optimisation Properties'
 """
 
-import bpy
 from bpy.props import (
     BoolProperty,
     FloatProperty,
@@ -11,7 +10,6 @@ from bpy.props import (
 )
 from bpy.types import PropertyGroup
 
-from ..utilities.version_utils import opencamlib_version
 from ..utilities.strategy_utils import (
     update_exact_mode,
     update_opencamlib,

@@ -1,18 +1,15 @@
+from mathutils import Vector
+
+import bpy
+
 from ..exception import CamException
 
-from ..utilities.chunk_utils import (
-    chunks_to_mesh,
-    sort_chunks,
-    chunks_refine,
-)
+from ..utilities.chunk_utils import chunks_to_mesh, sample_chunks_n_axis
 from ..utilities.curve_utils import curve_to_chunks
 from ..utilities.logging_utils import log, heading
 from ..utilities.operation_utils import (
-    get_operation_sources,
-    check_min_z,
     get_layers,
 )
-from ..utilities.simple_utils import subdivide_short_lines
 
 
 async def projected_curve(o):

@@ -4,15 +4,14 @@ Operators to create a number of geometric shapes with curves.
 """
 
 from math import (
+    cos,  # noqa: F401
     pi,
-    sin,
-    cos,
-    sqrt,
+    sin,  # noqa: F401
+    sqrt,  # noqa: F401
 )
 
 import numpy as np
 
-import bpy
 from bpy.props import (
     EnumProperty,
     FloatProperty,
@@ -212,19 +211,36 @@ class CamSineCurve(Operator):
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0, angle_offset: float = 0.0):
             if self.axis == "XY":
-                c = (e(t + angle_offset) + offset, t, 0)
+                c = (
+                    e(t + angle_offset) + offset,
+                    t,
+                    0,
+                )
             elif self.axis == "YX":
-                c = (t, e(t + angle_offset) + offset, 0)
+                c = (
+                    t,
+                    e(t + angle_offset) + offset,
+                    0,
+                )
             elif self.axis == "ZX":
-                c = (t, offset, e(t + angle_offset))
+                c = (
+                    t,
+                    offset,
+                    e(t + angle_offset),
+                )
             elif self.axis == "ZY":
-                c = (offset, t, e(t + angle_offset))
+                c = (
+                    offset,
+                    t,
+                    e(t + angle_offset),
+                )
             return c
 
         for i in range(self.wave_amount):
             angle_off = self.wave_angle_offset * period * i / (2 * pi)
             create_parametric_curve(
                 f,
+                curve_name="Periodic Wave",
                 offset=self.wave_distance * i,
                 min=self.min_t,
                 max=self.max_t,
@@ -253,7 +269,10 @@ class CamLissajousCurve(Operator):
     )
     wave_a: EnumProperty(
         name="Wave X",
-        items=(("sine", "Sine Wave", "Sine Wave"), ("triangle", "Triangle Wave", "triangle wave")),
+        items=(
+            ("sine", "Sine Wave", "Sine Wave"),
+            ("triangle", "Triangle Wave", "triangle wave"),
+        ),
         default="sine",
     )
 
@@ -267,7 +286,10 @@ class CamLissajousCurve(Operator):
     )
     wave_b: EnumProperty(
         name="Wave Y",
-        items=(("sine", "Sine Wave", "Sine Wave"), ("triangle", "Triangle Wave", "triangle wave")),
+        items=(
+            ("sine", "Sine Wave", "Sine Wave"),
+            ("triangle", "Triangle Wave", "triangle wave"),
+        ),
         default="sine",
     )
     period_a: FloatProperty(
@@ -369,7 +391,13 @@ class CamLissajousCurve(Operator):
             return c
 
         create_parametric_curve(
-            f, offset=0.0, min=self.min_t, max=self.max_t, use_cubic=True, iterations=self.iteration
+            f,
+            curve_name="Lissajous",
+            offset=0.0,
+            min=self.min_t,
+            max=self.max_t,
+            use_cubic=True,
+            iterations=self.iteration,
         )
 
         return {"FINISHED"}
@@ -466,6 +494,7 @@ class CamHypotrochoidCurve(Operator):
             iter = 10000
         create_parametric_curve(
             f,
+            curve_name="Hypotrochoid",
             offset=0.0,
             min=0,
             max=maxangle,
@@ -544,6 +573,7 @@ class CamCustomCurve(Operator):
 
         create_parametric_curve(
             f,
+            curve_name="Custom",
             offset=0.0,
             min=self.min_t,
             max=self.max_t,

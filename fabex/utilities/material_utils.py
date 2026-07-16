@@ -29,7 +29,7 @@ def add_transparent_material(ob, mname, color, alpha):
     else:
         mat = bpy.data.materials.new(name=mname)
         mat.use_nodes = True
-        bsdf = mat.node_tree.nodes["Principled BSDF"]
+        mat.node_tree.nodes["Principled BSDF"]
 
         # Assign it to object
         if ob.data.materials:

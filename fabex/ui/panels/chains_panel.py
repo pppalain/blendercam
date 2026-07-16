@@ -152,7 +152,6 @@ class CAM_CHAINS_Panel(CAMParentPanel, Panel):
 
                     box = layout.box()
                     col = box.column(align=True)
-                    cam_names = context.scene.cam_names
                     link_names = chain.link_chain_file_names
 
                     row = col.row(align=True)

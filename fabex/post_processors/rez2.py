@@ -7,6 +7,7 @@
 # Hirutso Enni, 2009-01-13
 
 from . import nc
+from . import iso
 import math
 import circular_pocket as circular
 
@@ -254,8 +255,8 @@ class Creator(nc.Creator):
     # def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
     def rapid(self, x=0.0000, y=0.0000, z=0.0000, a=0.0000, b=0.0000, c=0.0000, how=False):
         # self.write_blocknum()
-        if x == None:
-            if y == None:
+        if x is None:
+            if y is None:
                 return
         print("rychlopsuv")
         print(x)
@@ -301,8 +302,8 @@ class Creator(nc.Creator):
     def feed(self, x=0.0000, y=0.0000, z=0.0000, how=False):
         if self.same_xyz(x, y, z):
             return
-        if x == None:
-            if y == None:
+        if x is None:
+            if y is None:
                 return
 
         print("MA rez")
@@ -339,13 +340,13 @@ class Creator(nc.Creator):
         self.y = y
 
     def same_xyz(self, x=None, y=None, z=None):
-        if x != None:
+        if x is not None:
             if (self.fmt % x) != (self.fmt % self.x):
                 return False
-        if y != None:
+        if y is not None:
             if (self.fmt % y) != (self.fmt % self.y):
                 return False
-        if z != None:
+        if z is not None:
             if (self.fmt % z) != (self.fmt % self.z):
                 return False
 
@@ -354,8 +355,8 @@ class Creator(nc.Creator):
     def arc(self, cw, x=0.0000, y=0.0000, z=0.0000, i=0.0000, j=0.0000, k=0.0000, r=0.0000):
         if self.same_xyz(x, y, z):
             return
-        if x == None:
-            if y == None:
+        if x is None:
+            if y is None:
                 return
         # self.write_blocknum()
         print("ARC rez")
@@ -538,11 +539,11 @@ class Creator(nc.Creator):
         internal_coolant_on=None,
         rapid_to_clearance=None,
     ):
-        if standoff == None:
+        if standoff is None:
             # This is a bad thing.  All the drilling cycles need a retraction (and starting) height.
             return
 
-        if z == None:
+        if z is None:
             return  # We need a Z value as well.  This input parameter represents the top of the hole
 
         self.write_blocknum()
@@ -563,12 +564,12 @@ class Creator(nc.Creator):
         # Set the retraction point to the 'standoff' distance above the starting z height.
         retract_height = z + standoff
         # self.write(iso.RETRACT + (self.fmt % retract_height))
-        if x != None:
-            dx = x - self.x
+        if x is not None:
+            x - self.x
             self.write(iso.X + (self.fmt % x) + iso.SPACE)
             self.x = x
-        if y != None:
-            dy = y - self.y
+        if y is not None:
+            y - self.y
             self.write(iso.Y + (self.fmt % y) + iso.SPACE)
             self.y = y
 

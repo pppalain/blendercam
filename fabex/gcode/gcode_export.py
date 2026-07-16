@@ -26,7 +26,6 @@ from ..post_processors import iso
 from ..utilities.compare_utils import point_on_line
 from ..utilities.logging_utils import log, heading
 from ..utilities.simple_utils import (
-    progress,
     safe_filename,
     unit_value_to_string,
 )
@@ -373,8 +372,8 @@ def export_gcode_path(filename, vertslist, operations):
                 fadjustval = shapek.data[vi].co.z / scale_graph
 
             vect = v - last
-            l = vect.length
-            if vi > 0 and l > 0 and downvector.angle(vect) < plungelimit:
+            length = vect.length
+            if vi > 0 and length > 0 and downvector.angle(vect) < plungelimit:
                 if f != plungefeedrate or (fadjust and fadjustval != 1):
                     f = plungefeedrate * fadjustval
                     c.feedrate(f)
