@@ -21,10 +21,15 @@ jobs:
         blender_version: ['5.1.2']
     runs-on: ${{ matrix.os }}
     steps:
+    - uses: actions/checkout@v5
+    - name: Install Blender
+      uses: bradyajohnston/setup-blender@v5
+      with:
+        version: ${{ matrix.blender_version }}
 
-    # # Check out the Fabex repo
-    # - name: Checkout repository
-    #   uses: actions/checkout@v4.1.1
+    # Check out the Fabex repo
+    - name: Checkout repository
+      uses: actions/checkout@v4.1.1
     # # - name: Install bash 4(macOS)
     # #   if: runner.os == 'macOS'
     # #   run: brew install bash
@@ -98,18 +103,12 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
 
-    - uses: actions/checkout@v5
-    - name: Install Blender
-      uses: bradyajohnston/setup-blender@v5
-      with:
-        version: ${{ matrix.blender_version }}
-
     # Build the Extension using Blender
     - name: Build Extension
       id: build
       shell: bash
       run: |
-        blender --command extension build --source-dir=./fabex --split-platforms --output-filepath=fabex${{ env.VERSION_TAG }}-blender-${{matrix.blender_version}}.zip
+        blender --command extension build --source-dir=./fabex --split-platforms --output-filepath=fabex-${{ env.VERSION_TAG }}-blender-${{matrix.blender_version}}.zip
 
     # Upload the Linux Extension file for download
     - name: Upload Linux Build
