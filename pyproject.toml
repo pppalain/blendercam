@@ -79,7 +79,6 @@ required-environments = [
 # uv sync fails for the following:
 # "sys_platform == 'darwin' and platform_machine == 'x86_64'",
 # "sys_platform == 'linux' and platform_machine == 'aarch64'",
-required-version = "0.11.29"
 
 [tool.black]
 line-length = 100

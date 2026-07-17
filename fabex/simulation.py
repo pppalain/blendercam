@@ -111,10 +111,10 @@ def create_simulation_object(name, operations, i):
     bpy.ops.object.shade_smooth()
 
     # Assign Simulation Material
-    library_name = "Fabex Assets"
-    filename = "Fabex_Assets.blend"
     addon_prefs = bpy.context.preferences.addons[base_package].preferences
     material_name = str(addon_prefs.default_simulation_material).title()
+    library_name = "Fabex Assets"
+    filename = "Fabex_Assets.blend"
     filepaths = bpy.context.preferences.filepaths
     folder = filepaths.asset_libraries[library_name].path
     library_path = os.path.join(folder, filename)
@@ -130,8 +130,12 @@ def create_simulation_object(name, operations, i):
 
         for material in asset_library.materials:
             if material == material_name:
-                current_file.materials.append(material)
+                if material not in bpy.data.materials:
+                    current_file.materials.append(material)
+                else:
+                    pass
 
+    # ob.material_slots[0].material = bpy.data.materials[material_name]
     ob.data.materials.append(bpy.data.materials[material_name])
     ob.active_material_index = len(ob.material_slots) - 1
     bpy.context.collection.objects.unlink(ob)

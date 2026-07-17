@@ -424,14 +424,14 @@ def append_asset_from_library(asset_type, asset_name):
 
     with bpy.data.libraries.load(str(library_path)) as (data_from, data_to):
         if asset_type == "scene":
-            if asset_name in data_from.scenes:
+            if asset_name in data_from.scenes:  #  and not asset_name in data_to.scenes
                 data_to.scenes = [asset_name]
             bpy.context.window.scene = bpy.data.scenes[asset_name]
 
         elif asset_type == "node_group":
-            if asset_name in data_from.node_groups:
+            if asset_name in data_from.node_groups:  #  and not asset_name in data_to.node_groups
                 data_to.node_groups = [asset_name]
 
         elif asset_type == "material":
-            if asset_name in data_from.materials:
+            if asset_name in data_from.materials:  #  and not asset_name in data_to.materials
                 data_to.materials = [asset_name]
