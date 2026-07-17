@@ -161,14 +161,53 @@ def zip_extension():
 
 # import bpy
 
-# path_calc = bpy.data.objects['cam_path_Op_Cube_1']
-# path_file = bpy.data.objects['Gcode']
+# decimal_places = 4
+# test_path_name = "cam_path_Op_Suzanne_1"
 
-# verts_calc = path_calc.data.vertices
+# path_calc = bpy.data.objects[test_path_name]
+# path_file = bpy.data.objects["Gcode"]
+
+# try:
+#     verts_calc = path_calc.data.splines[0].points
+# except AttributeError:
+#     verts_calc = path_calc.data.vertices
+
 # verts_file = path_file.data.splines[0].points
 
+# errors = 0
+# points = len(verts_calc)
+
 # for i, v in enumerate(verts_calc):
-#     if i < 100:
-#         print(f"Calc {i}: {verts_calc[i].co[0]}, {verts_calc[i].co[1]}, {verts_calc[i].co[2]}")
-#         print(f"File {i}: {verts_file[i].co[0]}, {verts_file[i].co[1]}, {verts_file[i].co[2]}")
-#         print("")
+#     if i < len(verts_calc) - 1:
+#         cx, cy, cz = (
+#             round(verts_calc[i + 1].co[0], decimal_places),
+#             round(verts_calc[i + 1].co[1], decimal_places),
+#             round(verts_calc[i + 1].co[2], decimal_places),
+#         )
+#         fx, fy, fz = (
+#             round(verts_file[i].co[0], decimal_places),
+#             round(verts_file[i].co[1], decimal_places),
+#             round(verts_file[i].co[2], decimal_places),
+#         )
+
+#         if (cx, cy, cz) != (fx, fy, fz):
+#             errors += 1
+#             print("Error:")
+#             print(f"Point {i}:")
+#             if cx != fx:
+#                 print(f"X: {cx} != {fx}")
+#             if cy != fy:
+#                 print(f"Y: {cy} != {fy}")
+#             if cz != fz:
+#                 print(f"Z: {cz} != {fz}")
+#             print("")
+
+# percent = 100.0 - (errors/points) if errors > 0 else 100
+
+# print("____________________")
+# print("")
+# print("| Analysis Complete")
+# print(f"| {errors} discrepancies")
+# print(f"| {round(percent, decimal_places)}% accurate to {decimal_places} decimal points")
+# print("____________________")
+# print("")
