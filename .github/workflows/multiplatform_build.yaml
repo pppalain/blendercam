@@ -109,7 +109,7 @@ jobs:
       id: build
       shell: bash
       run: |
-        blender --command extension build --source-dir=./fabex --split-platforms --output-filepath=fabex-${{ env.VERSION_TAG }}-blender-${{matrix.blender_version}}.zip
+        blender --command extension build --source-dir=./fabex --split-platforms --output-filepath=fabex${{ env.VERSION_TAG }}-blender-${{matrix.blender_version}}.zip
 
     # Upload the Linux Extension file for download
     - name: Upload Linux Build
