@@ -475,8 +475,10 @@ def update_operation(self, context):
         context: The context in which the operation is being updated.
     """
 
-    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    update_rest(active_op, bpy.context)
+    if context is None or not getattr(context, "scene", None):
+        return
+
+    update_rest(self, context)
 
 
 def update_zbuffer_image(self, context):
