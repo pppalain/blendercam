@@ -40,31 +40,33 @@ def copy_property_group_data(source, target):
 
 def copy_operation_properties(source, target):
     """Copy all writable CAM operation properties from source to target."""
+    # 1. Direct key assignment (bypasses update callbacks)
+    for key in source.keys():
+        try:
+            target[key] = source[key]
+        except Exception:
+            pass
+
+    # 2. Copy nested PropertyGroups & Collections
     for prop in source.bl_rna.properties:
-        if prop.identifier == "rna_type" or prop.is_readonly:
+        if prop.identifier in {"rna_type", "name", "filename"} or prop.is_readonly:
             continue
 
         try:
             value = getattr(source, prop.identifier)
+            if prop.type == "POINTER" and isinstance(value, bpy.types.PropertyGroup):
+                target_group = getattr(target, prop.identifier, None)
+                if target_group is not None:
+                    copy_property_group_data(value, target_group)
+            elif prop.type == "COLLECTION":
+                target_collection = getattr(target, prop.identifier, None)
+                if target_collection is not None:
+                    target_collection.clear()
+                    for item in value:
+                        new_item = target_collection.add()
+                        copy_property_group_data(item, new_item)
         except Exception:
-            continue
-
-        if prop.type == "POINTER" and isinstance(value, bpy.types.PropertyGroup):
-            target_group = getattr(target, prop.identifier, None)
-            if target_group is not None:
-                copy_property_group_data(value, target_group)
-        elif prop.type == "COLLECTION":
-            target_collection = getattr(target, prop.identifier, None)
-            if target_collection is not None:
-                target_collection.clear()
-                for item in value:
-                    new_item = target_collection.add()
-                    copy_property_group_data(item, new_item)
-        else:
-            try:
-                setattr(target, prop.identifier, value)
-            except Exception:
-                pass
+            pass
 
 
 def make_unique_operation_name(base_name, existing_names):

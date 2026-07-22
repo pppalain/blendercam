@@ -207,33 +207,60 @@ def shapely_to_curve(name, p, z, cyclic=True):
 
     return objectdata  # bpy.context.active_object
 
+def validate_polygon(poly, obj=None, marker_name="Invalid_geometry_Marker"):
+    """Validate a Shapely polygon and mark the first invalid location.
+
+    Args:
+        poly: Shapely Polygon.
+        obj: Blender object whose local coordinates should be converted
+             to world coordinates. Pass None if polygon coordinates are
+             already in world space.
+        marker_name: Name given to the marker object.
+
+    Returns:
+        None if valid, otherwise the validity error string.
+    """
+    if poly.is_valid:
+        return None
+
+    error_msg = explain_validity(poly)
+
+    numbers = re.findall(r"-?\d+\.?\d*", error_msg)
+    if len(numbers) >= 2:
+        x, y = map(float, numbers[:2])
+
+        if obj is not None:
+            location = obj.matrix_world @ Vector((x, y, 0.0))
+        else:
+            location = (x, y, 0.0)
+
+        bpy.ops.curve.primitive_bezier_circle_add(
+            radius=0.003,
+            align="WORLD",
+            location=location,
+        )
+
+        marker = bpy.context.active_object
+        marker.name = marker_name
+
+    return error_msg
 
 # this does more cleve chunks to Poly with hierarchies... ;)
 def chunks_to_shapely(chunks):
     # print ('analyzing paths')
     remove_multiple("Invalid_geometry_Marker")  #remove old errors
-    for ch in chunks:  # first convert chunk to poly
+    for ch in chunks:
         if len(ch.points) > 2:
             try:
-                ch.poly = Polygon(ch.points[:, 0:2])
+                ch.poly = Polygon(ch.points[:, :2])
             except Exception as exc:
                 raise CamException("Invalid curve geometry") from exc
 
-            if not ch.poly.is_valid:
-                validity_error = explain_validity(ch.poly)
-                if validity_error != "Valid Geometry":
-                    numbers = re.findall(r'-?\d+\.?\d*', validity_error)
-                    if len(numbers) >= 2:
-                        x = float(numbers[0])
-                        y = float(numbers[1])
-                    bpy.ops.curve.primitive_bezier_circle_add(
-                        radius=0.003,
-                        align='WORLD',
-                        location=(x, y, 0.0),
-                    )
-                    bpy.context.active_object.name = "Invalid_geometry_Marker"
-                    raise CamException(f"Invalid curve geometry: {validity_error}")
-                raise CamException("Invalid curve geometry")
+            error = validate_polygon(ch.poly)
+
+            if error:
+                raise CamException(f"Invalid curve geometry:\n{error}")
+
         else:
             ch.poly = Polygon()
 
