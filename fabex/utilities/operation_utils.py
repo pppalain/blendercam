@@ -250,24 +250,31 @@ def operation_valid(self, context):
         context (Context): The context containing the scene and CAM operations.
     """
 
-    scene = context.scene
-    o = scene.cam_operations[scene.cam_active_operation]
+    # Safety guard: avoid running popup if context or scene isn't ready
+    if context is None or not getattr(context, "scene", None):
+        return
+
+    # Use 'self' directly so it checks THIS operation, not whatever active index is set to
+    o = self
     o.changed = True
     o.valid = source_valid(o, context)
     invalidmsg = "Invalid Source Object for Operation.\n"
+    
     if o.valid:
         o.info.warnings = ""
     else:
         o.info.warnings = invalidmsg
         addon_prefs = bpy.context.preferences.addons[base_package].preferences
-        if addon_prefs.show_popups:
+        
+        # Only trigger popup if user isn't copying/initializing in background
+        if addon_prefs.show_popups and context.window_manager is not None:
             bpy.ops.cam.popup("INVOKE_DEFAULT")
 
     if o.geometry_source == "IMAGE":
         o.optimisation.use_exact = False
     o.update_offset_image_tag = True
     o.update_z_buffer_image_tag = True
-    log.info("Validity ")
+    log.info("Validity checked for operation: %s", o.name)
 
 
 def chain_valid(chain, context):
