@@ -28,6 +28,12 @@ class CurveToolsTest(TestCase):
         points = len(objects[name].data.splines[0].points)
         self.assertEqual(points, 29)
 
+        # name = "Cube_silhouette"
+        # objects = bpy.data.objects
+        # self.assertIn(name, objects)
+        # points = len(objects[name].data.splines[0].points)
+        # self.assertEqual(points, 48)
+
     def test_silhouette_offset(self):
         bpy.context.view_layer.objects["Cube"].select_set(state=True)
         bpy.ops.object.silhouette_offset()
