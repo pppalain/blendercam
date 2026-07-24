@@ -268,9 +268,21 @@ def shapely_validate(chunks):
                         align="WORLD",
                         location=(x, y, 0.0),
                     )
-                    bpy.context.active_object.name = "Invalid_geometry_Marker"
-                    raise CamException(f"Invalid curve geometry: {validity_error}")
-                raise CamException("Invalid curve geometry")
+                    obj = bpy.context.active_object
+                    obj.name = "Invalid_Geometry_Marker"
+                    obj.show_name = True
+                    # Get 3D View Context for overrides
+                    # So that 3D View Operators will still run
+                    # When called from Calculate Path button in Properties
+                    area = [a for a in bpy.context.screen.areas if a.type == "VIEW_3D"][0]
+                    region = [r for r in area.regions if r.type == "WINDOW"][0]
+                    with bpy.context.temp_override(area=area, region=region):
+                        bpy.ops.view3d.view_axis(type="TOP")
+                        bpy.ops.view3d.view_selected()
+                        for i in range(24):
+                            bpy.ops.view3d.zoom()
+                raise CamException(f"Invalid curve geometry: {validity_error}")
+                return validity_error
         else:
             ch.poly = Polygon()
 

@@ -34,7 +34,7 @@ def curve_validate():
     chunks = curve_to_chunks(obj)
     try:
         shapely_validate(chunks=chunks)
-    except CamException:
+    except:
         log.info("Invalid Curve Geometry")
 
 
