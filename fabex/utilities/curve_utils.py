@@ -32,10 +32,10 @@ def curve_validate():
     """
     obj = bpy.context.active_object
     chunks = curve_to_chunks(obj)
-    try:
-        shapely_validate(chunks=chunks)
-    except:
-        log.info("Invalid Curve Geometry")
+    # try:
+    shapely_validate(chunks=chunks)
+    # except:
+    #     log.info("Invalid Curve Geometry")
 
 
 def curve_to_shapely(cob, use_modifiers=False):

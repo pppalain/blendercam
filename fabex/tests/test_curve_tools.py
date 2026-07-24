@@ -22,18 +22,20 @@ class CurveToolsTest(TestCase):
     def test_silhouette(self):
         bpy.context.view_layer.objects["Cube"].select_set(state=True)
         bpy.ops.object.silhouette()
-        self.assertIn("Cube_silhouette", bpy.data.objects)
-
-        # name = "Cube_silhouette"
-        # objects = bpy.data.objects
-        # self.assertIn(name, objects)
-        # points = len(objects[name].data.splines[0].points)
-        # self.assertEqual(points, 48)
+        name = "Cube_silhouette"
+        objects = bpy.data.objects
+        self.assertIn(name, objects)
+        points = len(objects[name].data.splines[0].points)
+        self.assertEqual(points, 29)
 
     def test_silhouette_offset(self):
         bpy.context.view_layer.objects["Cube"].select_set(state=True)
         bpy.ops.object.silhouette_offset()
-        self.assertIn("Cube_offset_0.003", bpy.data.objects)
+        name = "Cube_offset_0.003"
+        objects = bpy.data.objects
+        self.assertIn(name, objects)
+        points = len(objects[name].data.splines[0].points)
+        self.assertEqual(points, 70)
 
     def test_curve_boolean(self):
         bpy.ops.curve.primitive_bezier_circle_add()
