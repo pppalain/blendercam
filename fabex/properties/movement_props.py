@@ -134,13 +134,13 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
 
     ramp: BoolProperty(
         name="Ramp-in - EXPERIMENTAL",
-        description="Ramps down the whole contour, so the cutline looks " "like helix",
+        description="Ramps down the whole contour, so the cutline looks like helix",
         default=False,
         update=update_operation,
     )
     zig_zag_ramp: BoolProperty(
         name="Zigzag_ramp - EXPERIMENTAL",
-        description="Ramps down the whole contour, so the cutline looks " "like zigzag_",
+        description="Ramps down the whole contour, so the cutline looks like zigzag_",
         default=False,
         update=update_operation,
     )

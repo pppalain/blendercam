@@ -4,7 +4,6 @@ Parent (Mixin) class for all panels in 'panels'
 Sets up polling and operations to show / hide panels based on Interface Level
 """
 
-
 import bpy
 
 

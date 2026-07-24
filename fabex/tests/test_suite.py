@@ -109,6 +109,6 @@ if __name__ == "__main__":
         def test_func(self, tc=test_case):
             return self.run_test_case(tc)
 
-        setattr(FabexGcodeTest, f'test_{test_case["subdir_name"]}', test_func)
+        setattr(FabexGcodeTest, f"test_{test_case['subdir_name']}", test_func)
 
     unittest.main()

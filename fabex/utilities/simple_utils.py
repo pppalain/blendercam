@@ -654,7 +654,7 @@ def duplicate(x=0.0, y=0.0, z=0.0):
         y (float): The y-coordinate offset for the duplication.
             Defaults to 0.
     """
-    if x == 0.0 and y == 0.0 and z ==0.0:
+    if x == 0.0 and y == 0.0 and z == 0.0:
         bpy.ops.object.duplicate()
     else:
         bpy.ops.object.duplicate_move(
@@ -990,27 +990,30 @@ def subdivide_long_edges(ob, threshold):
             ob.update_from_editmode()
         iter += 1
 
+
 def extrude_curve2mesh(height=0.001):
     """Extrudes a closed curve to mesh with a height.
     This way of extruding does not produce non manifold mesh"""
-    bpy.context.object.data.dimensions = '2D'
-    bpy.context.object.data.fill_mode = 'BOTH'
-    bpy.ops.object.convert(target='MESH')
+    bpy.context.object.data.dimensions = "2D"
+    bpy.context.object.data.fill_mode = "BOTH"
+    bpy.ops.object.convert(target="MESH")
     bpy.ops.object.editmode_toggle()
-    bpy.ops.mesh.select_all(action='SELECT')
-    bpy.ops.mesh.dissolve_limited(angle_limit=0.00872665) # 0.5 degrees
+    bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.mesh.dissolve_limited(angle_limit=0.00872665)  # 0.5 degrees
     bpy.ops.mesh.extrude_region_move(TRANSFORM_OT_translate={"value": (0, 0, height)})
     bpy.ops.object.editmode_toggle()
-    return(bpy.context.active_object)
+    return bpy.context.active_object
+
 
 def mesh_difference(toBeRemoved):
     """subtract toBeRemoved from the active Mesh
-        Both need to be MANIFOLD"""
-    bpy.ops.object.modifier_add(type='BOOLEAN')
-    bpy.context.object.modifiers["Boolean"].solver = 'MANIFOLD'
-    bpy.context.object.modifiers["Boolean"].operation = 'DIFFERENCE'
+    Both need to be MANIFOLD"""
+    bpy.ops.object.modifier_add(type="BOOLEAN")
+    bpy.context.object.modifiers["Boolean"].solver = "MANIFOLD"
+    bpy.context.object.modifiers["Boolean"].operation = "DIFFERENCE"
     bpy.context.object.modifiers["Boolean"].object = toBeRemoved  # difference
     bpy.ops.object.modifier_apply(modifier="Boolean")
+
 
 def dilate_array(ar, cycles):
     """Dilate a binary array using a specified number of cycles.
@@ -1055,4 +1058,3 @@ def rotate_point_by_point(originp, p, ang):  # rotate point around another point
         qy = oy + sin(ang) * (px - ox) + cos(ang) * (py - oy)
     rot_p = [qx, qy, oz]
     return rot_p
-

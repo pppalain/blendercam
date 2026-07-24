@@ -200,7 +200,6 @@ def obj_from_pydata(name, verts, edges=None, close=True, collection_name=None):
 
 
 class GcodeParser:
-
     comment = ""
 
     # global, to access in other classes(to access RGB values in comment above when parsing M163).
@@ -386,7 +385,6 @@ class GcodeParser:
 
 
 class GcodeModel:
-
     def __init__(self, parser):
         # save parser for messages
         self.parser = parser

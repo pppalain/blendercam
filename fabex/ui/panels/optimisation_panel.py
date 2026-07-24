@@ -3,7 +3,6 @@
 'CAM Optimisation' properties and panel in Properties > Render
 """
 
-
 from bpy.types import Panel
 
 from .parent_panel import CAMParentPanel

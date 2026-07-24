@@ -20,7 +20,7 @@ class Parser(nc.Parser):
             "|\w\#\d+|\(.*?\)"
             "|\#\d+\=(?:[+-])?\d*(?:\.\d*)? )"
         )
-        self.pattern_tool = re.compile("([(!;].*" "|\S+" "|\s+|\d)")
+        self.pattern_tool = re.compile("([(!;].*|\S+|\s+|\d)")
         self.oldx = 0
         self.oldy = 0
         self.oldz = 150

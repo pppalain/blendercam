@@ -4,8 +4,6 @@ Blender Operator definitions are in this file.
 They mostly call the functions from 'utils.py'
 """
 
-
-
 import bpy
 from bpy.props import StringProperty
 from bpy.types import Operator

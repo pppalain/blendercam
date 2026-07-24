@@ -9,7 +9,7 @@ from ..chunk_builder import (
     CamPathChunkBuilder,
 )
 from .logging_utils import log
-from .shapely_utils import chunks_to_shapely
+from .shapely_utils import chunks_to_shapely, shapely_validate
 from .simple_utils import (
     activate,
     progress,
@@ -18,40 +18,24 @@ from .simple_utils import (
     active_to_shapely_poly,
 )
 
+from shapely.geometry import Polygon
 from shapely.validation import explain_validity
 
 from ..exception import CamException
 
-"""Validates a curve and checks for self intersections using
-Shapely.  
-Upon error detection, it creates a circle at the problem coordinates named with
-the problem error message
-"""
-
 
 def curve_validate():
-    obj = bpy.context.active_object
-    poly = active_to_shapely_poly()
-    error_msg = explain_validity(poly)
-    remove_multiple("Self-intersection[")  # remove old errors
-    error_msg = explain_validity(poly)
-    # Find negative numbers, decimals, and integers
-    pattern = r"-?\d+\.?\d*"
-    numbers_str = re.findall(pattern, error_msg)
-    # Convert to appropriate types (float if '.' is present, else int)
-    coordinates = [float(n) if "." in n else int(n) for n in numbers_str]
-    if coordinates:
-        world_origin = obj.matrix_world @ Vector((coordinates[0], coordinates[1], 0.0))
-        marker_location = (world_origin.x, world_origin.y, world_origin.z)
-        bpy.ops.curve.primitive_bezier_circle_add(
-            radius=0.003,
-            align="WORLD",
-            location=marker_location,
-        )
-        active_name(error_msg)
-        bpy.ops.view3d.view_selected()
+    """Validates a curve and checks for self intersections using Shapely.
 
-    return error_msg
+    Upon error detection, it creates a circle at the problem coordinates named with
+    the problem error message
+    """
+    obj = bpy.context.active_object
+    chunks = curve_to_chunks(obj)
+    try:
+        shapely_validate(chunks=chunks)
+    except:
+        log.info("Invalid Curve Geometry")
 
 
 def curve_to_shapely(cob, use_modifiers=False):

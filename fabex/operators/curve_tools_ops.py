@@ -24,14 +24,13 @@ from bpy.props import (
 from bpy.types import Operator
 from mathutils import Vector
 
-from ..utilities.curve_utils import curve_validate
 from ..utilities.geom_utils import circle
 from ..utilities.logging_utils import log, heading
 from ..utilities.polygon_utils import (
     polygon_boolean,
     polygon_convex_hull,
 )
-from ..utilities.curve_utils import curve_to_shapely
+from ..utilities.curve_utils import curve_to_shapely, curve_validate
 from ..utilities.shapely_utils import shapely_to_curve
 from ..utilities.silhouette_utils import (
     silhouette_offset,
@@ -915,11 +914,12 @@ class CamCurveRemoveDoubles(Operator):
         obj = bpy.context.selected_objects
         if self.validateCurve:  # validate curve
             error_msg = curve_validate()
-            if error_msg == "Valid Geometry":
-                self.report({"INFO"}, error_msg)
-            else:
-                validation_error = "Validation Error\n" + error_msg
-                self.report({"ERROR"}, validation_error)
+            if error_msg is not None:
+                if error_msg == "Valid Geometry":
+                    self.report({"INFO"}, error_msg)
+                else:
+                    validation_error = "Validation Error\n" + error_msg
+                    self.report({"ERROR"}, validation_error)
         else:
             for ob in obj:
                 if ob.type == "CURVE":
@@ -980,7 +980,7 @@ class CamMeshGetPockets(Operator):
     )
     z_limit: FloatProperty(
         name="Z Limit",
-        description="Maximum z height considered for pocket operation, " "default is 0.0",
+        description="Maximum z height considered for pocket operation, default is 0.0",
         default=0.0,
         min=-1000.0,
         max=1000.0,

@@ -86,6 +86,11 @@ exclude = "/fabex/presets/"
 target-version = ['py313']
 include = '\.py'
 
+[tool.ruff]
+line-length = 100
+exclude = ["fabex/presets/"]
+target-version = 'py313'
+
 [dependency-groups]
 dev = [
     "bpy>=5.1.2",

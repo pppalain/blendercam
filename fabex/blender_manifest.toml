@@ -1,7 +1,7 @@
-schema_version = "3.2.0"
+schema_version = "3.2.1"
 
 id = "fabex"
-version = "3.2.0"
+version = "3.2.1"
 name = "Fabex CNC"
 tagline = "G-code Generation Tools"
 maintainer = "Alain Pelletier and Contributors"
