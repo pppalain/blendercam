@@ -208,12 +208,51 @@ def shapely_to_curve(name, p, z, cyclic=True):
     return objectdata  # bpy.context.active_object
 
 
+def validate_polygon(poly, obj=None, marker_name="Invalid_geometry_Marker"):
+    """Validate a Shapely polygon and mark the first invalid location.
+
+    Args:
+        poly: Shapely Polygon.
+        obj: Blender object whose local coordinates should be converted
+             to world coordinates. Pass None if polygon coordinates are
+             already in world space.
+        marker_name: Name given to the marker object.
+
+    Returns:
+        None if valid, otherwise the validity error string.
+    """
+    if poly.is_valid:
+        return None
+
+    error_msg = explain_validity(poly)
+
+    numbers = re.findall(r"-?\d+\.?\d*", error_msg)
+    if len(numbers) >= 2:
+        x, y = map(float, numbers[:2])
+
+        if obj is not None:
+            location = obj.matrix_world @ Vector((x, y, 0.0))
+        else:
+            location = (x, y, 0.0)
+
+        bpy.ops.curve.primitive_bezier_circle_add(
+            radius=0.003,
+            align="WORLD",
+            location=location,
+        )
+
+        marker = bpy.context.active_object
+        marker.name = marker_name
+
+    return error_msg
+
+
 def shapely_validate(chunks):
     remove_multiple("Invalid_Geometry_Marker")  # remove old errors
     for ch in chunks:  # first convert chunk to poly
         if len(ch.points) > 2:
             try:
-                ch.poly = Polygon(ch.points[:, 0:2])
+                ch.poly = Polygon(ch.points[:, :2])
             except Exception as exc:
                 raise CamException("Invalid Curve Geometry") from exc
 
@@ -229,22 +268,9 @@ def shapely_validate(chunks):
                         align="WORLD",
                         location=(x, y, 0.0),
                     )
-                    obj = bpy.context.active_object
-                    obj.name = "Invalid_Geometry_Marker"
-                    obj.show_name = True
-                    # Get 3D View Context for overrides
-                    # So that 3D View Operators will still run
-                    # When called from Calculate Path button in Properties
-                    area = [a for a in bpy.context.screen.areas if a.type == "VIEW_3D"][0]
-                    region = [r for r in area.regions if r.type == "WINDOW"][0]
-                    with bpy.context.temp_override(area=area, region=region):
-                        bpy.ops.view3d.view_axis(type="TOP")
-                        bpy.ops.view3d.view_selected()
-                        for i in range(24):
-                            bpy.ops.view3d.zoom()
-                # raise CamException("Invalid curve geometry")
-                raise CamException(f"Invalid curve geometry: {validity_error}")
-                return validity_error
+                    bpy.context.active_object.name = "Invalid_geometry_Marker"
+                    raise CamException(f"Invalid curve geometry: {validity_error}")
+                raise CamException("Invalid curve geometry")
         else:
             ch.poly = Polygon()
 

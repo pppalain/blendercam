@@ -166,9 +166,7 @@ def get_spline_bounds(ob, curve):
 
 
 def get_bounds(o):
-    """Calculate the bounding box for a given object.
-
-    This function determines the minimum and maximum coordinates of an
+    """This function determines the minimum and maximum coordinates of an
     object's bounding box based on its geometry source. It handles different
     geometry types such as OBJECT, COLLECTION, and CURVE. The function also
     considers material properties and image cropping if applicable. The
@@ -184,9 +182,17 @@ def get_bounds(o):
             value.
     """
 
-    # print('kolikrat sem rpijde')
+    # Track warnings before calculation to avoid popping up on pre-existing warnings
+    initial_warnings = o.info.warnings
+
     if o.geometry_source in ["OBJECT", "COLLECTION", "CURVE"]:
         log.info("Geometry Source: Valid")
+        
+        # Check if objects exist before calculating bounds
+        if not hasattr(o, "objects") or not o.objects:
+            log.warning("No objects found for operation bounds calculation.")
+            return
+
         minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(
             o.objects,
             o.use_modifiers,
@@ -199,7 +205,7 @@ def get_bounds(o):
             o.min.z = minz
             o.min_z = o.min.z
         else:
-            o.min.z = o.min_z  # max(bb[0][2]+l.z,o.min_z)#
+            o.min.z = o.min_z
             log.info("~ Not Min Z from Object ~")
 
         if o.material.material_source == "MODEL":
@@ -213,16 +219,17 @@ def get_bounds(o):
 
         if o.material.material_source == "OBJECT":
             log.info(heading("Estimate Material from Alternate Object"))
-            minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(
-                [o.material.alt_object],
-                o.use_modifiers,
-            )
-            o.min.x = minx - o.material.radius_around_model
-            o.min.y = miny - o.material.radius_around_model
-            o.max.z = max(o.max_z, maxz)
+            if o.material.alt_object:
+                minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(
+                    [o.material.alt_object],
+                    o.use_modifiers,
+                )
+                o.min.x = minx - o.material.radius_around_model
+                o.min.y = miny - o.material.radius_around_model
+                o.max.z = max(o.max_z, maxz)
 
-            o.max.x = maxx + o.material.radius_around_model
-            o.max.y = maxy + o.material.radius_around_model
+                o.max.x = maxx + o.material.radius_around_model
+                o.max.y = maxy + o.material.radius_around_model
 
         if o.material.material_source == "DIMENSIONS":
             log.info("~ Not Material from Model ~")
@@ -235,6 +242,11 @@ def get_bounds(o):
             o.max.z = o.material.origin.z
 
     else:
+        # Check if image exists before accessing
+        if o.source_image_name not in bpy.data.images:
+            log.warning(f"Image '{o.source_image_name}' not found.")
+            return
+
         i = bpy.data.images[o.source_image_name]
         if o.source_image_crop:
             sx = int(i.size[0] * o.source_image_crop_start_x / 100)
@@ -267,10 +279,11 @@ def get_bounds(o):
     y_is_exceeded = y_delta_range > m.working_area.y
     z_is_exceeded = z_delta_range > m.working_area.z
 
+    new_warning_added = False
+
     if x_is_exceeded or y_is_exceeded or z_is_exceeded:
         exceed_msg = " \n!!! Bounds Error !!!\n"
 
-        # Do not append more than one such a warning
         if exceed_msg not in o.info.warnings:
             o.info.warnings += exceed_msg
             o.info.warnings += "Path Exceeds Machine Limits!\n"
@@ -285,9 +298,12 @@ def get_bounds(o):
             if z_is_exceeded:
                 o.info.warnings += f"Z: {unit_value_to_string(z_delta_range)} > {unit_value_to_string(m.working_area.z)}\n"
 
-    if not o.info.warnings == "":
+            new_warning_added = True
+
+    # ONLY show popup if a NEW warning was actually triggered right now
+    if new_warning_added:
         addon_prefs = bpy.context.preferences.addons[base_package].preferences
-        if addon_prefs.show_popups:
+        if addon_prefs.show_popups and bpy.context.window_manager is not None:
             bpy.ops.cam.popup("INVOKE_DEFAULT")
 
 
