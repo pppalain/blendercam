@@ -701,7 +701,6 @@ class Creator(nc.Creator):
             machine.spindle_slow_start_enable
             and s > machine.spindle_min + machine.spindle_slow_start_skip_threshold
         ):
-
             # Generate slow start sequence
             steps = machine.spindle_slow_start_steps
             total_time = machine.spindle_slow_start_total_time

@@ -874,7 +874,7 @@ class Halfedge(object):
         log.info(f"Right: {self.right}")
         log.info(f"Edge: {self.edge}")
         log.info(f"PM: {self.pm}")
-        log.info("Vertex: "),
+        (log.info("Vertex: "),)
         if self.vertex:
             self.vertex.dump()
         else:

@@ -40,7 +40,7 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
 
     use_exact: BoolProperty(
         name="Use Exact Mode",
-        description="Exact mode allows greater precision, but is slower " "with complex meshes",
+        description="Exact mode allows greater precision, but is slower with complex meshes",
         default=True,
         update=update_exact_mode,
     )
@@ -74,7 +74,7 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
 
     exact_subdivide_edges: BoolProperty(
         name="Auto Subdivide Long Edges",
-        description="This can avoid some collision issues when " "importing CAD models",
+        description="This can avoid some collision issues when importing CAD models",
         default=False,
         update=update_exact_mode,
     )

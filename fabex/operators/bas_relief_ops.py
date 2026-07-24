@@ -58,7 +58,7 @@ class DoBasRelief(Operator):
     )
     pass_per_radius: IntProperty(
         name="Passes per Radius",
-        description="Amount of passes per radius\n(more passes, " "more mesh precision)",
+        description="Amount of passes per radius\n(more passes, more mesh precision)",
         default=2,
         min=1,
         max=10,
@@ -309,7 +309,6 @@ class DoBasRelief(Operator):
         layout = self.layout
         layout.use_property_split = True
         layout.use_property_decorate = False
-
 
         box = layout.box()
         col = box.column(align=True)

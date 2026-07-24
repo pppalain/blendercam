@@ -27,11 +27,11 @@ apt, dnf, pacman, zypper etc. will provide copies of Blender that use your syste
 If your Python version is not ⚠️⚠️⚠️ EXACTLY {correct_python_version} ⚠️⚠️⚠️ then Fabex will not install / work correctly.
     """
 
-    string_4 = f"""{'OS:':>19} {os}
+    string_4 = f"""{"OS:":>19} {os}
 Architecture: {architecture}
-{'Blender:':>16} {bpy.app.version_string}
-{'Python:':>16} {python_version}
-{'Location:':>15} {python_executable}"""
+{"Blender:":>16} {bpy.app.version_string}
+{"Python:":>16} {python_version}
+{"Location:":>15} {python_executable}"""
 
     compatible = python_version == correct_python_version
 

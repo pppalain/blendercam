@@ -208,34 +208,51 @@ def shapely_to_curve(name, p, z, cyclic=True):
     return objectdata  # bpy.context.active_object
 
 
-# this does more cleve chunks to Poly with hierarchies... ;)
-def chunks_to_shapely(chunks):
-    # print ('analyzing paths')
-    remove_multiple("Invalid_geometry_Marker")  #remove old errors
+def shapely_validate(chunks):
+    remove_multiple("Invalid_Geometry_Marker")  # remove old errors
     for ch in chunks:  # first convert chunk to poly
         if len(ch.points) > 2:
             try:
                 ch.poly = Polygon(ch.points[:, 0:2])
             except Exception as exc:
-                raise CamException("Invalid curve geometry") from exc
+                raise CamException("Invalid Curve Geometry") from exc
 
             if not ch.poly.is_valid:
                 validity_error = explain_validity(ch.poly)
                 if validity_error != "Valid Geometry":
-                    numbers = re.findall(r'-?\d+\.?\d*', validity_error)
+                    numbers = re.findall(r"-?\d+\.?\d*", validity_error)
                     if len(numbers) >= 2:
                         x = float(numbers[0])
                         y = float(numbers[1])
                     bpy.ops.curve.primitive_bezier_circle_add(
                         radius=0.003,
-                        align='WORLD',
+                        align="WORLD",
                         location=(x, y, 0.0),
                     )
-                    bpy.context.active_object.name = "Invalid_geometry_Marker"
-                    raise CamException(f"Invalid curve geometry: {validity_error}")
-                raise CamException("Invalid curve geometry")
+                    obj = bpy.context.active_object
+                    obj.name = "Invalid_Geometry_Marker"
+                    obj.show_name = True
+                    # Get 3D View Context for overrides
+                    # So that 3D View Operators will still run
+                    # When called from Calculate Path button in Properties
+                    area = [a for a in bpy.context.screen.areas if a.type == "VIEW_3D"][0]
+                    region = [r for r in area.regions if r.type == "WINDOW"][0]
+                    with bpy.context.temp_override(area=area, region=region):
+                        bpy.ops.view3d.view_axis(type="TOP")
+                        bpy.ops.view3d.view_selected()
+                        for i in range(24):
+                            bpy.ops.view3d.zoom()
+                # raise CamException("Invalid curve geometry")
+                raise CamException(f"Invalid curve geometry: {validity_error}")
+                return validity_error
         else:
             ch.poly = Polygon()
+
+
+# this does more cleve chunks to Poly with hierarchies... ;)
+def chunks_to_shapely(chunks):
+
+    shapely_validate(chunks)
 
     for ppart in chunks:  # then add hierarchy relations
         for ptest in chunks:
@@ -343,9 +360,8 @@ def chunks_to_shapely(chunks):
                     ch.parents[0].points = np.array(newPoints)
                     ch.parents[0].poly = Polygon(ch.parents[0].points)
 
-                    ch.parents[0].poly = ch.parents[0].poly.difference(
-                        ch.poly
-                    )  # Polygon( ch.parents[0].poly, ch.poly)
+                    ch.parents[0].poly = ch.parents[0].poly.difference(ch.poly)
+                    # Polygon( ch.parents[0].poly, ch.poly)
 
     returnpolys = []
 

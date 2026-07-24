@@ -1,5 +1,4 @@
-"""Fabex 'dict_utils.py' © 2012 Vilem Novak
-"""
+"""Fabex 'dict_utils.py' © 2012 Vilem Novak"""
 
 from .logging_utils import log
 

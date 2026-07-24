@@ -72,7 +72,7 @@ class CamPackObjects(Operator):
     )
     distance: FloatProperty(
         name="Minimum Distance",
-        description="Minimum distance between objects(should be " "at least cutter diameter!)",
+        description="Minimum distance between objects(should be at least cutter diameter!)",
         min=0.001,
         max=10,
         default=0.01,

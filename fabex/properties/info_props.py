@@ -3,7 +3,6 @@
 'CAM Info Properties'
 """
 
-
 from bpy.props import (
     StringProperty,
     FloatProperty,

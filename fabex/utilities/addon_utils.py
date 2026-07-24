@@ -207,7 +207,6 @@ def on_blender_startup(context):
         render_engine = "FABEX_RENDER"
 
     if render_engine == "FABEX_RENDER":
-
         add_collections()
         log.debug("Collections Added to Scene")
         load_defaults(addon_prefs)
@@ -231,7 +230,6 @@ def on_engine_change(*args):
     addon_prefs = context.preferences.addons[base_package].preferences
 
     if render_engine == "FABEX_RENDER":
-
         add_collections()
         log.debug("Collections Added to Scene")
         load_defaults(addon_prefs)

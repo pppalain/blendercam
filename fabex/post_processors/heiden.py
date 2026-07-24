@@ -1527,11 +1527,31 @@ class Creator(nc.Creator):
         self.write("	   " + ub + "=[" + ub_numerator + " / " + ua_denominator + "]\n")
         self.write_blocknum()
         self.write(
-            "	   " + intersection_x + "=[" + x1 + " + [[" + ua + " * [" + x2 + " - " + x1 + "]]]]\n"
+            "	   "
+            + intersection_x
+            + "=["
+            + x1
+            + " + [["
+            + ua
+            + " * ["
+            + x2
+            + " - "
+            + x1
+            + "]]]]\n"
         )
         self.write_blocknum()
         self.write(
-            "	   " + intersection_y + "=[" + y1 + " + [[" + ua + " * [" + y2 + " - " + y1 + "]]]]\n"
+            "	   "
+            + intersection_y
+            + "=["
+            + y1
+            + " + [["
+            + ua
+            + " * ["
+            + y2
+            + " - "
+            + y1
+            + "]]]]\n"
         )
         self.write_blocknum()
         self.write("	   " + self.RAPID())

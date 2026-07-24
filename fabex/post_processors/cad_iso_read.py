@@ -10,7 +10,6 @@ draftsight,progecad,ares commander, etc....
 usage: python cad_iso_read.py temp.nc temp.scr
 """
 
-
 from . import cad_nc_read as nc
 import re
 import sys

@@ -187,14 +187,14 @@ class CamSineCurve(Operator):
             zstring = s_sine(amp, period, dc_offset=offset, phase_shift=shift)
             if self.beat_period != 0:
                 zstring += (
-                    f"+ {s_sine(amp, period+beatperiod, dc_offset=offset, phase_shift=shift)}"
+                    f"+ {s_sine(amp, period + beatperiod, dc_offset=offset, phase_shift=shift)}"
                 )
 
         # build triangle wave from fourier series
         elif self.wave == "triangle":
             zstring = f"{round(offset, 6)} + {triangle(80, period, amp)}"
             if self.beat_period != 0:
-                zstring += f"+ {triangle(80, period+beatperiod, amp)}"
+                zstring += f"+ {triangle(80, period + beatperiod, amp)}"
 
         elif self.wave == "cycloid":
             zstring = f"abs({s_sine(amp, period, dc_offset=offset, phase_shift=shift)})"
@@ -457,7 +457,7 @@ class CamHypotrochoidCurve(Operator):
         Rpr = round(R + r, 6)  # R +r
         Rpror = round(Rpr / r, 6)  # (R+r)/r
         Rmror = round(Rmr / r, 6)  # (R-r)/r
-        maxangle = 2 * pi * ((np.lcm(round(self.R * 1000), round(self.r * 1000)) / (R * 1000)))
+        maxangle = 2 * pi * (np.lcm(round(self.R * 1000), round(self.r * 1000)) / (R * 1000))
 
         if self.typecurve == "hypo":
             xstring = f"{Rmr} * cos(t) + {d} * cos({Rmror} * t)"

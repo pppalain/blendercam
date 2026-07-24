@@ -672,7 +672,7 @@ def tonemap(i, exponent):
     minheight = i.min()
     i[:] = np.clip(i, minheight, maxheight)
 
-    i[:] = ((i - minheight)) / (maxheight - minheight)
+    i[:] = (i - minheight) / (maxheight - minheight)
     i[:] **= exponent
 
 

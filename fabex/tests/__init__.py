@@ -7,7 +7,6 @@ import bpy
 test_path = str(Path(__file__).parent)
 
 if __name__ == "__main__":
-
     # Queue and run tests
     loader = unittest.TestLoader()
     suite = loader.discover(

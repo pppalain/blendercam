@@ -275,7 +275,6 @@ def update_names(self, context):
 
 
 class CAM_NAME_Properties(PropertyGroup):
-
     default_export_location: StringProperty(
         name="Export Folder",
         description="Folder where Fabex will save exported gcode files",
