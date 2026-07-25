@@ -186,7 +186,7 @@ def get_bounds(o):
 
     if o.geometry_source in ["OBJECT", "COLLECTION", "CURVE"]:
         log.info("Geometry Source: Valid")
-        
+
         # Check if objects exist before calculating bounds
         if not hasattr(o, "objects") or not o.objects:
             log.warning("No objects found for operation bounds calculation.")

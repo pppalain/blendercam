@@ -1210,16 +1210,14 @@ class Creator(nc.Creator):
 
         self.write_blocknum()
         self.write(
-            
-                self.PROBE_TOWARDS_WITH_SIGNAL()
-                + (
-                    " X "
-                    + (self.fmt.string(destination_point_x))
-                    + " Y "
-                    + (self.fmt.string(destination_point_y))
-                )
-                + ("\t(Probe towards our destination point)\n")
-            
+            self.PROBE_TOWARDS_WITH_SIGNAL()
+            + (
+                " X "
+                + (self.fmt.string(destination_point_x))
+                + " Y "
+                + (self.fmt.string(destination_point_y))
+            )
+            + ("\t(Probe towards our destination point)\n")
         )
 
         self.comment("Back off the workpiece and re-probe more slowly")
@@ -1261,48 +1259,38 @@ class Creator(nc.Creator):
 
         self.write_blocknum()
         self.write(
-            
-                self.SPACE()
-                + self.PROBE_TOWARDS_WITH_SIGNAL()
-                + (
-                    " X "
-                    + (self.fmt.string(destination_point_x))
-                    + " Y "
-                    + (self.fmt.string(destination_point_y))
-                )
-                + ("\t(Probe towards our destination point)\n")
-            
+            self.SPACE()
+            + self.PROBE_TOWARDS_WITH_SIGNAL()
+            + (
+                " X "
+                + (self.fmt.string(destination_point_x))
+                + " Y "
+                + (self.fmt.string(destination_point_y))
+            )
+            + ("\t(Probe towards our destination point)\n")
         )
 
         self.comment("Store the probed location somewhere we can get it again later")
         self.write_blocknum()
         self.write(
-            
-                "#"
-                + intersection_variable_x
-                + "="
-                + probe_offset_x_component
-                + " (Portion of probe radius that contributes to the X coordinate)\n"
-            
+            "#"
+            + intersection_variable_x
+            + "="
+            + probe_offset_x_component
+            + " (Portion of probe radius that contributes to the X coordinate)\n"
         )
         self.write_blocknum()
-        self.write(
-            "#" + intersection_variable_x + "=[#" + intersection_variable_x + " + #5061]\n"
-        )
+        self.write("#" + intersection_variable_x + "=[#" + intersection_variable_x + " + #5061]\n")
         self.write_blocknum()
         self.write(
-            
-                "#"
-                + intersection_variable_y
-                + "="
-                + probe_offset_y_component
-                + " (Portion of probe radius that contributes to the Y coordinate)\n"
-            
+            "#"
+            + intersection_variable_y
+            + "="
+            + probe_offset_y_component
+            + " (Portion of probe radius that contributes to the Y coordinate)\n"
         )
         self.write_blocknum()
-        self.write(
-            "#" + intersection_variable_y + "=[#" + intersection_variable_y + " + #5062]\n"
-        )
+        self.write("#" + intersection_variable_y + "=[#" + intersection_variable_y + " + #5062]\n")
 
         self.comment("Now move back to the original location")
         self.rapid(retracted_point_x, retracted_point_y)
@@ -1312,20 +1300,16 @@ class Creator(nc.Creator):
 
         self.write_blocknum()
         self.write(
-            
-                self.REMOVE_TEMPORARY_COORDINATE_SYSTEM()
-                + ("\t(Restore the previous coordinate system)\n")
-            
+            self.REMOVE_TEMPORARY_COORDINATE_SYSTEM()
+            + ("\t(Restore the previous coordinate system)\n")
         )
 
     def probe_downward_point(self, x=None, y=None, depth=None, intersection_variable_z=None):
         self.write_blocknum()
         self.write(
-            
-                self.SET_TEMPORARY_COORDINATE_SYSTEM()
-                + (" X 0 Y 0 Z 0")
-                + ("\t(Temporarily make this the origin)\n")
-            
+            self.SET_TEMPORARY_COORDINATE_SYSTEM()
+            + (" X 0 Y 0 Z 0")
+            + ("\t(Temporarily make this the origin)\n")
         )
         if self.fhv:
             self.calc_feedrate_hv(1, 0)
@@ -1340,12 +1324,10 @@ class Creator(nc.Creator):
 
         self.write_blocknum()
         self.write(
-            
-                self.PROBE_TOWARDS_WITH_SIGNAL()
-                + " Z "
-                + (self.fmt.string(depth))
-                + ("\t(Probe towards our destination point)\n")
-            
+            self.PROBE_TOWARDS_WITH_SIGNAL()
+            + " Z "
+            + (self.fmt.string(depth))
+            + ("\t(Probe towards our destination point)\n")
         )
 
         self.comment("Store the probed location somewhere we can get it again later")
@@ -1358,10 +1340,8 @@ class Creator(nc.Creator):
 
         self.write_blocknum()
         self.write(
-            
-                self.REMOVE_TEMPORARY_COORDINATE_SYSTEM()
-                + ("\t(Restore the previous coordinate system)\n")
-            
+            self.REMOVE_TEMPORARY_COORDINATE_SYSTEM()
+            + ("\t(Restore the previous coordinate system)\n")
         )
 
     def report_probe_results(

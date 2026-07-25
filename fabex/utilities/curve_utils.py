@@ -1,4 +1,3 @@
-
 import bpy
 
 from ..chunk_builder import (

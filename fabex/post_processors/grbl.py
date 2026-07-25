@@ -31,21 +31,17 @@ class Creator(iso_modal.Creator):
     def program_begin(self, id, comment):
         if not self.useCrc:
             self.write(
-                
-                    "(Created with grbl post processor "
-                    + str(now.strftime("%Y/%m/%d %H:%M"))
-                    + ")"
-                    + "\n"
-                
+                "(Created with grbl post processor "
+                + str(now.strftime("%Y/%m/%d %H:%M"))
+                + ")"
+                + "\n"
             )
         else:
             self.write(
-                
-                    "(Created with grbl Cutter Radius Compensation post processor "
-                    + str(now.strftime("%Y/%m/%d %H:%M"))
-                    + ")"
-                    + "\n"
-                
+                "(Created with grbl Cutter Radius Compensation post processor "
+                + str(now.strftime("%Y/%m/%d %H:%M"))
+                + ")"
+                + "\n"
             )
 
     ############################################################################

@@ -32,21 +32,17 @@ class Creator(iso_modal.Creator):
     def program_begin(self, id, comment):
         if not self.useCrc:
             self.write(
-                
-                    "(Created with win-pc post processor "
-                    + str(now.strftime("%Y/%m/%d %H:%M"))
-                    + ")"
-                    + "\n"
-                
+                "(Created with win-pc post processor "
+                + str(now.strftime("%Y/%m/%d %H:%M"))
+                + ")"
+                + "\n"
             )
         else:
             self.write(
-                
-                    "(Created with win-pc Cutter Radius Compensation post processor "
-                    + str(now.strftime("%Y/%m/%d %H:%M"))
-                    + ")"
-                    + "\n"
-                
+                "(Created with win-pc Cutter Radius Compensation post processor "
+                + str(now.strftime("%Y/%m/%d %H:%M"))
+                + ")"
+                + "\n"
             )
         # self.rapid( x=0.0, y=0.0, z=30.0 )
 

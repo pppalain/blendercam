@@ -121,7 +121,14 @@ class Parser(nc.Parser):
                 elif word == "G21" or word == "G71":
                     col = "prep"
                     self.set_mode(units=1.0)
-                elif word == "G81" or word == "g81" or word == "G82" or word == "g82" or word == "G83" or word == "g83":
+                elif (
+                    word == "G81"
+                    or word == "g81"
+                    or word == "G82"
+                    or word == "g82"
+                    or word == "G83"
+                    or word == "g83"
+                ):
                     drill = True
                     no_move = True
                     path_col = "feed"

@@ -80,13 +80,19 @@ class Parser(nc.Parser):
             self.path_col = "feed"
             self.col = "feed"
             self.arc = +1
-        elif word == "G10" or word == "g10" or word == "L1" or word == "l1" or (
-            word == "G61.1"
-            or word == "g61.1"
-            or word == "G61"
-            or word == "g61"
-            or word == "G64"
-            or word == "g64"
+        elif (
+            word == "G10"
+            or word == "g10"
+            or word == "L1"
+            or word == "l1"
+            or (
+                word == "G61.1"
+                or word == "g61.1"
+                or word == "G61"
+                or word == "g61"
+                or word == "G64"
+                or word == "g64"
+            )
         ):
             self.no_move = True
         elif word == "G20" or word == "G70":
@@ -100,7 +106,14 @@ class Parser(nc.Parser):
             self.move = True
             self.path_col = "rapid"
             self.col = "rapid"
-        elif word == "G81" or word == "g81" or word == "G82" or word == "g82" or word == "G83" or word == "g83":
+        elif (
+            word == "G81"
+            or word == "g81"
+            or word == "G82"
+            or word == "g82"
+            or word == "G83"
+            or word == "g83"
+        ):
             self.drill = True
             self.no_move = True
             self.path_col = "feed"
