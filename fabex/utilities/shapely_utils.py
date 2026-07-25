@@ -240,10 +240,12 @@ def shapely_validate(chunks):
                     with bpy.context.temp_override(area=area, region=region):
                         bpy.ops.view3d.view_axis(type="TOP")
                         bpy.ops.view3d.view_selected()
-                        for i in range(24):
-                            bpy.ops.view3d.zoom()
-                raise CamException(f"Invalid curve geometry: {validity_error}")
-                return validity_error
+                        space = area.spaces.active
+                        if space and space.type == 'VIEW_3D':
+                            rv3d = space.region_3d
+                            rv3d.view_distance *= 0.01
+
+                    raise CamException(f"Invalid curve geometry: {validity_error}")
         else:
             ch.poly = Polygon()
 
