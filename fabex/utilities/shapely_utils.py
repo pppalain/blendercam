@@ -208,45 +208,6 @@ def shapely_to_curve(name, p, z, cyclic=True):
     return objectdata  # bpy.context.active_object
 
 
-def validate_polygon(poly, obj=None, marker_name="Invalid_geometry_Marker"):
-    """Validate a Shapely polygon and mark the first invalid location.
-
-    Args:
-        poly: Shapely Polygon.
-        obj: Blender object whose local coordinates should be converted
-             to world coordinates. Pass None if polygon coordinates are
-             already in world space.
-        marker_name: Name given to the marker object.
-
-    Returns:
-        None if valid, otherwise the validity error string.
-    """
-    if poly.is_valid:
-        return None
-
-    error_msg = explain_validity(poly)
-
-    numbers = re.findall(r"-?\d+\.?\d*", error_msg)
-    if len(numbers) >= 2:
-        x, y = map(float, numbers[:2])
-
-        if obj is not None:
-            location = obj.matrix_world @ Vector((x, y, 0.0))
-        else:
-            location = (x, y, 0.0)
-
-        bpy.ops.curve.primitive_bezier_circle_add(
-            radius=0.003,
-            align="WORLD",
-            location=location,
-        )
-
-        marker = bpy.context.active_object
-        marker.name = marker_name
-
-    return error_msg
-
-
 def shapely_validate(chunks):
     remove_multiple("Invalid_Geometry_Marker")  # remove old errors
     for ch in chunks:  # first convert chunk to poly
