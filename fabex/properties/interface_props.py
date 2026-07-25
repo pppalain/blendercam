@@ -8,7 +8,6 @@ from bpy.props import EnumProperty
 from bpy.types import PropertyGroup
 
 from .. import __package__ as base_package
-
 from ..ui.panels.area_panel import CAM_AREA_Panel
 from ..ui.panels.chains_panel import CAM_CHAINS_Panel
 from ..ui.panels.curve_create_panel import VIEW3D_PT_tools_create

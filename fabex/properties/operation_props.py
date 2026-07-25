@@ -6,8 +6,6 @@ All properties of a single CAM Operation.
 from math import pi
 
 import numpy as np
-from shapely.geometry import Polygon
-
 from bpy.props import (
     BoolProperty,
     EnumProperty,
@@ -18,23 +16,25 @@ from bpy.props import (
     StringProperty,
 )
 from bpy.types import Curve, PropertyGroup
+from shapely.geometry import Polygon
+
 from ..constants import PRECISION
-from ..utilities.strategy_utils import (
-    get_strategy_list,
-    update_strategy,
-    update_cutout,
-)
 from ..utilities.operation_utils import (
     operation_valid,
-    update_operation,
     update_bridges,
     update_chipload,
+    update_image_size_y,
     update_offset_image,
+    update_operation,
     update_operation_valid,
     update_rest,
     update_rotation,
     update_Z_buffer_image,
-    update_image_size_y,
+)
+from ..utilities.strategy_utils import (
+    get_strategy_list,
+    update_cutout,
+    update_strategy,
 )
 from .info_props import CAM_INFO_Properties
 from .material_props import CAM_MATERIAL_Properties

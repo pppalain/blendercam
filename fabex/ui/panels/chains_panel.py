@@ -4,7 +4,7 @@
 """
 
 import bpy
-from bpy.types import UIList, Panel
+from bpy.types import Panel, UIList
 
 from .parent_panel import CAMParentPanel
 

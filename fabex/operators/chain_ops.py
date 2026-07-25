@@ -223,6 +223,5 @@ class CamChainOperationRemove(Operator):
         chain = s.cam_chains[s.cam_active_chain]
         chain.operations.remove(chain.active_operation)
         chain.active_operation -= 1
-        if chain.active_operation < 0:
-            chain.active_operation = 0
+        chain.active_operation = max(chain.active_operation, 0)
         return {"FINISHED"}

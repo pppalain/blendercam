@@ -6,29 +6,26 @@ from math import (
 )
 
 import bpy
-
 from shapely.geometry import Point
 
 from ..constants import DT
-
-from .finger import fingers
-from .mortise import mortise
-
 from ..utilities.compare_utils import angle
 from ..utilities.logging_utils import log
 from ..utilities.simple_utils import (
-    duplicate,
-    mirror_y,
-    union,
-    difference,
     active_name,
-    move,
-    rotate,
-    make_active,
-    join_multiple,
-    remove_doubles,
     add_rectangle,
+    difference,
+    duplicate,
+    join_multiple,
+    make_active,
+    mirror_y,
+    move,
+    remove_doubles,
+    rotate,
+    union,
 )
+from .finger import fingers
+from .mortise import mortise
 
 
 def interlock_groove(length, thickness, finger_play, cx=0, cy=0, rotation=0):

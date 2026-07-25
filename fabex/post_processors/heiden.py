@@ -15,8 +15,9 @@
 # 53 END PGM 0011 MM
 
 
-from . import nc
 import math
+
+from . import nc
 from .format import Address, AddressPlusMinus, Format
 
 ################################################################################
@@ -455,7 +456,7 @@ class Creator(nc.Creator):
             self.g_list.append(self.WORKPLANE() % (id + self.WORKPLANE_BASE()))
         if (id >= 7) and (id <= 9):
             self.g_list.append(
-                ((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (".%i" % (id - 6)))
+                (self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (".%i" % (id - 6))
             )
 
     ############################################################################
@@ -682,7 +683,7 @@ class Creator(nc.Creator):
             angle = angle_start
             z_step = float(z - self.z) / segments
             next_z = self.z
-            for p in range(0, segments):
+            for p in range(segments):
                 angle = angle + angle_step
                 next_x = i + radius * math.cos(angle)
                 next_y = j + radius * math.sin(angle)
@@ -934,8 +935,7 @@ class Creator(nc.Creator):
 
             while True:
                 next_z = current_z - peck_depth
-                if next_z < z - depth:
-                    next_z = z - depth
+                next_z = max(next_z, z - depth)
                 if next_z >= current_z:
                     break
                 if first:
@@ -1144,7 +1144,7 @@ class Creator(nc.Creator):
     # Misc
 
     def comment(self, text):
-        self.write((self.COMMENT(text) + "\n"))
+        self.write(self.COMMENT(text) + "\n")
 
     def insert(self, text):
         pass
@@ -1210,7 +1210,7 @@ class Creator(nc.Creator):
 
         self.write_blocknum()
         self.write(
-            (
+            
                 self.PROBE_TOWARDS_WITH_SIGNAL()
                 + (
                     " X "
@@ -1219,7 +1219,7 @@ class Creator(nc.Creator):
                     + (self.fmt.string(destination_point_y))
                 )
                 + ("\t(Probe towards our destination point)\n")
-            )
+            
         )
 
         self.comment("Back off the workpiece and re-probe more slowly")
@@ -1261,7 +1261,7 @@ class Creator(nc.Creator):
 
         self.write_blocknum()
         self.write(
-            (
+            
                 self.SPACE()
                 + self.PROBE_TOWARDS_WITH_SIGNAL()
                 + (
@@ -1271,37 +1271,37 @@ class Creator(nc.Creator):
                     + (self.fmt.string(destination_point_y))
                 )
                 + ("\t(Probe towards our destination point)\n")
-            )
+            
         )
 
         self.comment("Store the probed location somewhere we can get it again later")
         self.write_blocknum()
         self.write(
-            (
+            
                 "#"
                 + intersection_variable_x
                 + "="
                 + probe_offset_x_component
                 + " (Portion of probe radius that contributes to the X coordinate)\n"
-            )
+            
         )
         self.write_blocknum()
         self.write(
-            ("#" + intersection_variable_x + "=[#" + intersection_variable_x + " + #5061]\n")
+            "#" + intersection_variable_x + "=[#" + intersection_variable_x + " + #5061]\n"
         )
         self.write_blocknum()
         self.write(
-            (
+            
                 "#"
                 + intersection_variable_y
                 + "="
                 + probe_offset_y_component
                 + " (Portion of probe radius that contributes to the Y coordinate)\n"
-            )
+            
         )
         self.write_blocknum()
         self.write(
-            ("#" + intersection_variable_y + "=[#" + intersection_variable_y + " + #5062]\n")
+            "#" + intersection_variable_y + "=[#" + intersection_variable_y + " + #5062]\n"
         )
 
         self.comment("Now move back to the original location")
@@ -1312,20 +1312,20 @@ class Creator(nc.Creator):
 
         self.write_blocknum()
         self.write(
-            (
+            
                 self.REMOVE_TEMPORARY_COORDINATE_SYSTEM()
                 + ("\t(Restore the previous coordinate system)\n")
-            )
+            
         )
 
     def probe_downward_point(self, x=None, y=None, depth=None, intersection_variable_z=None):
         self.write_blocknum()
         self.write(
-            (
+            
                 self.SET_TEMPORARY_COORDINATE_SYSTEM()
                 + (" X 0 Y 0 Z 0")
                 + ("\t(Temporarily make this the origin)\n")
-            )
+            
         )
         if self.fhv:
             self.calc_feedrate_hv(1, 0)
@@ -1340,17 +1340,17 @@ class Creator(nc.Creator):
 
         self.write_blocknum()
         self.write(
-            (
+            
                 self.PROBE_TOWARDS_WITH_SIGNAL()
                 + " Z "
                 + (self.fmt.string(depth))
                 + ("\t(Probe towards our destination point)\n")
-            )
+            
         )
 
         self.comment("Store the probed location somewhere we can get it again later")
         self.write_blocknum()
-        self.write(("#" + intersection_variable_z + "= #5063\n"))
+        self.write("#" + intersection_variable_z + "= #5063\n")
 
         self.comment("Now move back to the original location")
         self.rapid(z=0)
@@ -1358,10 +1358,10 @@ class Creator(nc.Creator):
 
         self.write_blocknum()
         self.write(
-            (
+            
                 self.REMOVE_TEMPORARY_COORDINATE_SYSTEM()
                 + ("\t(Restore the previous coordinate system)\n")
-            )
+            
         )
 
     def report_probe_results(
@@ -1408,13 +1408,13 @@ class Creator(nc.Creator):
         self.write_blocknum()
         self.write(self.RAPID())
         if (x1 is not None) and (x2 is not None):
-            self.write((" X " + "[[[" + x1 + " - " + x2 + "] / 2.0] + " + x2 + "]"))
+            self.write(" X " + "[[[" + x1 + " - " + x2 + "] / 2.0] + " + x2 + "]")
 
         if (y1 is not None) and (y2 is not None):
-            self.write((" Y " + "[[[" + y1 + " - " + y2 + "] / 2.0] + " + y2 + "]"))
+            self.write(" Y " + "[[[" + y1 + " - " + y2 + "] / 2.0] + " + y2 + "]")
 
         if (z1 is not None) and (z2 is not None):
-            self.write((" Z " + "[[[" + z1 + " - " + z2 + "] / 2.0] + " + z2 + "]"))
+            self.write(" Z " + "[[[" + z1 + " - " + z2 + "] / 2.0] + " + z2 + "]")
 
         self.write("\n")
 

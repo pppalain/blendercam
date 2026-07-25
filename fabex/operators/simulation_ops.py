@@ -8,17 +8,15 @@ import bpy
 from bpy.props import StringProperty
 from bpy.types import Operator
 
-from .async_op import (
-    AsyncCancelledException,
-    AsyncOperatorMixin,
-)
-
 from ..simulation import do_simulation
-
 from ..utilities.logging_utils import log
 from ..utilities.operation_utils import (
     chain_valid,
     get_chain_operations,
+)
+from .async_op import (
+    AsyncCancelledException,
+    AsyncOperatorMixin,
 )
 
 

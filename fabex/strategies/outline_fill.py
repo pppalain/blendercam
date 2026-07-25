@@ -1,5 +1,4 @@
 from ..bridges import use_bridges
-
 from ..utilities.chunk_utils import (
     chunks_refine,
     chunks_to_mesh,
@@ -7,7 +6,7 @@ from ..utilities.chunk_utils import (
     sample_chunks,
     sort_chunks,
 )
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
     get_layers,
     get_move_and_spin,
@@ -73,7 +72,7 @@ async def outline_fill(o):
             d = o.distance_between_paths
             steps = o.ambient_radius / o.distance_between_paths
 
-            for a in range(0, int(steps)):
+            for a in range(int(steps)):
                 dist = d
 
                 if a == int(o.cutter_diameter / 2 / o.distance_between_paths):

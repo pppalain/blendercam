@@ -1,5 +1,4 @@
-from . import nc
-from . import iso
+from . import iso, nc
 
 
 class Creator(iso.Creator):
@@ -25,7 +24,7 @@ class Creator(iso.Creator):
         return ("G89") + self.SPACE() + (format.string(dwell))
 
     def program_begin(self, id, comment):
-        self.write(("(" + comment + ")" + "\n"))
+        self.write("(" + comment + ")" + "\n")
 
     ############################################################################
     # Settings

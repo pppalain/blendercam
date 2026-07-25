@@ -3,26 +3,25 @@
 Various helper functions, less complex than those found in the 'utils' files.
 """
 
+import os
+import string
+
+# import sys
+import time
 from math import (
     cos,
     hypot,
     pi,
     sin,
 )
-import os
-import string
-import numpy
-
-# import sys
-import time
-
-from shapely.geometry import Polygon
 
 import bpy
+import numpy
 from mathutils import Vector
+from shapely.geometry import Polygon
 
-from .logging_utils import log
 from ..constants import BULLET_SCALE
+from .logging_utils import log
 
 
 def tuple_add(t, t1):  # add two tuples as Vectors
@@ -895,7 +894,7 @@ def make_visible(o):
     bpy.context.scene.collection.children.link(cam_collection)
     cam_collection.objects.link(bpy.context.object)
 
-    for i in range(0, 20):
+    for i in range(20):
         storage[1].append(o.layers[i])
 
         o.layers[i] = bpy.context.scene.layers[i]
@@ -906,7 +905,7 @@ def make_visible(o):
 def restore_visibility(o, storage):
     o.hide_viewport = storage[0]
     # print(storage)
-    for i in range(0, 20):
+    for i in range(20):
         o.layers[i] = storage[1][i]
 
 

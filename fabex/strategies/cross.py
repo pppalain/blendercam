@@ -1,13 +1,12 @@
 from math import pi
 
 from ..bridges import use_bridges
-
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     sample_chunks,
     sort_chunks,
 )
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import get_layers
 from ..utilities.strategy_utils import parallel_pattern
 

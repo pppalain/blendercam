@@ -1,9 +1,8 @@
+import bpy
 from shapely.geometry import (
     MultiPoint,
     MultiPolygon,
 )
-
-import bpy
 
 from .curve_utils import curve_to_shapely
 from .shapely_utils import shapely_to_curve

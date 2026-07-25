@@ -1,27 +1,24 @@
 from math import pi
 
+import bpy
 from shapely.geometry import Point
 
-import bpy
-
-from .mortise import mortise
-
 from ..constants import DT  # DT = Bit diameter tolerance
-
 from ..utilities.compare_utils import angle
 from ..utilities.logging_utils import log
 from ..utilities.simple_utils import (
     active_name,
-    mirror_x,
-    union,
-    move,
-    join_multiple,
+    difference,
     duplicate,
+    join_multiple,
     make_active,
+    mirror_x,
+    move,
     remove_multiple,
     rename,
-    difference,
+    union,
 )
+from .mortise import mortise
 
 
 def finger(diameter, stem=2):

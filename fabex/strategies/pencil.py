@@ -1,5 +1,4 @@
 from ..bridges import use_bridges
-
 from ..utilities.chunk_utils import (
     chunks_coherency,
     chunks_to_mesh,
@@ -8,13 +7,13 @@ from ..utilities.chunk_utils import (
     sort_chunks,
 )
 from ..utilities.image_utils import (
-    prepare_area,
     get_offset_image_cavities,
+    prepare_area,
 )
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
-    get_layers,
     get_ambient,
+    get_layers,
 )
 
 

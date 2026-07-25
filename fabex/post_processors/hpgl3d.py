@@ -4,14 +4,13 @@
 # This program is released under the BSD license. See the file COPYING for details.
 #
 
-from . import nc
-from . import hpgl2d
+from . import hpgl2d, nc
 
 
 class Creator(hpgl2d.Creator):
     def __init__(self):
         hpgl2d.Creator.__init__(self)
-        self.z = int(0)
+        self.z = 0
         self.metric()  # set self.units_to_mc_units
         self.doing_rapid = True
 

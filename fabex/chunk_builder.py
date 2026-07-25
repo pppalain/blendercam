@@ -12,9 +12,8 @@ from math import (
 )
 
 import numpy as np
-from shapely.geometry import Polygon
-
 from mathutils import Vector
+from shapely.geometry import Polygon
 
 from .utilities.internal_utils import _internal_x_y_distance_to
 from .utilities.logging_utils import log
@@ -65,7 +64,7 @@ class CamPathChunk:
         self.length = 0  # this is total length of this chunk.
         self.zstart = 0  # this is stored for ramps mainly,
         # because they are added afterwards, but have to use layer info
-        self.zend = 0  #
+        self.zend = 0
 
     def update_poly(self):
         self.poly = Polygon(self.points[:, 0:2]) if len(self.points) > 2 else Polygon()
@@ -110,7 +109,7 @@ class CamPathChunk:
 
     def set_z(self, z, if_bigger=False):
         if if_bigger:
-            self.points[:, 2] = z if z > self.points[:, 2] else self.points[:, 2]
+            self.points[:, 2] = max(self.points[:, 2], z)
         else:
             self.points[:, 2] = z
 
@@ -534,7 +533,7 @@ class CamPathChunk:
                 log.info(f"Turns: {turns}")
 
                 for r in range(turns):
-                    for p in range(0, len(ramppoints)):
+                    for p in range(len(ramppoints)):
                         p1 = chunk_points[-1]
                         p2 = ramppoints[p]
                         d = distance_2d(p1, p2)
@@ -615,7 +614,7 @@ class CamPathChunk:
                         log.info(f"Turns: {turns}")
 
                         for r in range(turns):
-                            for p in range(0, len(ramppoints)):
+                            for p in range(len(ramppoints)):
                                 p1 = chunk_points[-1]
                                 p2 = ramppoints[p]
                                 d = distance_2d(p1, p2)
@@ -667,9 +666,8 @@ class CamPathChunk:
     def lead_contour(self, o):
         # 1 is Clockwise, 0 is CCW
         perimeterDirection = 1
-        if o.movement.spindle_rotation == "CW":
-            if o.movement.type == "CONVENTIONAL":
-                perimeterDirection = 0
+        if o.movement.spindle_rotation == "CW" and o.movement.type == "CONVENTIONAL":
+            perimeterDirection = 0
 
         if self.parents:  # if it is inside another parent
             perimeterDirection ^= 1  # toggle with a bitwise XOR

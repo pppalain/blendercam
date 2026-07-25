@@ -4,25 +4,23 @@ from math import (
     tan,
 )
 
+import bpy
+from mathutils import Euler, Vector
 from shapely import affinity
 from shapely.geometry import Polygon
 
-import bpy
-from mathutils import Euler, Vector
-
 from ..operators.curve_create_ops import generate_crosshatch
-
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     limit_chunks,
-    sort_chunks,
     set_chunks_z,
+    sort_chunks,
 )
 from ..utilities.geom_utils import (
     circle,
     helix,
 )
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
     check_min_z,
     get_layers,
@@ -30,8 +28,8 @@ from ..utilities.operation_utils import (
 )
 from ..utilities.parent_utils import parent_child_distance
 from ..utilities.shapely_utils import (
-    shapely_to_curve,
     shapely_to_chunks,
+    shapely_to_curve,
 )
 from ..utilities.silhouette_utils import get_object_outline
 from ..utilities.simple_utils import (
@@ -74,8 +72,7 @@ async def pocket(o):
     elif o.cutter_type == "BALLCONE":
         cutter_offset = -max_depth * tan(cutter_angle) + o.ball_radius
 
-    if cutter_offset > o.cutter_diameter / 2:
-        cutter_offset = o.cutter_diameter / 2
+    cutter_offset = min(cutter_offset, o.cutter_diameter / 2)
 
     cutter_offset += o.skin  # add skin
     log.info(f"Cutter Offset: {cutter_offset}")

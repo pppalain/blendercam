@@ -2,9 +2,8 @@
 
 from math import atan2
 
-from mathutils import Vector
-
 import numpy as np
+from mathutils import Vector
 
 
 def compare_z_level(x):

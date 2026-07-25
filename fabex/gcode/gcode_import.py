@@ -9,13 +9,10 @@ No license terms found in YAGV repo, will assume GNU release
 import math
 import time
 
+import bpy
 import numpy as np
 
-import bpy
-
-
 from ..utilities.logging_utils import log
-
 
 np.set_printoptions(suppress=True)  # suppress scientific notation in subdivide functions linspace
 
@@ -302,7 +299,6 @@ class GcodeParser:
                     self.parse_line()  # parse this line again with the corrections
 
                 else:
-                    pass
                     log.info(f"Unsupported gcode: {code}")
 
     def parse_args(self, args):

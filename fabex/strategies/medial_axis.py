@@ -1,10 +1,11 @@
+import sys
 from math import (
     pi,
     sqrt,
     tan,
 )
-import sys
 
+import bpy
 from shapely.geometry import (
     LineString,
     MultiPolygon,
@@ -13,21 +14,18 @@ from shapely.geometry import (
 from shapely.ops import linemerge
 from shapely.prepared import prep
 
-import bpy
-
 from ..exception import CamException
-
 from ..utilities.chunk_utils import (
-    chunks_to_mesh,
     chunks_refine_threshold,
+    chunks_to_mesh,
     sort_chunks,
 )
 from ..utilities.compare_utils import check_equal, unique
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import get_layers
 from ..utilities.shapely_utils import (
-    shapely_to_curve,
     shapely_to_chunks,
+    shapely_to_curve,
 )
 from ..utilities.silhouette_utils import get_operation_silhouette
 from ..utilities.simple_utils import (
@@ -107,8 +105,7 @@ async def medial_axis(o):
     for ob in o.objects:
         if ob.type in ["CURVE", "FONT"]:
             resolutions_before.append(ob.data.resolution_u)
-            if ob.data.resolution_u < 64:
-                ob.data.resolution_u = 64
+            ob.data.resolution_u = max(ob.data.resolution_u, 64)
 
     silhouette_polygon = get_operation_silhouette(o)
     silhouette_is_list = isinstance(silhouette_polygon, list)
@@ -215,7 +212,7 @@ async def medial_axis(o):
                     # NOTE: this now uses the cached `multipolygon_boundary` computed
                     # once above
                     z = o.max_z - multipolygon_boundary.distance(point_geom) * slope
-                    z = max_depth if z < max_depth else z
+                    z = max(z, max_depth)
 
                 elif is_ballnose:
                     d = multipolygon_boundary.distance(point_geom)
@@ -225,7 +222,7 @@ async def medial_axis(o):
                     else:
                         z = -cutter_radius + sqrt(cutter_radius * cutter_radius - d * d)
                 else:
-                    z = 0  #
+                    z = 0
 
                 filtered_points.append((point[0], point[1], z))
                 newIdx += 1

@@ -4,35 +4,33 @@ Blender Operator definitions are in this file.
 They mostly call the functions from 'utils.py'
 """
 
-from math import pi
 import random
 import time
-
-import shapely
-from shapely.geometry import (
-    Point,
-    Polygon,
-    MultiPolygon,
-)
-from shapely import (
-    affinity,
-    prepared,
-    speedups,
-)
+from math import pi
 
 import bpy
+import shapely
 from bpy.props import (
     BoolProperty,
     EnumProperty,
     FloatProperty,
 )
 from bpy.types import Operator
+from shapely import (
+    affinity,
+    prepared,
+    speedups,
+)
+from shapely.geometry import (
+    MultiPolygon,
+    Point,
+    Polygon,
+)
 
 from ..constants import PRECISION
-
 from ..utilities.curve_utils import curve_to_chunks
 from ..utilities.logging_utils import log
-from ..utilities.shapely_utils import shapely_to_curve, chunks_to_shapely
+from ..utilities.shapely_utils import chunks_to_shapely, shapely_to_curve
 from ..utilities.simple_utils import activate
 
 
@@ -212,20 +210,19 @@ class CamPackObjects(Operator):
                         (direction == "Y" and xmax < sheetsizex)
                         or (direction == "X" and ymax < sheetsizey)
                     )
-                ):
-                    if not allpoly.intersects(ptrans):
-                        # we do more good solutions, choose best out of them:
-                        hits += 1
-                        if best is None:
+                ) and not allpoly.intersects(ptrans):
+                    # we do more good solutions, choose best out of them:
+                    hits += 1
+                    if best is None:
+                        best = [x, y, rot, xmax, ymax]
+                        besthit = hits
+                    if direction == "X":
+                        if xmax < best[3]:
                             best = [x, y, rot, xmax, ymax]
                             besthit = hits
-                        if direction == "X":
-                            if xmax < best[3]:
-                                best = [x, y, rot, xmax, ymax]
-                                besthit = hits
-                        elif ymax < best[4]:
-                            best = [x, y, rot, xmax, ymax]
-                            besthit = hits
+                    elif ymax < best[4]:
+                        best = [x, y, rot, xmax, ymax]
+                        besthit = hits
 
                 if hits >= 15 or (
                     itera > 20000 and hits > 0

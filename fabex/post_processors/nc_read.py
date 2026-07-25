@@ -4,8 +4,9 @@
 # Base class for NC code parsing
 
 ################################################################################
-import area
 import math
+
+import area
 
 count = 0
 

@@ -1,16 +1,15 @@
 """Fabex 'addon_utils.py' © 2012 Vilem Novak"""
 
-from pathlib import Path
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 
 import bpy
 
-from .logging_utils import log
-
-from ..exception import CamException
 from .. import __package__ as base_package
+from ..exception import CamException
+from .logging_utils import log
 
 
 def addon_dependencies():

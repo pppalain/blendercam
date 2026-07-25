@@ -6,12 +6,11 @@ from math import (
 from mathutils import Euler, Vector
 
 from ..chunk_builder import CamPathChunkBuilder
-
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     sample_chunks_n_axis,
 )
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
     get_layers,
     get_move_and_spin,
@@ -80,7 +79,7 @@ async def parallel_four_axis(o):
     cutterend = Vector((0, 0, 0))  # end point for casting
 
     if o.strategy_4_axis == "PARALLELR":
-        for a in range(0, floor(steps) + 1):
+        for a in range(floor(steps) + 1):
             chunk = CamPathChunkBuilder([])
 
             cutterstart[a1] = o.min[a1] + a * o.distance_between_paths
@@ -92,7 +91,7 @@ async def parallel_four_axis(o):
             cutterstart[a3] = radius
             cutterend[a3] = radiusend
 
-            for b in range(0, floor(circlesteps) + 1):
+            for b in range(floor(circlesteps) + 1):
                 chunk.startpoints.append(cutterstart.to_tuple())
                 chunk.endpoints.append(cutterend.to_tuple())
                 rot = [0, 0, 0]
@@ -119,7 +118,7 @@ async def parallel_four_axis(o):
         reverse = False
         meander_reverse = reverse and o.movement.type == "MEANDER"
 
-        for b in range(0, floor(circlesteps) + 1):
+        for b in range(floor(circlesteps) + 1):
             chunk = CamPathChunkBuilder([])
             cutterstart[a2] = 0
             cutterstart[a3] = radius
@@ -132,7 +131,7 @@ async def parallel_four_axis(o):
             cutterstart.rotate(e)
             cutterend.rotate(e)
 
-            for a in range(0, floor(steps) + 1):
+            for a in range(floor(steps) + 1):
                 cutterstart[a1] = o.min[a1] + a * o.distance_along_paths
                 cutterend[a1] = cutterstart[a1]
                 chunk.startpoints.append(cutterstart.to_tuple())

@@ -13,11 +13,10 @@ from bpy.types import (
 )
 
 from ..constants import was_hidden_dict
-
-from ..utilities.machine_utils import add_machine_area_object
-from ..utilities.logging_utils import log
-from ..utilities.bounds_utils import get_bounds_worldspace
 from ..utilities.addon_utils import fix_units
+from ..utilities.bounds_utils import get_bounds_worldspace
+from ..utilities.logging_utils import log
+from ..utilities.machine_utils import add_machine_area_object
 
 
 def copy_property_group_data(source, target):

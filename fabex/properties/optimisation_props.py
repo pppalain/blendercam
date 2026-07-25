@@ -10,15 +10,15 @@ from bpy.props import (
 )
 from bpy.types import PropertyGroup
 
-from ..utilities.strategy_utils import (
-    update_exact_mode,
-    update_opencamlib,
-)
+from ..constants import PRECISION
 from ..utilities.operation_utils import (
     update_operation,
     update_zbuffer_image,
 )
-from ..constants import PRECISION
+from ..utilities.strategy_utils import (
+    update_exact_mode,
+    update_opencamlib,
+)
 
 
 class CAM_OPTIMISATION_Properties(PropertyGroup):

@@ -11,7 +11,6 @@ from math import (
 )
 
 import numpy as np
-
 from bpy.props import (
     EnumProperty,
     FloatProperty,
@@ -21,8 +20,8 @@ from bpy.props import (
 from bpy.types import Operator
 
 from ..utilities.geom_utils import (
-    triangle,
     s_sine,
+    triangle,
 )
 from ..utilities.logging_utils import log
 from ..utilities.parametric_utils import create_parametric_curve

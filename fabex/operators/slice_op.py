@@ -12,13 +12,12 @@ from bpy.props import (
 from bpy.types import Operator
 
 from ..constants import PRECISION
+from ..utilities.bounds_utils import get_bounds_worldspace
+from ..utilities.logging_utils import log
 from ..utilities.slice_utils import (
     slicing_2d,
     slicing_3d,
 )
-
-from ..utilities.bounds_utils import get_bounds_worldspace
-from ..utilities.logging_utils import log
 
 
 class CamSliceObjects(Operator):

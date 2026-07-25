@@ -4,21 +4,16 @@ Blender Operator definitions are in this file.
 They mostly call the functions from 'utils.py'
 """
 
-from importlib import import_module
-from math import pi
 import os
 import subprocess
 import textwrap
 import threading
 import traceback
+from importlib import import_module
+from math import pi
 
 import bpy
 from bpy.types import Operator
-
-from .async_op import (
-    AsyncCancelledException,
-    AsyncOperatorMixin,
-)
 
 from .. import __package__ as base_package
 from ..exception import CamException
@@ -27,18 +22,22 @@ from ..toolpath import get_path
 
 # from ..utilities.addon_utils import add_collections
 from ..utilities.async_utils import progress_async
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
+from ..utilities.operation_utils import (
+    chain_valid,
+    get_chain_operations,
+    source_valid,
+)
 from ..utilities.simple_utils import (
     safe_filename,
 )
 from ..utilities.thread_utils import (
-    threadCom,
     thread_read,
+    threadCom,
 )
-from ..utilities.operation_utils import (
-    chain_valid,
-    source_valid,
-    get_chain_operations,
+from .async_op import (
+    AsyncCancelledException,
+    AsyncOperatorMixin,
 )
 
 
@@ -444,9 +443,8 @@ class CalculatePath(Operator, AsyncOperatorMixin):
         s = context.scene
         o = s.cam_operations[s.cam_active_operation] if len(s.cam_operations) > 0 else None
 
-        if o is not None:
-            if source_valid(o, context):
-                return True
+        if o is not None and source_valid(o, context):
+            return True
         return False
 
     async def execute_async(self, context):
@@ -643,7 +641,7 @@ class PathsChain(Operator, AsyncOperatorMixin):
         meshes = []
 
         try:
-            for i in range(0, len(chainops)):
+            for i in range(len(chainops)):
                 s.cam_active_operation = s.cam_operations.find(chainops[i].name)
                 self.report({"INFO"}, f"Calculating Path: {chainops[i].name}")
                 result, success = await _calc_path(self, context)

@@ -3,8 +3,8 @@ from unittest import TestCase
 import bpy
 
 from .utils import (
-    install_extension,
     activate_engine,
+    install_extension,
     run_test_file,
     zip_extension,
 )

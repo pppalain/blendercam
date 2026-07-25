@@ -3,17 +3,15 @@
 Functions to render, save, convert and analyze image data.
 """
 
+import os
+import time
 from math import (
     ceil,
     floor,
 )
-from typing import Optional
-import os
-import time
-
-import numpy as np
 
 import bpy
+import numpy as np
 
 try:
     import bl_ext.blender_org.simplify_curves_plus as curve_simplify
@@ -24,17 +22,17 @@ from mathutils import (
     Vector,
 )
 
-from .async_utils import progress_async
 from ..chunk_builder import CamPathChunkBuilder
-from .logging_utils import log, heading
-from .operation_utils import get_cutter_array
-from .simple_utils import (
-    progress,
-    get_cache_path,
-)
+from .async_utils import progress_async
+from .logging_utils import heading, log
 from .numba_utils import (
     jit,
     prange,
+)
+from .operation_utils import get_cutter_array
+from .simple_utils import (
+    get_cache_path,
+    progress,
 )
 
 
@@ -95,7 +93,7 @@ def numpy_to_image(a: np.ndarray, iname: str) -> bpy.types.Image:
     log.info(f"Name: {iname}")
     log.info(f"Dimensions: {width}x{height}")
 
-    def find_image(name: str, width: int, heigh: int) -> Optional[bpy.types.Image]:
+    def find_image(name: str, width: int, heigh: int) -> bpy.types.Image | None:
         if name in bpy.data.images:
             image = bpy.data.images[name]
 
@@ -130,7 +128,7 @@ def numpy_to_image(a: np.ndarray, iname: str) -> bpy.types.Image:
 
     image.pixels[:] = a  # [:]  # this gives big speedup!
 
-    log.info(f"Time: {str(time.time() - t)}")
+    log.info(f"Time: {time.time() - t!s}")
 
     return image
 
@@ -195,7 +193,7 @@ def _offset_inner_loop(y1, y2, cutterArrayNan, cwidth, sourceArray, width, heigh
     """
 
     for y in prange(y1, y2):
-        for x in range(0, width - cwidth):
+        for x in range(width - cwidth):
             comparearea[x, y] = np.nanmax(
                 sourceArray[x : x + cwidth, y : y + cwidth] + cutterArrayNan
             )
@@ -243,7 +241,7 @@ async def offset_area(o, samples):
             cutterArray > -10, cutterArray, np.full(cutterArray.shape, np.nan)
         )
 
-        for y in range(0, 10):
+        for y in range(10):
             y1 = (y * comparearea.shape[1]) // 10
             y2 = ((y + 1) * comparearea.shape[1]) // 10
             _offset_inner_loop(
@@ -883,7 +881,7 @@ def image_edge_search_on_line(o, ar, zimage):
     for ch in chunk_builders:
         ch = ch.points
 
-        for i in range(0, len(ch)):
+        for i in range(len(ch)):
             ch[i] = (
                 (ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
                 (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny,
@@ -979,7 +977,7 @@ def image_to_chunks(o, image, with_border=False):
     h = image.shape[1]
     coef = 0.75  # compensates for imprecisions
 
-    for id in range(0, len(indices1[0])):
+    for id in range(len(indices1[0])):
         a = indices1[0][id]
         b = indices1[1][id]
 
@@ -989,7 +987,7 @@ def image_to_chunks(o, image, with_border=False):
     ar = image[:-1, :] - image[1:, :]
     indices2 = ar.nonzero()
 
-    for id in range(0, len(indices2[0])):
+    for id in range(len(indices2[0])):
         a = indices2[0][id]
         b = indices2[1][id]
 
@@ -1040,22 +1038,34 @@ def image_to_chunks(o, image, with_border=False):
                         verts.remove(v)
 
                     if not take:
-                        if (not white and comesfromtop) or (white and comesfrombottom):
+                        if (
+                            (not white and comesfromtop)
+                            or (white and comesfrombottom)
+                            and v1[0] + 0.5 < v[0]
+                        ):
                             # goes right
-                            if v1[0] + 0.5 < v[0]:
-                                take = True
-                        elif (not white and comesfrombottom) or (white and comesfromtop):
+                            take = True
+                        elif (
+                            (not white and comesfrombottom)
+                            or (white and comesfromtop)
+                            and v1[0] > v[0] + 0.5
+                        ):
                             # goes left
-                            if v1[0] > v[0] + 0.5:
-                                take = True
-                        elif (not white and comesfromleft) or (white and comesfromright):
+                            take = True
+                        elif (
+                            (not white and comesfromleft)
+                            or (white and comesfromright)
+                            and v1[1] > v[1] + 0.5
+                        ):
                             # goes down
-                            if v1[1] > v[1] + 0.5:
-                                take = True
-                        elif (not white and comesfromright) or (white and comesfromleft):
+                            take = True
+                        elif (
+                            (not white and comesfromright)
+                            or (white and comesfromleft)
+                            and v1[1] + 0.5 < v[1]
+                        ):
                             # goes up
-                            if v1[1] + 0.5 < v[1]:
-                                take = True
+                            take = True
                         if take:
                             ch.append(v)
                             verts.remove(v)
@@ -1080,10 +1090,11 @@ def image_to_chunks(o, image, with_border=False):
                 polychunks.append(ch)
 
                 for si, s in enumerate(ch):
-                    if si > 0:  # first one was popped
-                        if d.get(s, None) is not None and len(d[s]) == 0:
-                            # this makes the case much less probable, but i think not impossible
-                            d.pop(s)
+                    if (
+                        si > 0 and d.get(s, None) is not None and len(d[s]) == 0
+                    ):  # first one was popped
+                        # this makes the case much less probable, but i think not impossible
+                        d.pop(s)
                 if len(d) > 0:
                     newch = False
 
@@ -1106,7 +1117,7 @@ def image_to_chunks(o, image, with_border=False):
             vecchunk = []
             vecchunks.append(vecchunk)
 
-            for i in range(0, len(ch)):
+            for i in range(len(ch)):
                 ch[i] = (
                     (ch[i][0] + coef - o.borderwidth) * pixsize + minx,
                     (ch[i][1] + coef - o.borderwidth) * pixsize + miny,
@@ -1128,7 +1139,7 @@ def image_to_chunks(o, image, with_border=False):
             s = curve_simplify.simplify_RDP(ch, soptions)
             nch = CamPathChunkBuilder([])
 
-            for i in range(0, len(s)):
+            for i in range(len(s)):
                 nch.points.append((ch[s[i]].x, ch[s[i]].y))
 
             if len(nch.points) > 2:

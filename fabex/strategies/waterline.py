@@ -5,17 +5,17 @@ from math import (
 
 from shapely.geometry import Polygon
 
+from ..utilities.async_utils import progress_async
 from ..utilities.chunk_utils import (
-    chunks_to_mesh,
     chunks_refine,
+    chunks_to_mesh,
     limit_chunks,
     sample_chunks,
     sort_chunks,
 )
 from ..utilities.image_shapely_utils import image_to_shapely
 from ..utilities.image_utils import prepare_area
-from ..utilities.logging_utils import log, heading
-from ..utilities.waterline_utils import oclGetWaterline
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
     get_ambient,
     get_layers,
@@ -23,7 +23,7 @@ from ..utilities.operation_utils import (
 )
 from ..utilities.parent_utils import parent_child_distance
 from ..utilities.shapely_utils import shapely_to_chunks
-from ..utilities.async_utils import progress_async
+from ..utilities.waterline_utils import oclGetWaterline
 
 
 async def waterline(o):
@@ -68,8 +68,8 @@ async def waterline(o):
             z_levels = sorted({round(o.min_z + h * o.slice_detail, 6) for h in range(n_regular)})
 
         # for projection of filled areas
-        layerstart = o.max.z  #
-        layerend = o.min.z  #
+        layerstart = o.max.z
+        layerend = o.min.z
         layers = [[layerstart, layerend]]
         nslices = len(z_levels)
         lastslice = Polygon()  # polyversion
@@ -102,8 +102,8 @@ async def waterline(o):
                 slicesfilled += 1
 
             if o.waterline_fill:
-                layerstart = min(o.max_z, z + o.slice_detail)  #
-                layerend = max(o.min.z, z - o.slice_detail)  #
+                layerstart = min(o.max_z, z + o.slice_detail)
+                layerend = max(o.min.z, z - o.slice_detail)
                 layers = [[layerstart, layerend]]
                 #####################################
                 # fill top slice for normal and first for inverse, fill between polys

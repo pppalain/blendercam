@@ -7,14 +7,13 @@ from math import (
 import bpy
 
 from ..bridges import use_bridges
-
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     limit_chunks,
     sort_chunks,
 )
 from ..utilities.curve_utils import curve_to_chunks
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
     check_min_z,
     get_layers,
@@ -78,7 +77,7 @@ async def cutout(o):
         pass
 
     # Add Skin for Profile
-    cutter_offset = (r if cutter_offset > r else cutter_offset) + o.skin
+    cutter_offset = (min(cutter_offset, r)) + o.skin
 
     log.info(f"Offset: {cutter_offset}")
 

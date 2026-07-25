@@ -1,25 +1,23 @@
 import time
 
+import bmesh
+import bpy
 import numpy as np
-from shapely.ops import unary_union
 from shapely.geometry import (
     MultiPolygon,
     Polygon,
 )
-
-import bpy
-import bmesh
+from shapely.ops import unary_union
 
 from .curve_utils import (
-    curve_to_shapely,
     curve_to_chunks,
+    curve_to_shapely,
 )
 from .image_utils import (
     image_to_chunks,
     render_sample_image,
 )
-
-from .logging_utils import log, heading
+from .logging_utils import heading, log
 from .shapely_utils import (
     chunks_to_shapely,
     shapely_to_curve,

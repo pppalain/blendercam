@@ -5,12 +5,11 @@ Functions used by OpenCAMLib sampling.
 
 """
 
-from math import radians, tan
 import os
 import tempfile
+from math import radians, tan
 
 import numpy as np
-
 
 try:
     import ocl
@@ -22,11 +21,10 @@ except ImportError:
 
 import bpy
 
-
-from ..constants import OCL_SCALE, _PREVIOUS_OCL_MESH
+from ..chunk_builder import CamPathChunk
+from ..constants import _PREVIOUS_OCL_MESH, OCL_SCALE
 from ..exception import CamException
 from .async_utils import progress_async
-from ..chunk_builder import CamPathChunk
 from .logging_utils import log
 from .simple_utils import activate
 
@@ -120,7 +118,7 @@ def exportModelsToSTL(operation):
         bpy.ops.object.duplicate(linked=False)
         # collision_object = bpy.context.scene.objects.active
         # bpy.context.scene.objects.selected = collision_object
-        file_name = os.path.join(tempfile.gettempdir(), "model{0}.stl".format(str(file_number)))
+        file_name = os.path.join(tempfile.gettempdir(), f"model{file_number!s}.stl")
 
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 

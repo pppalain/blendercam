@@ -8,22 +8,18 @@ import math
 import os
 import time
 
+import bpy
 import numpy as np
 
-
-import bpy
-
-
 from . import __package__ as base_package
-
 from .exception import CamException
 from .utilities.async_utils import progress_async
 from .utilities.bounds_utils import get_bounds_multiple
 from .utilities.image_utils import numpy_save
-from .utilities.logging_utils import log, heading
+from .utilities.logging_utils import heading, log
 from .utilities.operation_utils import (
-    get_operation_sources,
     get_cutter_array,
+    get_operation_sources,
 )
 from .utilities.simple_utils import get_simulation_path
 
@@ -341,7 +337,7 @@ async def generate_simulation_image(operations, limits):
         if o.do_simulation_feedrate:
             xcoef = shapek.data[len(shapek.data) - 1].co.x / len(shapek.data)
 
-            for a in range(0, 10):
+            for a in range(10):
                 nvals = []
                 val1 = 0
                 val2 = 0

@@ -1,12 +1,10 @@
+import bpy
 from mathutils import Vector
 
-import bpy
-
 from ..exception import CamException
-
 from ..utilities.chunk_utils import chunks_to_mesh, sample_chunks_n_axis
 from ..utilities.curve_utils import curve_to_chunks
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
     get_layers,
 )
@@ -60,7 +58,7 @@ async def projected_curve(o):
             for i, s in enumerate(chunk_points):
                 # move the points a bit
                 end_point = Vector(target_chunk[i])
-                start_point = Vector(chunk_points[i])
+                start_point = Vector(s)
 
                 # Extend Start Point
                 vector_start = start_point - end_point

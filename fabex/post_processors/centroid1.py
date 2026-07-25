@@ -6,10 +6,9 @@
 #
 # Dan Falck, 7th March 2010
 
-from . import nc
-from . import iso_modal
-
 import datetime
+
+from . import iso_modal, nc
 
 now = datetime.datetime.now()
 
@@ -61,7 +60,7 @@ class Creator(iso_modal.Creator):
     # APT style INSERT- insert anything into program
 
     def insert(self, text):
-        self.write((text + "\n"))
+        self.write(text + "\n")
 
     ################################################################################
     # program begin and end
@@ -96,7 +95,7 @@ class Creator(iso_modal.Creator):
             self.g_list.append(self.WORKPLANE() % (id + self.WORKPLANE_BASE()))
         if (id >= 7) and (id <= 9):
             self.g_list.append(
-                ((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (".%i" % (id - 6)))
+                (self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (".%i" % (id - 6))
             )
         self.prev_g0123 = ""
 

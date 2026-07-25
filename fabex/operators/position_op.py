@@ -4,7 +4,6 @@
 """
 
 import bpy
-
 from bpy.types import Operator
 
 from ..utilities.bounds_utils import position_object

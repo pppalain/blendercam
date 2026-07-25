@@ -4,13 +4,12 @@ Generate and Export G-Code based on scene, machine, chain, operation and path se
 """
 
 # G-code Generaton
+import time
 from importlib import import_module
 from math import (
     ceil,
     pi,
 )
-import time
-
 
 import bpy
 from mathutils import Euler, Vector
@@ -22,9 +21,8 @@ from ..constants import (
     ROTATION_CORRECTION,
 )
 from ..post_processors import iso
-
 from ..utilities.compare_utils import point_on_line
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.simple_utils import (
     safe_filename,
     unit_value_to_string,
@@ -112,9 +110,7 @@ def export_gcode_path(filename, vertslist, operations):
     unitcorr = (
         METRIC_CORRECTION
         if unit_system == "METRIC"
-        else IMPERIAL_CORRECTION
-        if unit_system == "IMPERIAL"
-        else 1
+        else IMPERIAL_CORRECTION if unit_system == "IMPERIAL" else 1
     )
 
     rotcorr = ROTATION_CORRECTION
@@ -208,8 +204,7 @@ def export_gcode_path(filename, vertslist, operations):
             o.cutter_type,
             o.cutter_flutes,
         ]:
-            if m.output_tool_change:
-                c.tool_change(o.cutter_id)
+            c.tool_change(o.cutter_id)
 
         if m.output_tool_definitions:
             c.comment(

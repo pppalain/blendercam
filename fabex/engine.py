@@ -3,12 +3,12 @@
 Engine definition, options and panels.
 """
 
+import bpy
 from bl_ui.properties_material import (
     EEVEE_MATERIAL_PT_context_material,
     EEVEE_MATERIAL_PT_settings,
     EEVEE_MATERIAL_PT_surface,
 )
-import bpy
 from bpy.types import RenderEngine
 
 from .ui.panels.area_panel import CAM_AREA_Panel
@@ -84,8 +84,11 @@ def get_panels():
     ]
 
     for panel in bpy.types.Panel.__subclasses__():
-        if hasattr(panel, "COMPAT_ENGINES") and "BLENDER_RENDER" in panel.COMPAT_ENGINES:
-            if panel.__name__ not in exclude_panels:
-                panels.append(panel)
+        if (
+            hasattr(panel, "COMPAT_ENGINES")
+            and "BLENDER_RENDER" in panel.COMPAT_ENGINES
+            and panel.__name__ not in exclude_panels
+        ):
+            panels.append(panel)
 
     return panels

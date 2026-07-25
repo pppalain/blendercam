@@ -10,17 +10,15 @@ Very slow and STUPID, a collision algorithm would be much much faster...
 import random
 import time
 
-import shapely
-from shapely.geometry import Point, Polygon, MultiPolygon
-from shapely import affinity, prepared, speedups
-
 import bpy
+import shapely
 from mathutils import Euler, Vector
-
+from shapely import affinity, prepared, speedups
+from shapely.geometry import MultiPolygon, Point, Polygon
 
 from .curve_utils import curve_to_chunks
 from .logging_utils import log
-from .shapely_utils import shapely_to_curve, chunks_to_shapely
+from .shapely_utils import chunks_to_shapely, shapely_to_curve
 from .simple_utils import activate
 
 
@@ -157,20 +155,19 @@ def pack_curves():
                     (direction == "Y" and xmax < sheetsizex)
                     or (direction == "X" and ymax < sheetsizey)
                 )
-            ):
-                if not allpoly.intersects(ptrans):
-                    # we do more good solutions, choose best out of them:
-                    hits += 1
-                    if best is None:
+            ) and not allpoly.intersects(ptrans):
+                # we do more good solutions, choose best out of them:
+                hits += 1
+                if best is None:
+                    best = [x, y, rot, xmax, ymax]
+                    besthit = hits
+                if direction == "X":
+                    if xmax < best[3]:
                         best = [x, y, rot, xmax, ymax]
                         besthit = hits
-                    if direction == "X":
-                        if xmax < best[3]:
-                            best = [x, y, rot, xmax, ymax]
-                            besthit = hits
-                    elif ymax < best[4]:
-                        best = [x, y, rot, xmax, ymax]
-                        besthit = hits
+                elif ymax < best[4]:
+                    best = [x, y, rot, xmax, ymax]
+                    besthit = hits
 
             if hits >= 15 or (itera > 20000 and hits > 0):
                 # here was originally more, but 90% of best solutions are still 1

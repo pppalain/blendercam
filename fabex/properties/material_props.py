@@ -12,8 +12,9 @@ from bpy.props import (
     PointerProperty,
 )
 from bpy.types import PropertyGroup
-from ..utilities.material_utils import update_material
+
 from ..constants import PRECISION
+from ..utilities.material_utils import update_material
 
 
 class CAM_MATERIAL_Properties(PropertyGroup):

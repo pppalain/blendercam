@@ -1,12 +1,11 @@
 import bpy
 
 from ..chunk_builder import CamPathChunk
-
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     sort_chunks,
 )
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
     check_min_z,
     get_layers,
@@ -182,8 +181,7 @@ async def drill(o):
                 z = o.min_z
             # only add a chunk layer if the chunk z point is in or lower than the layer
             if z <= layer[0]:
-                if z <= layer[1]:
-                    z = layer[1]
+                z = max(layer[1], z)
                 # perform peck drill
                 new_chunk = chunk.copy()
                 new_chunk.set_z(z)

@@ -8,13 +8,8 @@ from math import (
     tan,
 )
 
-import shapely
-from shapely.geometry import (
-    LineString,
-    MultiLineString,
-)
-
 import bpy
+import shapely
 from bpy.props import (
     BoolProperty,
     EnumProperty,
@@ -23,31 +18,35 @@ from bpy.props import (
 )
 from bpy.types import Operator
 from mathutils import Vector
+from shapely.geometry import (
+    LineString,
+    MultiLineString,
+)
 
+from ..utilities.curve_utils import curve_to_shapely, curve_validate
 from ..utilities.geom_utils import circle
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.polygon_utils import (
     polygon_boolean,
     polygon_convex_hull,
 )
-from ..utilities.curve_utils import curve_to_shapely, curve_validate
 from ..utilities.shapely_utils import shapely_to_curve
 from ..utilities.silhouette_utils import (
-    silhouette_offset,
     get_object_silhouette,
+    silhouette_offset,
 )
 from ..utilities.simple_utils import (
-    remove_multiple,
-    join_multiple,
     active_name,
-    remove_doubles,
     deselect,
-    move,
-    duplicate,
-    make_active,
     difference,
+    duplicate,
     extrude_curve2mesh,
+    join_multiple,
+    make_active,
     mesh_difference,
+    move,
+    remove_doubles,
+    remove_multiple,
     rename,
 )
 
@@ -951,9 +950,8 @@ class CamCurveRemoveDoubles(Operator):
     def draw(self, context):
         layout = self.layout
         obj = context.active_object
-        if obj.type == "CURVE":
-            if obj.data.splines and obj.data.splines[0].type == "BEZIER":
-                layout.prop(self, "keep_bezier", text="Keep Bezier")
+        if obj.type == "CURVE" and obj.data.splines and obj.data.splines[0].type == "BEZIER":
+            layout.prop(self, "keep_bezier", text="Keep Bezier")
         layout.prop(self, "validateCurve", text="Validate Curve")
         if not self.validateCurve:
             layout.prop(self, "merge_distance", text="Merge Distance")

@@ -1,7 +1,7 @@
 """Fabex 'logging_utils.py' © 2025"""
 
-from datetime import datetime
 import logging
+from datetime import datetime
 from pathlib import Path
 
 LOG_WIDTH = 60
@@ -12,7 +12,7 @@ class ConsoleFormatter(logging.Formatter):
         if ":" in str(record.msg):
             record.msg = record.msg.split(":")
             record.msg = f"{record.msg[0]:>28}:{record.msg[1]:<30}"
-        return super(ConsoleFormatter, self).format(record)
+        return super().format(record)
 
 
 def heading(text):

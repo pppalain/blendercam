@@ -8,9 +8,8 @@ from datetime import timedelta
 import bpy
 from bpy.types import Panel
 
-from .parent_panel import CAMParentPanel
-
 from ...utilities.version_utils import get_fabex_version
+from .parent_panel import CAMParentPanel
 
 
 # Info panel
@@ -66,7 +65,7 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
                             icon = "MOD_WIREFRAME"
                         if line.startswith(("Memory", "Detail")):
                             icon = "MEMORY"
-                        if line.startswith(("!!!")):
+                        if line.startswith("!!!"):
                             icon = "ERROR"
                         col.label(text=line, icon=icon)
 

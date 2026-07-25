@@ -1,6 +1,6 @@
-from . import nc
-from . import iso_modal
 import datetime
+
+from . import iso_modal, nc
 
 now = datetime.datetime.now()
 
@@ -38,21 +38,21 @@ class Creator(iso_modal.Creator):
     def program_begin(self, id, comment):
         if not self.useCrc:
             self.write(
-                (
+                
                     "(Created with emc2b post processor "
                     + str(now.strftime("%Y/%m/%d %H:%M"))
                     + ")"
                     + "\n"
-                )
+                
             )
         else:
             self.write(
-                (
+                
                     "(Created with emc2b Cutter Radius Compensation post processor "
                     + str(now.strftime("%Y/%m/%d %H:%M"))
                     + ")"
                     + "\n"
-                )
+                
             )
         iso_modal.Creator.program_begin(self, id, comment)
 

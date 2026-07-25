@@ -54,7 +54,7 @@ class Format:
 
         before_dp = before_dp.zfill(self.add_leading_zeros)
         if self.add_trailing_zeros:
-            for i in range(0, self.number_of_decimal_places - len(after_dp)):
+            for i in range(self.number_of_decimal_places - len(after_dp)):
                 after_dp += "0"
         else:
             after_dp = after_dp.rstrip("0")

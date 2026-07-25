@@ -15,7 +15,7 @@ from ..utilities.chunk_utils import (
     chunks_to_mesh,
     sample_chunks_n_axis,
 )
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import get_layers
 
 
@@ -91,14 +91,14 @@ async def helix_four_axis(o):
     # only one chunk, init here
     chunk = CamPathChunkBuilder([])
 
-    for a in range(0, floor(steps) + 1):
+    for a in range(floor(steps) + 1):
         cutterstart[a1] = o.min[a1] + a * o.distance_between_paths
         cutterend[a1] = cutterstart[a1]
         cutterstart[a2] = 0
         cutterstart[a3] = radius
         cutterend[a3] = radiusend
 
-        for b in range(0, floor(circlesteps) + 1):
+        for b in range(floor(circlesteps) + 1):
             cutterstart[a1] += a1step
             cutterend[a1] += a1step
             chunk.startpoints.append(cutterstart.to_tuple())

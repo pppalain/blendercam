@@ -5,9 +5,10 @@
 #
 # Dan Falck 2010/09/28
 
+import math
+
 from . import iso_lathe_codes as iso
 from . import nc
-import math
 
 ################################################################################
 
@@ -145,7 +146,7 @@ class CreatorIso(nc.Creator):
             self.g += iso.codes.PLANE_YZ()
 
     def set_temporary_origin(self, x=None, y=None, z=None, a=None, b=None, c=None):
-        self.write((iso.codes.SET_TEMPORARY_COORDINATE_SYSTEM()))
+        self.write(iso.codes.SET_TEMPORARY_COORDINATE_SYSTEM())
         if x is not None:
             self.write(iso.codes.SPACE() + "X " + (self.fmt % x))
         if y is not None:
@@ -161,7 +162,7 @@ class CreatorIso(nc.Creator):
         self.write("\n")
 
     def remove_temporary_origin(self):
-        self.write((iso.codes.REMOVE_TEMPORARY_COORDINATE_SYSTEM()))
+        self.write(iso.codes.REMOVE_TEMPORARY_COORDINATE_SYSTEM())
         self.write("\n")
 
     ############################################################################
@@ -494,7 +495,7 @@ class CreatorIso(nc.Creator):
     # Misc
 
     def comment(self, text):
-        self.write((iso.codes.COMMENT(text) + "\n"))
+        self.write(iso.codes.COMMENT(text) + "\n")
 
     def insert(self, text):
         pass

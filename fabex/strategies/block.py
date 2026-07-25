@@ -5,13 +5,12 @@ from math import (
 
 from ..bridges import use_bridges
 from ..chunk_builder import CamPathChunkBuilder
-
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     connect_chunks_low,
     sample_chunks,
 )
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
     get_layers,
     get_move_and_spin,
@@ -77,7 +76,7 @@ async def block(o):
         chunk.points.reverse()
 
     if climb_CW or conventional_CCW:
-        for si in range(0, len(chunk.points)):
+        for si in range(len(chunk.points)):
             s = chunk.points[si]
             chunk.points[si] = (o.max.x + o.min.x - s[0], s[1], s[2])
 

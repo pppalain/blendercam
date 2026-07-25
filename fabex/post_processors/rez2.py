@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ################################################################################
 # iso.py
 #
@@ -6,10 +5,11 @@
 #
 # Hirutso Enni, 2009-01-13
 
-from . import nc
-from . import iso
 import math
+
 import circular_pocket as circular
+
+from . import iso, nc
 
 ################################################################################
 
@@ -45,7 +45,6 @@ class Creator(nc.Creator):
         self.SPACE = " "
 
         self.fmt = self.FORMAT_MM()
-        pass
 
     ############################################################################
     # Internals
@@ -287,10 +286,10 @@ class Creator(nc.Creator):
         # if (c != None) : self.write(iso.C + (iso.FORMAT_ANG % c))
         # self.write_spindle()
         # self.write_misc()
-        self.write((" %.4f" % x))
+        self.write(" %.4f" % x)
         # self.write(('%f' %x) )
         self.write(" , ")
-        self.write((" %.4f" % y))
+        self.write(" %.4f" % y)
         self.write("\n")
         self.write("SS\n")
         self.write("AD_W\n")
@@ -331,10 +330,10 @@ class Creator(nc.Creator):
         # self.write_spindle()
         # self.write_misc()
         self.write("MA ")
-        self.write((" %.4f" % x))
+        self.write(" %.4f" % x)
         # self.write(('%f' %x) )
         self.write(" , ")
-        self.write((" %.4f" % y))
+        self.write(" %.4f" % y)
         self.write("\n")
         self.x = x
         self.y = y
@@ -389,10 +388,10 @@ class Creator(nc.Creator):
         # self.write_feedrate()
         # self.write_spindle()
         # self.write_misc()
-        self.write((" %.4f" % (self.x + i)))
+        self.write(" %.4f" % (self.x + i))
         # self.write(('%f' %x) )
         self.write(" , ")
-        self.write((" %.4f" % (self.y + j)))
+        self.write(" %.4f" % (self.y + j))
 
         self.write(" , ")
         angle = 0.0000
@@ -426,24 +425,24 @@ class Creator(nc.Creator):
         # 	  self.write(' , ')
         # 	  angle-=90
         if cw:
-            self.write((" %.4f" % (-angle)))
+            self.write(" %.4f" % (-angle))
         else:
-            self.write((" %.4f" % (angle)))
+            self.write(" %.4f" % (angle))
 
         # self.write((', %.4f' % ))
         self.write("\n")
         self.x = x
         self.y = y
         self.write("// stred")
-        self.write((" %f" % i))
+        self.write(" %f" % i)
         self.write(" ")
-        self.write((" %f" % j))
+        self.write(" %f" % j)
         self.write("\n")
 
         self.write("// koniec")
-        self.write((" %f" % self.x))
+        self.write(" %f" % self.x)
         self.write(" ")
-        self.write((" %f" % self.y))
+        self.write(" %f" % self.y)
         self.write("\n")
 
     def arc_cw(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None):

@@ -5,8 +5,6 @@ Module to allow the creation of reliefs from Images or View Layers.
 """
 
 import bpy
-
-from bpy.types import Operator
 from bpy.props import (
     BoolProperty,
     EnumProperty,
@@ -14,14 +12,14 @@ from bpy.props import (
     IntProperty,
     StringProperty,
 )
+from bpy.types import Operator
 
 from ..constants import PRECISION
-
 from ..utilities.relief_utils import (
-    problem_areas,
-    render_scene,
-    relief,
     ReliefError,
+    problem_areas,
+    relief,
+    render_scene,
 )
 
 

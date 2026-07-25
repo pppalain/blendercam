@@ -3,17 +3,17 @@
 Functions to handle shapely operations and conversions - curve, coords, polygon
 """
 
+import re
+
+import bpy
 import numpy as np
 import shapely
-import bpy
-import re
+from mathutils import Vector
 from shapely.geometry import (
-    Polygon,
     MultiPolygon,
+    Polygon,
 )
 from shapely.validation import explain_validity
-
-from mathutils import Vector
 
 try:
     import bl_ext.blender_org.simplify_curves_plus as curve_simplify
@@ -21,9 +21,9 @@ except ImportError:
     pass
 
 from ..chunk_builder import CamPathChunkBuilder
-from .simple_utils import remove_multiple
-from .logging_utils import log
 from ..exception import CamException
+from .logging_utils import log
+from .simple_utils import remove_multiple
 
 
 def shapely_remove_doubles(p, optimize_threshold):
@@ -53,7 +53,7 @@ def shapely_remove_doubles(p, optimize_threshold):
             veclist.append(Vector((v[0], v[1])))
         s = curve_simplify.simplify_RDP(veclist, soptions)
         nc = []
-        for i in range(0, len(s)):
+        for i in range(len(s)):
             nc.append(c[s[i]])
 
         if len(nc) > 2:
@@ -255,11 +255,14 @@ def chunks_to_shapely(chunks):
 
     for ppart in chunks:  # then add hierarchy relations
         for ptest in chunks:
-            if ppart != ptest:
-                if not ppart.poly.is_empty and not ptest.poly.is_empty:
-                    if ptest.poly.contains(ppart.poly):
-                        # hierarchy works like this: - children get milled first.
-                        ppart.parents.append(ptest)
+            if (
+                ppart != ptest
+                and not ppart.poly.is_empty
+                and not ptest.poly.is_empty
+                and ptest.poly.contains(ppart.poly)
+            ):
+                # hierarchy works like this: - children get milled first.
+                ppart.parents.append(ptest)
 
     for ch in chunks:  # now make only simple polygons with holes, not more polys inside others
         found = False
@@ -364,12 +367,11 @@ def chunks_to_shapely(chunks):
 
     returnpolys = []
 
-    for polyi in range(0, len(chunks)):  # export only the booleaned polygons
+    for polyi in range(len(chunks)):  # export only the booleaned polygons
         ch = chunks[polyi]
 
-        if not ch.poly.is_empty:
-            if len(ch.parents) == 0:
-                returnpolys.append(ch.poly)
+        if not ch.poly.is_empty and len(ch.parents) == 0:
+            returnpolys.append(ch.poly)
 
     polys = MultiPolygon(returnpolys)
     return polys

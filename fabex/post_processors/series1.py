@@ -1,5 +1,4 @@
-from . import nc
-from . import iso_modal
+from . import iso_modal, nc
 
 ################################################################################
 

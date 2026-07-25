@@ -8,9 +8,9 @@ draftsight,progecad,ares commander, etc....
 usage: python cad_read.py temp.nc temp.scr
 """
 
-from . import cad_iso_read as iso
 import sys
 
+from . import cad_iso_read as iso
 
 # Override some iso parser methods to interpret arc centers as relative to origin, not relative to start of arc.
 
@@ -124,9 +124,7 @@ class CAD_backplot(iso.Parser):
                     path_col = "feed"
                     col = "feed"
                     arc = +1
-                elif word == "G10" or word == "g10":
-                    no_move = True
-                elif word == "L1" or word == "l1":
+                elif word == "G10" or word == "g10" or word == "L1" or word == "l1":
                     no_move = True
                 elif word == "G20" or word == "G70":
                     col = "prep"
@@ -135,17 +133,7 @@ class CAD_backplot(iso.Parser):
                     col = "prep"
                     self.set_mode(units=1.0)
                 # Note: Anilam has very non standard params for drill cycles.  Not Yet implemented!
-                elif word == "G81" or word == "g81":
-                    drill = True
-                    no_move = True
-                    path_col = "feed"
-                    col = "feed"
-                elif word == "G82" or word == "g82":
-                    drill = True
-                    no_move = True
-                    path_col = "feed"
-                    col = "feed"
-                elif word == "G83" or word == "g83":
+                elif word == "G81" or word == "g81" or word == "G82" or word == "g82" or word == "G83" or word == "g83":
                     drill = True
                     no_move = True
                     path_col = "feed"
@@ -203,11 +191,7 @@ class CAD_backplot(iso.Parser):
                     col = "axis"
                     z = eval(word[1:])
                     move = True
-                elif word[0] == "(":
-                    (col, cdata) = ("comment", True)
-                elif word[0] == "!":
-                    (col, cdata) = ("comment", True)
-                elif word[0] == ";":
+                elif word[0] == "(" or word[0] == "!" or word[0] == ";":
                     (col, cdata) = ("comment", True)
                 elif word[0] == "#":
                     col = "variable"

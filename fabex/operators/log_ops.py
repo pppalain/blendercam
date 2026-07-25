@@ -5,8 +5,8 @@ They mostly call the functions from 'utils.py'
 """
 
 from os import listdir
-from platform import system
 from pathlib import Path
+from platform import system
 from subprocess import call
 
 from bpy.types import Operator

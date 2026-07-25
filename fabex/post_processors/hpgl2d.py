@@ -4,15 +4,16 @@
 # This program is released under the BSD license. See the file COPYING for details.
 #
 
-from . import nc
 import math
+
+from . import nc
 
 
 class Creator(nc.Creator):
     def __init__(self):
         nc.Creator.__init__(self)
-        self.x = int(0)
-        self.y = int(0)  # these are in machine units, like 0.01mm or maybe 0.25mm
+        self.x = 0
+        self.y = 0  # these are in machine units, like 0.01mm or maybe 0.25mm
         self.metric()  # set self.units_to_mc_units
 
     def imperial(self):

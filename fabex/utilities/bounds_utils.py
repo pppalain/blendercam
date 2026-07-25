@@ -5,14 +5,13 @@ import time
 import bpy
 from mathutils import Vector
 
-from .logging_utils import log, heading
+from .. import __package__ as base_package
+from ..exception import CamException
+from .logging_utils import heading, log
 from .simple_utils import (
     activate,
     unit_value_to_string,
 )
-
-from .. import __package__ as base_package
-from ..exception import CamException
 
 
 def get_bounds_worldspace(obs, use_modifiers=False):

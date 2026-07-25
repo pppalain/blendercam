@@ -1,5 +1,4 @@
-from . import nc
-from . import iso
+from . import iso, nc
 
 
 class Creator(iso.Creator):
@@ -10,8 +9,8 @@ class Creator(iso.Creator):
         return " "
 
     def program_begin(self, id, comment):
-        self.write(("(" + "GCode created using the HeeksCNC Mach3 post processor" + ")" + "\n"))
-        self.write(("(" + comment + ")" + "\n"))
+        self.write("(" + "GCode created using the HeeksCNC Mach3 post processor" + ")" + "\n")
+        self.write("(" + comment + ")" + "\n")
 
     def tool_change(self, id):
         self.write("G43H%i" % id + "\n")

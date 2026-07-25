@@ -7,8 +7,7 @@
 #
 ################################################################################
 
-from . import nc
-from . import iso
+from . import iso, nc
 from .format import Format
 
 
@@ -227,7 +226,7 @@ class Creator(iso.Creator):
     # Misc
 
     def comment(self, text):
-        self.write((self.COMMENT(text) + "\n"))
+        self.write(self.COMMENT(text) + "\n")
 
 
 nc.creator = Creator()

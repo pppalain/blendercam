@@ -10,13 +10,12 @@ from mathutils import (
 
 from ..bridges import use_bridges
 from ..chunk_builder import CamPathChunkBuilder
-
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     connect_chunks_low,
     sample_chunks,
 )
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
     get_layers,
     get_move_and_spin,
@@ -54,7 +53,7 @@ async def circles(o):
         laststepchunks = []
         currentstepchunks = []
 
-        for a in range(0, int(steps)):
+        for a in range(int(steps)):
             laststepchunks = currentstepchunks
             currentstepchunks = []
 
