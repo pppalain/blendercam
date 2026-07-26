@@ -12,6 +12,7 @@ import time
 import bpy
 import numpy as np
 
+from ..exception import CamException
 from ..utilities.logging_utils import log
 
 np.set_printoptions(suppress=True)  # suppress scientific notation in subdivide functions linspace
@@ -375,9 +376,11 @@ class GcodeParser:
             Exception: Always raises an Exception with the formatted error message.
         """
 
-        log.error(f"[ERROR] Line {self.lineNb}: {msg} (Text:'{self.line}')")
+        message = f"[ERROR] Line {self.lineNb}: {msg} (Text:'{self.line}')"
 
-        raise Exception(f"[ERROR] Line {self.lineNb}: {msg} (Text:'{self.line}')")
+        log.error(message)
+
+        raise CamException(message)
 
 
 class GcodeModel:
@@ -416,7 +419,7 @@ class GcodeModel:
         # clone previous coords
         coords = dict(self.relative)
         # update changed coords
-        for axis in args.keys():
+        for axis in args:
             # print(coords)
             if axis in coords:
                 if self.isRelative:
@@ -487,7 +490,7 @@ class GcodeModel:
             args = {"X": 0.0, "Y": 0.0, "Z": 0.0}  # , "E":0.0
 
         # update specified axes
-        for axis in args.keys():
+        for axis in args:
             if axis in self.offset:
                 # transfer value from relative to offset
                 self.offset[axis] += self.relative[axis] - args[axis]

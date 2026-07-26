@@ -43,7 +43,8 @@ async def projected_curve(o):
     target_curve = s.objects[o.curve_target]
 
     if target_curve.type != "CURVE":
-        raise CamException("Projection Target and Source Have to Be Curve Objects!")
+        message = "Projection Target and Source Have to Be Curve Objects!"
+        raise CamException(message)
 
     if 1:
         extend_up = 0.1

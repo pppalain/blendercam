@@ -63,7 +63,8 @@ from .simple_utils import (
 def chunks_refine(chunks, o):
     """Add Extra Points in Between for Chunks"""
     if o.distance_along_paths <= 0:
-        raise CamException("distance_along_paths must be greater than zero")
+        message = "distance_along_paths must be greater than zero"
+        raise CamException(message)
     for ch in chunks:
         # print('before',len(ch))
         newchunk = []
@@ -423,10 +424,10 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
     last_percent = -1
 
     for patternchunk in pathSamples:
-        thisrunchunks = []
+        thisrunchunks = [[] for layer in layers]
 
-        for layer in layers:
-            thisrunchunks.append([])
+        # for layer in layers:
+        #     thisrunchunks.append([])
         lastlayer = None
         currentlayer = None
         lastsample = None
@@ -506,9 +507,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                                 growing = False
                                 spliti = 0
 
-                            li = 0
-
-                            for ls in r:
+                            for li, ls in enumerate(r):
                                 splitdistance = layers[ls][1]
 
                                 ratio = (splitdistance - lastdistance) / (distance - lastdistance)
@@ -559,7 +558,6 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                                     layeractivechunks[ls + 1].startpoints.append(betweenstartpoint)
                                     layeractivechunks[ls + 1].endpoints.append(betweenendpoint)
 
-                                li += 1
                         # this chunk is terminated, and allready in layerchunks /
                         ch.points.append(newsample)
                         ch.rotations.append(rotation)
@@ -645,7 +643,8 @@ def sample_path_low(o, ch1, ch2, dosample):
     """
 
     if o.distance_along_paths <= 0:
-        raise CamException("distance_along_paths must be greater than zero")
+        message = "distance_along_paths must be greater than zero"
+        raise CamException(message)
     v1 = Vector(ch1.get_point(-1))
     v2 = Vector(ch2.get_point(0))
     v = v2 - v1
@@ -772,10 +771,10 @@ async def sample_chunks(o, pathSamples, layers):
     lastz = minz
 
     for patternchunk in pathSamples:
-        thisrunchunks = []
+        thisrunchunks = [[] for layer in layers]
 
-        for layer in layers:
-            thisrunchunks.append([])
+        # for layer in layers:
+        #     thisrunchunks.append([])
 
         lastlayer = None
         currentlayer = None
@@ -939,18 +938,18 @@ async def sample_chunks(o, pathSamples, layers):
     if o.strategy in ["PARALLEL", "CROSS", "OUTLINEFILL"] and len(layers) > 1:
         # sorting help so that upper layers go first always
         for i in range(len(layers) - 1):
-            parents = []
-            children = []
+            parents = [ch for ch in layerchunks[i + 1] if not ch.children]
+            children = [ch1 for ch1 in layerchunks[i] if not ch1.parents]
             # only pick chunks that should have connectivity assigned - 'last' and 'first' ones of the layer.
-            for ch in layerchunks[i + 1]:
-                if not ch.children:
-                    parents.append(ch)
-            for ch1 in layerchunks[i]:
-                if not ch1.parents:
-                    children.append(ch1)
+            # for ch in layerchunks[i + 1]:
+            #     if not ch.children:
+            #         parents.append(ch)
+            # for ch1 in layerchunks[i]:
+            #     if not ch1.parents:
+            #         children.append(ch1)
 
-                # parent only last and first chunk, before it did this for all.
-                parent_child(parents, children, o)
+            # parent only last and first chunk, before it did this for all.
+            parent_child(parents, children, o)
     timing_add(sortingtime)
     chunks = []
 
@@ -1165,7 +1164,7 @@ def chunks_to_mesh(chunks, o):
 
     free_height = o.movement.free_height
 
-    three_axis, four_axis, five_axis, indexed_four_axis, indexed_five_axis = get_operation_axes(o)
+    three_axis, four_axis, _five_axis, indexed_four_axis, indexed_five_axis = get_operation_axes(o)
 
     user_origin = (
         machine.starting_position.x,

@@ -17,6 +17,7 @@
 
 import math
 
+from ..exception import CamException
 from . import nc
 from .format import Address, AddressPlusMinus, Format
 
@@ -865,7 +866,8 @@ class Creator(nc.Creator):
     def start_CRC(self, left=True, radius=0.0):
         # set up prep code, to be output on next line
         if self.t is None:
-            raise "No tool specified for start_CRC()"
+            message = "No tool specified for start_CRC()"
+            raise CamException(message)
         self.write_blocknum()
         if left:
             self.write(self.SPACE() + "G41")
@@ -1068,7 +1070,8 @@ class Creator(nc.Creator):
             return  # We need a direction value.
 
         if tap_mode != 0:
-            raise "only rigid tapping currently supported"
+            message = "only rigid tapping currently supported"
+            raise CamException(message)
 
         self.write_preps()
         self.write_blocknum()

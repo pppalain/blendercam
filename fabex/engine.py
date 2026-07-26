@@ -83,12 +83,14 @@ def get_panels():
         CAM_SLICE_Panel,
     ]
 
-    for panel in bpy.types.Panel.__subclasses__():
+    panels = [
+        panel
+        for panel in bpy.types.Panel.__subclasses__()
         if (
             hasattr(panel, "COMPAT_ENGINES")
             and "BLENDER_RENDER" in panel.COMPAT_ENGINES
             and panel.__name__ not in exclude_panels
-        ):
-            panels.append(panel)
+        )
+    ]
 
     return panels

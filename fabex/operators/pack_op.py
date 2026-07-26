@@ -169,11 +169,11 @@ class CamPackObjects(Operator):
             mindist = -xmin
         else:
             mindist = -ymin
-        i = 0
+
         p = polyfield[0][2]
         placedpolys = []
         rotcenter = Point(0, 0)
-        for pf in polyfield:
+        for i, pf in enumerate(polyfield):
             log.info(f"Polygon: {i}")
             rot = 0
             porig = pf[2]
@@ -224,21 +224,16 @@ class CamPackObjects(Operator):
                         best = [x, y, rot, xmax, ymax]
                         besthit = hits
 
-                if hits >= 15 or (
-                    itera > 20000 and hits > 0
-                ):  # here was originally more, but 90% of best solutions are still 1
+                if hits >= 15 or (itera > 20000 and hits > 0):
+                    # here was originally more, but 90% of best solutions are still 1
                     placed = True
                     pf[3].location.x = best[0]
                     pf[3].location.y = best[1]
                     pf[3].location.z = pf[4]
                     pf[3].rotation_euler.z = best[2]
-
                     pf[3].select_set(state=True)
 
-                    # print(mindist)
                     mindist = mindist - 0.5 * (xmax - xmin)
-                    # print(mindist)
-                    # print(iter)
 
                     # reset polygon to best position here:
                     ptrans = affinity.rotate(porig, best[2], rotcenter, use_radians=True)
@@ -254,23 +249,28 @@ class CamPackObjects(Operator):
                     log.info(f"Iteration: {itera}")
                     log.info(f"Hits: {hits}")
                     log.info(f"Best Hit: {besthit}")
+
                 if not placed:
                     if direction == "Y":
                         x += shift
                         mindist = y
+
                         if xmax + shift > sheetsizex:
                             x = x - xmin
                             y += shift
+
                     if direction == "X":
                         y += shift
                         mindist = x
+
                         if ymax + shift > sheetsizey:
                             y = y - ymin
                             x += shift
+
                     if rotate:
                         rot += rotchange
+
                 itera += 1
-            i += 1
         t = time.time() - t
 
         shapely_to_curve("test", MultiPolygon(placedpolys), 0)

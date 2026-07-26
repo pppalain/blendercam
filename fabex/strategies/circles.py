@@ -41,7 +41,7 @@ async def circles(o):
     chunk.points.append((midx, midy, zlevel))
     pathSamples.append(chunk.to_chunk())
     r = 0
-    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
+    _climb_CW, climb_CCW, conventional_CW, _conventional_CCW = get_move_and_spin(o)
 
     while r < maxr:
         r += pathd

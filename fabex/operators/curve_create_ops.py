@@ -853,10 +853,10 @@ class CamCurveMortise(Operator):
     bl_label = "Mortise"
     bl_options = {"REGISTER", "UNDO", "PRESET"}
 
-    finger_size: BoolProperty(
-        name="Kurf Bending only",
-        default=False,
-    )
+    # finger_size: BoolProperty(
+    #     name="Kurf Bending only",
+    #     default=False,
+    # )
     finger_size: FloatProperty(
         name="Maximum Finger Size",
         default=0.015,
@@ -956,9 +956,8 @@ class CamCurveMortise(Operator):
         active_name("_temp_mesh")
 
         if self.opencurve:
-            coords = []
-            for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-                coords.append((v.co.x, v.co.y))
+            # extract X,Y coordinates from the vertices data
+            coords = [(v.co.x, v.co.y) for v in obj.data.vertices]
             # convert coordinates to shapely LineString datastructure
             line = LineString(coords)
             remove_multiple("-converted")
@@ -1139,9 +1138,8 @@ class CamCurveInterlock(Operator):
             active_name("_temp_mesh")
 
             if self.opencurve:
-                coords = []
-                for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-                    coords.append((v.co.x, v.co.y))
+                # extract X,Y coordinates from the vertices data
+                coords = [(v.co.x, v.co.y) for v in obj.data.vertices]
                 # convert coordinates to shapely LineString datastructure
                 line = LineString(coords)
                 remove_multiple("-converted")

@@ -87,7 +87,7 @@ class CamSliceObjects(Operator):
             bpy.context.scene.collection.children.link(tcollection)
 
         bpy.ops.object.mode_set(mode="OBJECT")  # force object mode
-        minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace([ob])
+        _minx, _miny, minz, _maxx, _maxy, maxz = get_bounds_worldspace([ob])
 
         start_height = minz
         if above0 and minz < 0:

@@ -70,7 +70,7 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
                         col.label(text=line, icon=icon)
 
             # Cutter Engagement
-            if not self.op.strategy == "CUTOUT" and self.op.cutter_type not in ["LASER", "PLASMA"]:
+            if self.op.strategy != "CUTOUT" and self.op.cutter_type not in ["LASER", "PLASMA"]:
                 box = main.box()
                 col = box.column(align=True)
                 # Warns if cutter engagement is greater than 50%

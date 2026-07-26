@@ -200,10 +200,9 @@ async def generate_simulation_image(operations, limits):
 
     max_sim_pixels = 4000 * 4000  # ~128 MB limit for the simulation array
     if resx * resy > max_sim_pixels:
-        raise CamException(
-            f"Simulation resolution {resx}×{resy} ({resx * resy / 1e6:.1f}M pixels) exceeds limit.\n"
-            f"Increase Simulation Detail or reduce the work area."
-        )
+        message = f"Simulation resolution {resx}×{resy} ({resx * resy / 1e6:.1f}M pixels) exceeds limit.\n"
+        "Increase Simulation Detail or reduce the work area."
+        raise CamException(message)
 
     # create array in which simulation happens, similar to an image to be painted in.
     si = np.full(shape=(resx, resy), fill_value=maxz, dtype=float)

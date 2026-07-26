@@ -88,7 +88,8 @@ async def medial_axis(o):
     elif o.cutter_type == "BALLNOSE":
         max_depth = -new_cutter_diameter / 2 - o.skin
     else:
-        raise CamException("Only Ballnose and V-carve Cutters Are Supported for Medial Axis.")
+        message = "Only Ballnose and V-carve Cutters Are Supported for Medial Axis."
+        raise CamException(message)
 
     # remember resolutions of curves, to refine them,
     # otherwise medial axis computation yields too many branches in curved parts
@@ -120,7 +121,8 @@ async def medial_axis(o):
         # just a multipolygon
         multipolygon = silhouette_polygon
     else:
-        raise CamException("Failed Getting Object Silhouette. Is Input Curve Closed?")
+        message = "Failed Getting Object Silhouette. Is Input Curve Closed?"
+        raise CamException(message)
 
     multipolygon_boundary = multipolygon.boundary
     multipolygon_geometry = multipolygon.geoms

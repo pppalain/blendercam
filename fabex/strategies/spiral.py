@@ -23,7 +23,7 @@ from ..utilities.operation_utils import (
 async def spiral(o):
     log.info(heading("Strategy: Spiral"))
 
-    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
+    _climb_CW, climb_CCW, conventional_CW, _conventional_CCW = get_move_and_spin(o)
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathSamples = []
     zlevel = 1

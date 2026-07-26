@@ -133,7 +133,7 @@ class AsyncOperatorMixin:
                 (msg, args) = self.coroutine.send(AsyncCancelledException("Cancelled with ESC Key"))
                 raise StopIteration
             else:
-                (msg, args) = self.coroutine.send(None)
+                (_msg, args) = self.coroutine.send(None)
 
             # if msg == "Progress:":
             self.show_progress(context, **args)

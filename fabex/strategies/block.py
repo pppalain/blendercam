@@ -33,7 +33,7 @@ async def block(o):
     chunk = CamPathChunkBuilder([])
     i = 0
 
-    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
+    climb_CW, _climb_CCW, _conventional_CW, conventional_CCW = get_move_and_spin(o)
 
     while maxxp - minxp > 0 and maxyp - minyp > 0:
         y = minyp

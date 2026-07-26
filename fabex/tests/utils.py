@@ -144,6 +144,7 @@ def build_extension(blender):
             output_dir,
             # "--split-platforms",
         ],
+        check=False,
     )
 
 

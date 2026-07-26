@@ -71,7 +71,7 @@ class Context:
             list: A list of tuples, where each tuple contains two points representing the
                 clipped edges.
         """
-        xmin, xmax, ymin, ymax = self.extent
+        _xmin, _xmax, _ymin, _ymax = self.extent
         clipEdges = []
         for edge in self.edges:
             equation = self.lines[edge[0]]  # line equation
@@ -233,10 +233,8 @@ class Context:
             # delete duplicate (happens if intersect point is at extent corner)
             intersectPts = set(intersectPts)
             # choose target intersect point
-            if leftDir:
-                pt = min(intersectPts)  # smaller x value
-            else:
-                pt = max(intersectPts)
+            pt = min(intersectPts) if leftDir else max(intersectPts)
+
             return pt
 
     def in_extent(self, x, y):
@@ -284,7 +282,7 @@ class Context:
         # try to get start & end point
         try:
             # start and end point aren't duplicate
-            startPt, endPt = [pt for pt in pts if pts.count(pt) < 2]
+            startPt, _endPt = [pt for pt in pts if pts.count(pt) < 2]
         except:  # all points are duplicate --> polygon is complete --> append some or other edge points
             complete = True
             firstIdx = 0
@@ -785,9 +783,7 @@ class Edge:
             bool: True if the opposite endpoint is set, False otherwise.
         """
         self.ep[lrFlag] = site
-        if self.ep[Edge.RE - lrFlag] is None:
-            return False
-        return True
+        return self.ep[Edge.RE - lrFlag] is not None
 
     @staticmethod
     def bisect(s1, s2):
@@ -1614,9 +1610,8 @@ def format_edges_output(edges):
     # get dict {values:index}
     valuesIdxDict = dict(zip(pts, range(len(pts))))
     # get edges index reference
-    edgesIdx = []
-    for edge in edges:
-        edgesIdx.append([valuesIdxDict[pt] for pt in edge])
+    edgesIdx = [[valuesIdxDict[pt] for pt in edge] for edge in edges]
+
     return list(pts), edgesIdx
 
 

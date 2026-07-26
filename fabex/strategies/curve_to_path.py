@@ -42,7 +42,8 @@ async def curve(o):
     get_operation_sources(o)
 
     if not o.onlycurves:
-        raise CamException("All Objects Must Be Curves for This Operation.")
+        message = "All Objects Must Be Curves for This Operation."
+        raise CamException(message)
 
     for ob in o.objects:
         # Ensure Polylines are at least three points long
@@ -64,13 +65,12 @@ async def curve(o):
             o.max_z,
             round(check_min_z(o), 6),
         )
-        chunk_copies = []
-        chunks = []
+        chunk_copies = [[chunk.copy(), layer] for chunk in path_samples for layer in layers]
 
         # Include Layer information in Chunk list
-        for layer in layers:
-            for chunk in path_samples:
-                chunk_copies.append([chunk.copy(), layer])
+        # for layer in layers:
+        #     for chunk in path_samples:
+        #         chunk_copies.append([chunk.copy(), layer])
 
         # Set offset Z for all chunks according to the layer information,
         for chunk_layer in chunk_copies:
@@ -84,9 +84,11 @@ async def curve(o):
 
             log.info(f"Layer: {layer[1]}")
 
+        chunks = [chunk_layer[0] for chunk_layer in chunk_copies]
+
         # Strip Layer information from extendorder and transfer them to Chunks
-        for chunk_layer in chunk_copies:
-            chunks.append(chunk_layer[0])
+        # for chunk_layer in chunk_copies:
+        #     chunks.append(chunk_layer[0])
 
         chunks_to_mesh(chunks, o)  # finish by converting to mesh
 

@@ -105,10 +105,7 @@ async def oclGetWaterline(operation, chunks):
         wl_loops = waterline.getLoops()
 
         for loop in wl_loops:
-            inpoints = []
-
-            for p in loop:
-                inpoints.append((p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE))
+            inpoints = [(p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE) for p in loop]
 
             inpoints.append(inpoints[0])
             chunk = CamPathChunk(inpoints=inpoints)

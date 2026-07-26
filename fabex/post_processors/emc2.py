@@ -1,3 +1,4 @@
+from ..exception import CamException
 from . import iso, nc
 
 
@@ -247,7 +248,8 @@ class Creator(iso.Creator):
 
     def start_CRC(self, left=True, radius=0.0):
         if self.t is None:
-            raise "No tool specified for start_CRC()"
+            message = "No tool specified for start_CRC()"
+            raise CamException(message)
         if left:
             self.write(
                 ("G41" + self.SPACE() + "D%i") % self.t

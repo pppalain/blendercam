@@ -48,13 +48,9 @@ def shapely_remove_doubles(p, optimize_threshold):
 
     soptions = ["distance", "distance", 0.0, 5, optimize_threshold, 5, optimize_threshold]
     for ci, c in enumerate(p.boundary):  # in range(0,len(p)):
-        veclist = []
-        for v in c:
-            veclist.append(Vector((v[0], v[1])))
+        veclist = [Vector((v[0], v[1])) for v in c]
         s = curve_simplify.simplify_RDP(veclist, soptions)
-        nc = []
-        for i in range(len(s)):
-            nc.append(c[s[i]])
+        nc = [c[s[i]] for i in range(len(s))]
 
         if len(nc) > 2:
             pnew.addContour(nc, p.isHole(ci))
@@ -215,7 +211,8 @@ def shapely_validate(chunks):
             try:
                 ch.poly = Polygon(ch.points[:, :2])
             except Exception as exc:
-                raise CamException("Invalid Curve Geometry") from exc
+                message = "Invalid Curve Geometry"
+                raise CamException(message) from exc
 
             if not ch.poly.is_valid:
                 validity_error = explain_validity(ch.poly)
@@ -235,17 +232,18 @@ def shapely_validate(chunks):
                     # Get 3D View Context for overrides
                     # So that 3D View Operators will still run
                     # When called from Calculate Path button in Properties
-                    area = [a for a in bpy.context.screen.areas if a.type == "VIEW_3D"][0]
-                    region = [r for r in area.regions if r.type == "WINDOW"][0]
+                    area = next(a for a in bpy.context.screen.areas if a.type == "VIEW_3D")
+                    region = next(r for r in area.regions if r.type == "WINDOW")
                     with bpy.context.temp_override(area=area, region=region):
                         bpy.ops.view3d.view_axis(type="TOP")
                         bpy.ops.view3d.view_selected()
                         space = area.spaces.active
-                        if space and space.type == 'VIEW_3D':
+                        if space and space.type == "VIEW_3D":
                             rv3d = space.region_3d
                             rv3d.view_distance *= 0.01
 
-                    raise CamException(f"Invalid curve geometry: {validity_error}")
+                    message = f"Invalid curve geometry: {validity_error}"
+                    raise CamException(message)
         else:
             ch.poly = Polygon()
 
@@ -382,9 +380,8 @@ def chunks_to_shapely(chunks):
 def shapely_to_chunks(p, zlevel):
     chunk_builders = []
     seq = shapely_to_coordinates(p)
-    i = 0
 
-    for s in seq:
+    for i, s in enumerate(seq):
         if len(s) > 1:
             chunk = CamPathChunkBuilder([])
 
@@ -395,6 +392,6 @@ def shapely_to_chunks(p, zlevel):
                     chunk.points.append((v[0], v[1], zlevel))
 
             chunk_builders.append(chunk)
-        i += 1
+
     chunk_builders.reverse()  # this is for smaller shapes first.
     return [c.to_chunk() for c in chunk_builders]

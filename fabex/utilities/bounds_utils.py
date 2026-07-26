@@ -86,7 +86,8 @@ def get_bounds_worldspace(obs, use_modifiers=False):
                 bpy.ops.outliner.orphans_purge()
             else:
                 if not hasattr(ob.data, "splines"):
-                    raise CamException("Can't do CAM operation on the selected object type")
+                    message = "Can't do CAM operation on the selected object type"
+                    raise CamException(message)
                 # for coord in bb:
                 for c in ob.data.splines:
                     for p in c.bezier_points:

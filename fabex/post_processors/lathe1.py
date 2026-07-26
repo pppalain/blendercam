@@ -7,6 +7,7 @@
 
 import math
 
+from ..exception import CamException
 from . import iso_lathe_codes as iso
 from . import nc
 
@@ -463,7 +464,8 @@ class CreatorIso(nc.Creator):
     def start_CRC(self, left=True, radius=0.0):
         # set up prep code, to be output on next line
         if self.t is None:
-            raise "No tool specified for start_CRC()"
+            message = "No tool specified for start_CRC()"
+            raise CamException(message)
         self.g = ("G41" + iso.codes.SPACE() + "D%i") % self.t
 
     def end_CRC(self):

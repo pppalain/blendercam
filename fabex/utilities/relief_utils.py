@@ -728,8 +728,8 @@ def build_mesh(mesh_z, br):
     numX = mesh_z.shape[0]
     log.info(f"{numX}, {numY}")
 
-    verts = list()
-    faces = list()
+    verts = []
+    faces = []
 
     for i, row in enumerate(mesh_z):
         for j, col in enumerate(row):
@@ -1068,9 +1068,8 @@ def relief(br):
     nar = 1 - nar  # reverse z buffer+ add something
     log.info(f"Range: {nar.min()}, {nar.max()}")
     if nar.min() - nar.max() == 0:
-        raise ReliefError(
-            "Input Image Is Blank - Check You Have the Correct View Layer or Input Image Set."
-        )
+        message = "Input Image Is Blank - Check You Have the Correct View Layer or Input Image Set."
+        raise ReliefError(message)
 
     gx = nar.copy()
     gx.fill(0)

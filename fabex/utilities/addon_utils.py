@@ -67,9 +67,8 @@ def python_dependencies():
                 subprocess.check_call([sys.executable, "-m", "pip", "install", module])
             except:
                 log.debug("Python Dependencies Not Found!")
-                raise CamException(
-                    "Fabex couldn't install required Python libraries! Check your Blender Python Version and Location!"
-                )
+                message = "Fabex couldn't install required Python libraries! Check your Blender Python Version and Location!"
+                raise CamException(message)
 
 
 def load_defaults(addon_prefs):
@@ -396,7 +395,7 @@ def edit_user_post_processor():
 
     try:
         areas = bpy.data.workspaces["Scripting"].screens["Scripting"].areas
-        text_editor = [area.spaces[0] for area in areas if area.type == "TEXT_EDITOR"][0]
+        text_editor = next(area.spaces[0] for area in areas if area.type == "TEXT_EDITOR")
 
         with bpy.context.temp_override(space=text_editor):
             text_editor.text = bpy.data.texts["user.py"]

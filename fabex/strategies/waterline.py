@@ -29,7 +29,7 @@ from ..utilities.waterline_utils import oclGetWaterline
 async def waterline(o):
     log.info(heading("Strategy: Waterline"))
 
-    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
+    climb_CW, _climb_CCW, _conventional_CW, conventional_CCW = get_move_and_spin(o)
 
     if o.optimisation.use_opencamlib:
         get_ambient(o)

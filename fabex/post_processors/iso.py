@@ -9,6 +9,7 @@ import math
 
 import bpy
 
+from ..exception import CamException
 from . import nc
 from .format import Address, AddressPlusMinus, Format
 
@@ -375,7 +376,8 @@ class Creator(nc.Creator):
             if self.fixture_order[i] == self.fixture_wanted:
                 self.fixture_wanted = self.fixture_order[i + 1]
                 return
-        raise "too many fixtures wanted!"
+        message = "too many fixtures wanted!"
+        raise CamException(message)
 
     def get_fixture(self):
         return self.fixture_wanted
@@ -1176,7 +1178,8 @@ class Creator(nc.Creator):
     def start_CRC(self, left=True, radius=0.0):
         # set up prep code, to be output on next line
         if self.t is None:
-            raise "No tool specified for start_CRC()"
+            message = "No tool specified for start_CRC()"
+            raise CamException(message)
         if left:
             self.write(self.SPACE() + "G41")
         else:

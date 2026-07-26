@@ -69,7 +69,8 @@ def mesh_from_curve(o, use_modifiers=False):
         bpy.ops.object.convert(target="CURVE", keep_original=False)
     elif co.type != "CURVE":  # curve must be a curve...
         bpy.ops.object.delete()  # delete temporary object
-        raise CamException("Source Curve Object Must Be of Type Curve")
+        message = "Source Curve Object Must Be of Type Curve"
+        raise CamException(message)
 
     co.data.dimensions = "3D"
     co.data.bevel_depth = 0

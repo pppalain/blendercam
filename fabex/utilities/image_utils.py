@@ -476,8 +476,7 @@ def render_sample_image(o):
                 (scene.world, "mist_settings"),
             ]
 
-            for ob in scene.objects:
-                SETTINGS_TO_BACKUP.append((ob, "hide_render"))
+            SETTINGS_TO_BACKUP.extend((ob, "hide_render") for ob in scene.objects)
             backup_settings = None
 
             ############################################################3
@@ -505,7 +504,7 @@ def render_sample_image(o):
                     node_tree = scene.compositing_node_group
                 else:
                     scene.use_nodes = True
-                    scene.node_tree
+                    node_tree = scene.node_tree
 
                 node_tree.links.clear()
                 node_tree.nodes.clear()

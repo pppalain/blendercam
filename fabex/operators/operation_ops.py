@@ -21,7 +21,7 @@ from ..utilities.machine_utils import add_machine_area_object
 
 def copy_property_group_data(source, target):
     """Copy nested PropertyGroup data from source to target."""
-    for key in source.keys():
+    for key in source:
         try:
             value = source[key]
             if isinstance(value, bpy.types.PropertyGroup):
@@ -40,7 +40,7 @@ def copy_property_group_data(source, target):
 def copy_operation_properties(source, target):
     """Copy all writable CAM operation properties from source to target."""
     # 1. Direct key assignment (bypasses update callbacks)
-    for key in source.keys():
+    for key in source:
         try:
             target[key] = source[key]
         except Exception:
@@ -117,7 +117,7 @@ class CamOperationAdd(Operator):
         """
         # Open Sidebar to show Operation Settings
         if context.scene.interface.operation_location == "SIDEBAR":
-            view3d = [a for a in context.screen.areas if a.type == "VIEW_3D"][0]
+            view3d = next(a for a in context.screen.areas if a.type == "VIEW_3D")
             view3d.spaces[0].show_region_ui = True
 
         s = bpy.context.scene
@@ -128,7 +128,7 @@ class CamOperationAdd(Operator):
             self.report({"ERROR_INVALID_INPUT"}, "Please Add an Object to Base the Operation on.")
             return {"CANCELLED"}
 
-        minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace([ob])
+        _minx, _miny, minz, _maxx, _maxy, _maxz = get_bounds_worldspace([ob])
         s.cam_operations.add()
         o = s.cam_operations[-1]
         o.object_name = ob.name

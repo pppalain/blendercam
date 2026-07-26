@@ -167,12 +167,9 @@ def point_on_line(a, b, c, tolerance):
     norms = np.linalg.norm(b) * np.linalg.norm(c)  # find norms
     # Ensure that values aren't == 0, which would cause
     # a Divide by Zero error on the next line
-    if not dot_pr == 0 and not norms == 0:
+    if dot_pr != 0 and norms != 0:
         # find angle between the two vectors
         angle = np.rad2deg(np.arccos(dot_pr / norms))
-        if angle > tolerance:
-            return False
-        else:
-            return True
+        return not angle > tolerance
     else:
         return True

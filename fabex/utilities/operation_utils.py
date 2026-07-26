@@ -116,13 +116,13 @@ def reload_paths(o):
 
     s = bpy.context.scene
     oname = s.cam_names.path_name_full
-    ob = s.objects[oname] if oname in s.objects else None
+    ob = s.objects.get(oname, None)
     old_pathmesh = s.objects[oname].data if oname in s.objects else None
 
     picklepath = get_cache_path(o) + ".pickle"
-    f = open(picklepath, "rb")
-    d = pickle.load(f)
-    f.close()
+    with open(picklepath, "rb") as f:
+        d = pickle.load(f)
+        # f.close()
 
     o.info.warnings = d["warnings"]
     o.info.duration = d["duration"]

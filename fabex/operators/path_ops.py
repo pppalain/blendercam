@@ -443,9 +443,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
         s = context.scene
         o = s.cam_operations[s.cam_active_operation] if len(s.cam_operations) > 0 else None
 
-        if o is not None and source_valid(o, context):
-            return True
-        return False
+        return bool(o is not None and source_valid(o, context))
 
     async def execute_async(self, context):
         """Execute an asynchronous calculation of a path.
@@ -515,7 +513,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
 
         try:
             areas = bpy.data.workspaces["Scripting"].screens["Scripting"].areas
-            text_editor = [area.spaces[0] for area in areas if area.type == "TEXT_EDITOR"][0]
+            text_editor = next(area.spaces[0] for area in areas if area.type == "TEXT_EDITOR")
 
             with context.temp_override(space=text_editor):
                 text_editor.text = bpy.data.texts[f"{name}{extension}"]
@@ -550,12 +548,10 @@ class PathsAll(Operator):
                 typically {'FINISHED'}.
         """
 
-        i = 0
-        for o in bpy.context.scene.cam_operations:
+        for i, o in enumnerate(bpy.context.scene.cam_operations):
             bpy.context.scene.cam_active_operation = i
             log.info(heading(f"Calculating Path : {o.name}"))
             bpy.ops.object.calculate_cam_paths_background()
-            i += 1
 
         return {"FINISHED"}
 
@@ -629,7 +625,7 @@ class PathsChain(Operator, AsyncOperatorMixin):
         s = context.scene
 
         # Ensure there is an active object, and force Object Mode
-        if not context.mode == "OBJECT":
+        if context.mode != "OBJECT":
             operations = context.scene.cam_operations
             active_operation = operations[context.scene.cam_active_operation]
             context_object = context.scene.objects[active_operation.object_name]

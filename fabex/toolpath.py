@@ -79,7 +79,8 @@ async def get_path(context, operation):
             auto_export.
     """
     if operation.feedrate > context.scene.cam_machine.feedrate_max:
-        raise CamException("Operation Feedrate is greater than Machine Maximum!")
+        message = "Operation Feedrate is greater than Machine Maximum!"
+        raise CamException(message)
 
     t = time.process_time()
 
@@ -96,7 +97,7 @@ async def get_path(context, operation):
     operation.update_ambient_tag = True
     operation.update_bullet_collision_tag = True
 
-    three_axis, four_axis, five_axis, indexed_four_axis, indexed_five_axis = get_operation_axes(
+    three_axis, four_axis, _five_axis, indexed_four_axis, indexed_five_axis = get_operation_axes(
         o=operation
     )
     get_operation_sources(operation)

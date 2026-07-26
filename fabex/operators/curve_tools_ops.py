@@ -566,7 +566,7 @@ class CamCurveSimpleOvercuts(Operator):
                         v1 = v1.xy  # Vector((v1.x,v1.y,0))
                         v2 = Vector(c.coords[i2]) - Vector(co)
                         v2 = v2.xy  # v2 = Vector((v2.x,v2.y,0))
-                        if not v1.length == 0 and not v2.length == 0:
+                        if v1.length != 0 and v2.length != 0:
                             a = v1.angle_signed(v2)
                             sign = 1
 
@@ -687,7 +687,7 @@ class CamCurveBoneFilletOvercuts(Operator):
         sign = -1 if self.do_invert else 1
         isTBone = self.style == "TBONE"
         # indexes in insideCorner tuple
-        POS, V1, V2, A, IDX = range(5)
+        _POS, V1, V2, _A, IDX = range(5)
 
         def add_overcut(a):
             nonlocal pos, centerv, radius, extendedv, sign, negative_overcuts, positive_overcuts
@@ -769,7 +769,7 @@ class CamCurveBoneFilletOvercuts(Operator):
                         v1 = Vector(co).xy - Vector(c.coords[i1]).xy
                         v2 = Vector(c.coords[i2]).xy - Vector(co).xy
 
-                        if not v1.length == 0 and not v2.length == 0:
+                        if v1.length != 0 and v2.length != 0:
                             a = v1.angle_signed(v2)
                             insideCornerFound = False
                             outsideCornerFound = False
@@ -1003,31 +1003,34 @@ class CamMeshGetPockets(Operator):
                 bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type="FACE")
                 bpy.ops.mesh.select_all(action="DESELECT")
                 bpy.ops.object.editmode_toggle()
-                i = 0
-                for face in mesh.polygons:
+
+                for i, face in enumerate(mesh.polygons):
                     # n = mw @ face.normal
                     n = face.normal.to_4d()
                     n.w = 0
                     n = (mw @ n).to_3d().normalized()
+
                     if n.z > self.threshold:
                         face.select = True
                         z = (mw @ mesh.vertices[face.vertices[0]].co).z
+
                         if z < self.z_limit:
                             if pockets.get(z) is None:
                                 pockets[z] = [i]
                             else:
                                 pockets[z].append(i)
-                    i += 1
+
                 log.info(f"Pockets: {len(pockets)}")
+
                 for p in pockets:
                     log.info(f"Pocket: {p}")
-                ao = bpy.context.active_object
-                i = 0
-                for p in pockets:
-                    log.info(f"Pocket: {i}")
-                    i += 1
 
+                ao = bpy.context.active_object
+
+                for i, p in enumerate(pockets):
+                    log.info(f"Pocket: {i}")
                     sf = pockets[p]
+
                     for face in mesh.polygons:
                         face.select = False
 
@@ -1093,15 +1096,27 @@ class CamOffsetSilhouete(Operator):
     )
     style: EnumProperty(
         name="Corner Type",
-        items=(("1", "Round", ""), ("2", "Mitre", ""), ("3", "Bevel", "")),
+        items=(
+            ("1", "Round", ""),
+            ("2", "Mitre", ""),
+            ("3", "Bevel", ""),
+        ),
     )
     caps: EnumProperty(
         name="Cap Type",
-        items=(("round", "Round", ""), ("square", "Square", ""), ("flat", "Flat", "")),
+        items=(
+            ("round", "Round", ""),
+            ("square", "Square", ""),
+            ("flat", "Flat", ""),
+        ),
     )
     align: EnumProperty(
         name="Alignment",
-        items=(("worldxy", "World XY", ""), ("bottom", "Base Bottom", ""), ("top", "Base Top", "")),
+        items=(
+            ("worldxy", "World XY", ""),
+            ("bottom", "Base Bottom", ""),
+            ("top", "Base Top", ""),
+        ),
     )
     open_type: EnumProperty(
         name="Curve Type",
@@ -1128,13 +1143,8 @@ class CamOffsetSilhouete(Operator):
         end_pt = geom.interpolate(1, normalized=True)
         straight_dist = start_pt.distance(end_pt)
         if straight_dist == 0.0:
-            if length == 0.0:
-                return True
-            return False
-        elif length / straight_dist == 1:
-            return True
-        else:
-            return False
+            return length == 0.0
+        return length / straight_dist == 1
 
     # this is almost same as getobjectoutline, just without the need of operation data
     def execute(self, context):
@@ -1178,9 +1188,7 @@ class CamOffsetSilhouete(Operator):
             point = 0
 
         # extract X,Y coordinates from the vertices data and put them into a LineString object
-        coords = []
-        for v in obj.data.vertices:
-            coords.append((v.co.x, v.co.y))
+        coords = [(v.co.x, v.co.y) for v in obj.data.vertices]
         remove_multiple("temp_mesh")  # delete temporary mesh
         remove_multiple("dilation")  # delete old dilation objects
 

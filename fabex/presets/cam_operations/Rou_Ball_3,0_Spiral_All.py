@@ -1,5 +1,6 @@
-import bpy
 from pathlib import Path
+
+import bpy
 
 bpy.ops.scene.cam_operation_add()
 

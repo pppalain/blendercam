@@ -112,13 +112,12 @@ def exportModelsToSTL(operation):
         operation: An object containing a collection of collision objects to be exported.
     """
 
-    file_number = 0
-    for collision_object in operation.objects:
+    for i, collision_object in enumerate(operation.objects):
         activate(collision_object)
         bpy.ops.object.duplicate(linked=False)
         # collision_object = bpy.context.scene.objects.active
         # bpy.context.scene.objects.selected = collision_object
-        file_name = os.path.join(tempfile.gettempdir(), f"model{file_number!s}.stl")
+        file_name = os.path.join(tempfile.gettempdir(), f"model{i!s}.stl")
 
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
@@ -154,8 +153,6 @@ def exportModelsToSTL(operation):
         )
 
         bpy.ops.object.delete()
-
-        file_number += 1
 
 
 async def oclSamplePoints(operation, points):
@@ -276,16 +273,16 @@ def get_oclSTL(operation):
 
         # FIXME needs to work with collections
     if not found_mesh:
-        raise CamException(
+        message = (
             "This Operation Requires a Mesh or Curve Object or Equivalent (e.g. Text, Volume)."
         )
+        raise CamException(message)
 
     if triangle_count == 0:
-        raise CamException(
-            "OpenCAMLib requires a mesh with polygons. "
-            "The selected object has no triangulated faces - "
-            "make sure it has geometry (not just vertices or edges)."
-        )
+        message = "OpenCAMLib requires a mesh with polygons. "
+        "The selected object has no triangulated faces - "
+        "make sure it has geometry (not just vertices or edges)."
+        raise CamException(message)
 
     return oclSTL
 
@@ -403,7 +400,7 @@ async def oclResampleChunks(operation, chunks_to_resample, use_cached_mesh):
             chunks in place.
     """
 
-    tmp_chunks = list()
+    tmp_chunks = []
     tmp_chunks.append(CamPathChunk(inpoints=[]))
 
     for chunk, i_start, i_length in chunks_to_resample:

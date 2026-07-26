@@ -32,10 +32,7 @@ class Parser:
 
     def readline(self):
         self.line = self.file_in.readline().rstrip()
-        if len(self.line):
-            return True
-        else:
-            return False
+        return bool(len(self.line))
 
     def write(self, s):
         self.file_out.write(s)

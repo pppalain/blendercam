@@ -253,16 +253,23 @@ async def pocket(o):
 
                         # invert helix if not the typical direction
                         if conventional_CW or climb_CCW:
-                            inverse_helix = []
-
-                            for vector in entry_helix:
-                                inverse_helix.append(
-                                    (
-                                        2 * point[0] - vector[0],
-                                        vector[1],
-                                        vector[2],
-                                    )
+                            inverse_helix = [
+                                (
+                                    2 * point[0] - vector[0],
+                                    vector[1],
+                                    vector[2],
                                 )
+                                for vector in entry_helix
+                            ]
+
+                            # for vector in entry_helix:
+                            #     inverse_helix.append(
+                            #         (
+                            #             2 * point[0] - vector[0],
+                            #             vector[1],
+                            #             vector[2],
+                            #         )
+                            #     )
 
                             entry_helix = inverse_helix
 

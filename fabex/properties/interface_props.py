@@ -32,7 +32,7 @@ def update_interface(self, context):
 
 
 def update_shading(self, context):
-    view3d = [a.spaces[0] for a in context.screen.areas if a.type == "VIEW_3D"][0]
+    view3d = next(a.spaces[0] for a in context.screen.areas if a.type == "VIEW_3D")
     shading = view3d.shading
     overlay = view3d.overlay
 
@@ -201,36 +201,27 @@ def update_layout(self, context):
     # Assign Panels to their location
     # Main Panels
     if main_location == "PROPERTIES":
-        for cls in main_classes:
-            properties_area_classes.append(cls)
+        properties_area_classes = list(main_classes)
     elif main_location == "SIDEBAR":
-        for cls in main_classes:
-            sidebar_area_classes.append(cls)
+        sidebar_area_classes = list(main_classes)
     elif main_location == "TOOLS":
-        for cls in main_classes:
-            tools_area_classes.append(cls)
+        tools_area_classes = list(main_classes)
 
     # Operation Panels
     if operation_location == "PROPERTIES":
-        for cls in operation_classes:
-            properties_area_classes.append(cls)
+        properties_area_classes = list(operation_classes)
     elif operation_location == "SIDEBAR":
-        for cls in operation_classes:
-            sidebar_area_classes.append(cls)
+        sidebar_area_classes = list(operation_classes)
     elif operation_location == "TOOLS":
-        for cls in operation_classes:
-            tools_area_classes.append(cls)
+        tools_area_classes = list(operation_classes)
 
     # Tools Panels
     if tools_location == "PROPERTIES":
-        for cls in tools_classes:
-            properties_area_classes.append(cls)
+        properties_area_classes = list(tools_classes)
     elif tools_location == "SIDEBAR":
-        for cls in tools_classes:
-            sidebar_area_classes.append(cls)
+        sidebar_area_classes = list(tools_classes)
     elif tools_location == "TOOLS":
-        for cls in tools_classes:
-            tools_area_classes.append(cls)
+        tools_area_classes = list(tools_classes)
 
     # Re-register the panels in their new areas
     # Properties Area
@@ -259,7 +250,6 @@ def update_layout(self, context):
 
     # Update Preferences with current settings and save
     addon_prefs.default_layout = panel_layout
-
     addon_prefs.default_main_location = main_location
     addon_prefs.default_operation_location = operation_location
     addon_prefs.default_tools_location = tools_location
@@ -286,34 +276,10 @@ class CAM_INTERFACE_Properties(PropertyGroup):
         name="Interface",
         description="Choose visible options",
         items=[
-            (
-                "0",
-                "Basic",
-                "Only show essential options",
-                "",
-                0,
-            ),
-            (
-                "1",
-                "Advanced",
-                "Show advanced options",
-                "",
-                1,
-            ),
-            (
-                "2",
-                "Complete",
-                "Show all options",
-                "",
-                2,
-            ),
-            (
-                "3",
-                "Experimental",
-                "Show experimental options",
-                "EXPERIMENTAL",
-                3,
-            ),
+            ("0", "Basic", "Only show essential options", "", 0),
+            ("1", "Advanced", "Show advanced options", "", 1),
+            ("2", "Complete", "Show all options", "", 2),
+            ("3", "Experimental", "Show experimental options", "EXPERIMENTAL", 3),
         ],
         default="0",
         update=update_interface,

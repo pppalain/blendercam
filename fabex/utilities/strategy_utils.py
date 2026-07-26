@@ -379,7 +379,7 @@ def parallel_pattern(o, angle):
     e = Euler((0, 0, angle))
     reverse = False
 
-    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
+    _climb_CW, climb_CCW, conventional_CW, _conventional_CCW = get_move_and_spin(o)
     meander_reverse = reverse and o.movement.type == "MEANDER"
     step_back_reverse = reverse and o.movement.parallel_step_back
 

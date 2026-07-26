@@ -319,9 +319,7 @@ def compare(v1, v2, vmiddle, e):
     vect1.normalize()
     vect1 *= vect2.length
     v = vect2 - vect1
-    if v.length < e:
-        return True
-    return False
+    return v.length < e
 
 
 def is_vertical_limit(v1, v2, limit):
@@ -862,9 +860,9 @@ def active_to_coords():
     bpy.ops.object.convert(target="MESH")
     active_name("_tmp_mesh")
 
-    coords = []
-    for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-        coords.append((v.co.x, v.co.y))
+    # extract X,Y coordinates from the vertices data
+    coords = [(v.co.x, v.co.y) for v in obj.data.vertices]
+
     remove_multiple("_tmp_mesh")
     return coords
 
@@ -1046,7 +1044,7 @@ def dilate_array(ar, cycles):
 
 def rotate_point_by_point(originp, p, ang):  # rotate point around another point with angle
     ox, oy, oz = originp
-    px, py, pz = p
+    px, py, _pz = p
 
     if ang == abs(pi / 2):
         d = ang / abs(ang)

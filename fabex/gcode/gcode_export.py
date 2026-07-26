@@ -196,7 +196,7 @@ def export_gcode_path(filename, vertslist, operations):
             rots = mesh.shape_keys.key_blocks["rotations"].data
 
         # spindle rpm and direction
-        spdir_clockwise = True if o.movement.spindle_rotation == "CW" else False
+        spdir_clockwise = o.movement.spindle_rotation == "CW"
 
         # write tool, not working yet probably
         # print (last_cutter)
