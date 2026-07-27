@@ -240,7 +240,7 @@ def source_valid(o, context):
     return valid
 
 
-def operation_valid(self, context):
+def operation_valid(o, context):
     """Validate the current CAM operation in the given context.
 
     This method checks if the active CAM operation is valid based on the
@@ -252,13 +252,28 @@ def operation_valid(self, context):
         context (Context): The context containing the scene and CAM operations.
     """
 
-    # Safety guard: avoid running popup if context or scene isn't ready
+    # Safety guard 1: invalid context
     if context is None or not getattr(context, "scene", None):
         return
 
-    # Use 'self' directly so it checks THIS operation, not whatever active index is set to
-    o = self
+    scene = context.scene
+
+    # Safety guard 2: no operations exist in scene
+    if not hasattr(scene, "cam_operations") or len(scene.cam_operations) == 0:
+        return
+
+    # Check bounds safety for active index
+    if scene.cam_active_operation >= len(scene.cam_operations):
+        return
+
+    # Safely retrieve the operation
+    o = scene.cam_operations[scene.cam_active_operation]
+    
     o.changed = True
+    
+    # Check if this operation ALREADY has the warning so we don't trigger duplicate popups
+    already_warned = "Invalid Source Object" in o.info.warnings
+    
     o.valid = source_valid(o, context)
     invalidmsg = "Invalid Source Object for Operation.\n"
 
@@ -274,6 +289,7 @@ def operation_valid(self, context):
 
     if o.geometry_source == "IMAGE":
         o.optimisation.use_exact = False
+        
     o.update_offset_image_tag = True
     o.update_z_buffer_image_tag = True
     log.info("Validity checked for operation: %s", o.name)
