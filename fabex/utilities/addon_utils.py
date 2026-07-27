@@ -21,7 +21,6 @@ def addon_dependencies():
     can't find them, attempts to download them from Blender.
     """
     preferences = bpy.context.preferences
-    addons = preferences.addons
     preferences.system.use_online_access = True
 
     modules = [

@@ -12,7 +12,7 @@ from ..utilities.strategy_utils import parallel_pattern
 async def parallel(o):
     log.info(heading("Strategy: Parallel"))
 
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    _minx, _miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathSamples = parallel_pattern(o, o.parallel_angle)
     chunks = []
     layers = get_layers(o, o.max_z, o.min.z)

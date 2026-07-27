@@ -7,6 +7,7 @@ from mathutils import (
     Vector,
 )
 
+from ..bridges import use_bridges
 from ..chunk_builder import CamPathChunkBuilder
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
@@ -24,7 +25,7 @@ async def spiral(o):
     log.info(heading("Strategy: Spiral"))
 
     _climb_CW, climb_CCW, conventional_CW, _conventional_CCW = get_move_and_spin(o)
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    _minx, _miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathSamples = []
     zlevel = 1
     chunk = CamPathChunkBuilder([])
@@ -32,8 +33,8 @@ async def spiral(o):
     pathstep = o.distance_along_paths
     midx = (o.max.x + o.min.x) / 2
     midy = (o.max.y + o.min.y) / 2
-    x = pathd / 4
-    y = pathd / 4
+    pathd / 4
+    pathd / 4
     v = Vector((pathd / 4, 0, 0))
     e = Euler((0, 0, 0))
     chunk.points.append((midx + v.x, midy + v.y, zlevel))

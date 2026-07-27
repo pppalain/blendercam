@@ -23,7 +23,7 @@ async def outline_fill(o):
 
     climb_CW, _climb_CCW, _conventional_CW, conventional_CCW = get_move_and_spin(o)
 
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    minx, miny, _minz, maxx, maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathchunks = []
     zlevel = 1
     polys = o.silhouette.geoms

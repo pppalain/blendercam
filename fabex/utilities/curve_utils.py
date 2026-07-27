@@ -93,8 +93,8 @@ def mesh_from_curve(o, use_modifiers=False):
         bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
-    except:
-        pass
+    except Exception as e:
+        log.debug(e)
 
     return bpy.context.active_object
 

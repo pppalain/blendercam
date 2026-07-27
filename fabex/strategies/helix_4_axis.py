@@ -38,9 +38,8 @@ async def helix_four_axis(o):
     """
 
     log.info(heading("Strategy: Helix 4 Axis"))
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    _minx, _miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathchunks = []
-    zlevel = 1
 
     # set axes for various options, Z option is obvious nonsense now.
     if o.rotary_axis_1 == "X":

@@ -268,12 +268,11 @@ def operation_valid(o, context):
 
     # Safely retrieve the operation
     o = scene.cam_operations[scene.cam_active_operation]
-    
+
     o.changed = True
-    
+
     # Check if this operation ALREADY has the warning so we don't trigger duplicate popups
-    already_warned = "Invalid Source Object" in o.info.warnings
-    
+
     o.valid = source_valid(o, context)
     invalidmsg = "Invalid Source Object for Operation.\n"
 
@@ -289,7 +288,7 @@ def operation_valid(o, context):
 
     if o.geometry_source == "IMAGE":
         o.optimisation.use_exact = False
-        
+
     o.update_offset_image_tag = True
     o.update_z_buffer_image_tag = True
     log.info("Validity checked for operation: %s", o.name)
@@ -418,7 +417,7 @@ def update_image_size_y(self, context):
         i = bpy.data.images[self.source_image_name]
         if i is not None:
             size_x = self.source_image_size_x / i.size[0]
-            size_y = int(size_x * i.size[1] * 1000000) / 1000
+            int(size_x * i.size[1] * 1000000) / 1000
             # col.label(text="Image Size on Y Axis: " + unit_value_to_string(size_y, 8))
             # col.separator()
 
@@ -619,7 +618,7 @@ def check_memory_limit(o):
         o.info.warnings += "Memory Limit Exceeded!\n"
         o.info.warnings += f"Detail Size Increased to {round(o.optimisation.pixsize, 5)}\n"
 
-        log.info("Changing Sampling Resolution to %f" % o.optimisation.pixsize)
+        log.info(f"Changing Sampling Resolution to {o.optimisation.pixsize:f}")
 
     # Also check simulation_detail — governed by a separate array in simulation.py
     sim_res = (sx / o.optimisation.simulation_detail) * (sy / o.optimisation.simulation_detail)
@@ -786,7 +785,7 @@ def get_cutter_array(operation, pixsize):
         angle = radians(operation.cutter_tip_angle) / 2
         ball_r = operation.ball_radius
         cutter_r = operation.cutter_diameter / 2
-        conedepth = (cutter_r - ball_r) / tan(angle)
+        (cutter_r - ball_r) / tan(angle)
         Ball_R = ball_r / cos(angle)
         D_ofset = ball_r * tan(angle)
         s = tan(pi / 2 - angle)

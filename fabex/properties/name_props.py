@@ -4,7 +4,7 @@
 All CAM related naming properties.
 """
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 import bpy
 from bpy.props import (
@@ -66,7 +66,7 @@ name_options = [
 def setup_names():
     scene = bpy.context.scene
 
-    get_time = datetime.now().strftime
+    get_time = datetime.now(tz=UTC).strftime
 
     current_date = get_time("%y%m%d")
     current_time = get_time("%H%M%S")
@@ -78,13 +78,12 @@ def setup_names():
         strategy = active_op.strategy.title()
         op_name = active_op.name
         operation_index = scene.cam_active_operation + 1
-        chain_index = scene.cam_active_chain
     else:
         active_op = ""
         object_name = "OBJECT"
         strategy = "STRATEGY"
         op_name = "OP_NAME"
-        operation_index = chain_index = ""
+        operation_index = ""
 
     current_file = bpy.path.display_name_from_filepath(bpy.data.filepath)
 
@@ -131,7 +130,6 @@ def get_path_name(context):
     scene = bpy.context.scene
 
     names = scene.cam_names
-    sep = names.separator
 
     prefix = names.path_prefix
     main_1 = names.path_main_1
@@ -155,7 +153,6 @@ def get_operation_name(context):
     scene = bpy.context.scene
 
     names = scene.cam_names
-    sep = names.separator
 
     prefix = names.operation_prefix
     main_1 = names.operation_main_1
@@ -179,7 +176,6 @@ def get_chain_name(context):
     scene = bpy.context.scene
 
     names = scene.cam_names
-    sep = names.separator
 
     prefix = names.chain_prefix
     main_1 = names.chain_main_1
@@ -203,7 +199,6 @@ def get_simulation_name(context):
     scene = bpy.context.scene
 
     names = scene.cam_names
-    sep = names.separator
 
     prefix = names.simulation_prefix
     main_1 = names.simulation_main_1
@@ -227,7 +222,6 @@ def get_file_name(context):
     scene = bpy.context.scene
 
     names = scene.cam_names
-    sep = names.separator
 
     prefix = names.file_prefix
     main_1 = names.file_main_1
@@ -261,17 +255,10 @@ def update_names(self, context):
     scene = context.scene
     if len(scene.cam_operations) > 0:
         active_op = scene.cam_operations[scene.cam_active_operation]
-        object_name = active_op.object_name
-        strategy = active_op.strategy.title()
-        op_name = active_op.name
-        operation_index = scene.cam_active_operation + 1
-        chain_index = scene.cam_active_chain
+        active_op.strategy.title()
+        scene.cam_active_operation + 1
     else:
         active_op = ""
-        object_name = "OBJECT"
-        strategy = "STRATEGY"
-        op_name = "OP_NAME"
-        operation_index = chain_index = ""
 
 
 class CAM_NAME_Properties(PropertyGroup):

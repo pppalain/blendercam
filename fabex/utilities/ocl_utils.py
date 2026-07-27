@@ -6,6 +6,7 @@ Functions used by OpenCAMLib sampling.
 """
 
 import os
+import sys
 import tempfile
 from math import radians, tan
 
@@ -350,7 +351,7 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
         )
     else:
         log.info(f"Cutter Unsupported: {op_cutter_type}\n")
-        quit()
+        sys.exit()
 
     bdc = ocl.BatchDropCutter()
 

@@ -169,7 +169,6 @@ async def medial_axis(o):
         log.info(f"Tesselating: ({vertex_count} Points)")
 
         x_buffer, y_buffer = 5, 5
-        z_position = 0
         verts_as_points = [Point(vertex[0], vertex[1], vertex[2]) for vertex in vertices]
         points, edges = compute_voronoi_diagram(
             verts_as_points,

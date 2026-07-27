@@ -130,7 +130,9 @@ class AsyncOperatorMixin:
 
         try:
             if self._is_cancelled:
-                (msg, args) = self.coroutine.send(AsyncCancelledException("Cancelled with ESC Key"))
+                (_msg, args) = self.coroutine.send(
+                    AsyncCancelledException("Cancelled with ESC Key")
+                )
                 raise StopIteration
             else:
                 (_msg, args) = self.coroutine.send(None)

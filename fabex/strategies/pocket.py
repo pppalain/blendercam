@@ -150,9 +150,7 @@ async def pocket(o):
         i = 0
         chunks = []
         last_chunks = []
-        centers = None
-        first_outline = point  # for testing in the end.
-        prest = point.buffer(-cutter_offset, circle_detail)
+        point.buffer(-cutter_offset, circle_detail)
 
         while not point.is_empty:
             if o.pocket_to_curve:

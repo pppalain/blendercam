@@ -1,7 +1,7 @@
 """Fabex 'logging_utils.py' © 2025"""
 
 import logging
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 LOG_WIDTH = 60
@@ -23,7 +23,7 @@ def heading(text):
     return text
 
 
-current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+current_time = datetime.now(tz=UTC).strftime("%Y%m%d_%H%M%S")
 
 log = logging.getLogger("fabex_logger")
 log.setLevel(logging.DEBUG)

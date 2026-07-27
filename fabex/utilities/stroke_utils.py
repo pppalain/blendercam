@@ -44,7 +44,7 @@ def crazy_stroke_image(o):
     """
 
     # this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    minx, miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
 
     r = int((o.cutter_diameter / 2.0) / o.optimisation.pixsize)
@@ -101,7 +101,6 @@ def crazy_stroke_image(o):
     elif conventional_CCW or climb_CW:
         anglerange = [0, pi]
         testangleinit = -1
-        angleincrement = angleincrement
 
     while totpix > 0 and totaltests < maxtotaltests:  # a ratio when the algorithm is allowed to end
         success = False
@@ -260,7 +259,7 @@ def crazy_stroke_image_binary(o, ar, avoidar):
     # try to go in various directions.
     # if somewhere the cutter load is appropriate - it is correct magnitude and side, continue in that directon
     # try to continue straight or around that, looking
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    minx, miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
     # TODO this should be somewhere else, but here it is now to get at least some ambient for start of the operation.
     ar[: o.borderwidth, :] = 0
@@ -293,6 +292,7 @@ def crazy_stroke_image_binary(o, ar, avoidar):
 
     chunk_builders = []
     # try to find starting point here
+    chunks = []
 
     xs = indices[0][0] - radius / 2
     xs = max(xs, radius)
@@ -331,7 +331,6 @@ def crazy_stroke_image_binary(o, ar, avoidar):
     elif conventional_CCW or climb_CW:
         anglerange = [0, pi]
         testangleinit = -anglelimit
-        angleincrement = angleincrement
 
     while totpix > 0 and totaltests < maxtotaltests:  # a ratio when the algorithm is allowed to end
         success = False

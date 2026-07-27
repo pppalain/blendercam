@@ -37,9 +37,8 @@ async def parallel_four_axis(o):
 
     log.info(heading("Strategy: Parallel 4 Axis"))
 
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    _minx, _miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathchunks = []
-    zlevel = 1
     _climb_CW, climb_CCW, conventional_CW, _conventional_CCW = get_move_and_spin(o)
 
     # set axes for various options, Z option is obvious nonsense now.

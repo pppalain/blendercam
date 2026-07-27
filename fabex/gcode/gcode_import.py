@@ -428,7 +428,7 @@ class GcodeModel:
                     coords[axis] = args[axis]
 
             else:
-                self.warn("Unknown axis '%s'" % axis)
+                self.warn(f"Unknown axis '{axis}'")
 
         # build segment
         absolute = {
@@ -496,7 +496,7 @@ class GcodeModel:
                 self.offset[axis] += self.relative[axis] - args[axis]
                 self.relative[axis] = args[axis]
             else:
-                self.warn("Unknown axis '%s'" % axis)
+                self.warn(f"Unknown axis '{axis}'")
 
     def do_M163(self, args):
         """Update the color settings for a specific segment based on given
@@ -640,8 +640,7 @@ class GcodeModel:
             None: The method modifies the instance's segments attribute in place.
         """
 
-        # smart subdivide
-        # divide edge if > subd_threshold
+        # smart subdivide - divide edge if > subd_threshold
         # do it in parser to keep index order of vertex and travel/extrude info
         # segmentation of path necessary for manipulation of color, continous deforming ect.
         subdivided_segs = []
@@ -656,19 +655,20 @@ class GcodeModel:
             seg.distance = math.sqrt(d)
 
             if seg.distance > subd_threshold:
-                subdivs = math.ceil(
-                    seg.distance / subd_threshold
-                )  # ceil makes sure that linspace interval is at least 2
+                subdivs = math.ceil(seg.distance / subd_threshold)
+                # ceil makes sure that linspace interval is at least 2
                 P1 = coords
                 P2 = seg.coords
                 # interpolated points
                 interp_coords = np.linspace(
-                    list(P1.values()), list(P2.values()), num=subdivs, endpoint=True
+                    list(P1.values()),
+                    list(P2.values()),
+                    num=subdivs,
+                    endpoint=True,
                 )
 
-                for i in range(
-                    len(interp_coords)
-                ):  # inteprolated points array back to segment object
+                for i in range(len(interp_coords)):
+                    # inteprolated points array back to segment object
                     new_coords = {
                         "X": interp_coords[i][0],
                         "Y": interp_coords[i][1],
@@ -692,7 +692,12 @@ class GcodeModel:
                         # write segment only if movement changes,
                         # avoid double coordinates due to same start and endpoint of linspace
                         new_seg = Segment(
-                            seg.type, new_coords, seg.color, seg.toolnumber, seg.lineNb, seg.line
+                            seg.type,
+                            new_coords,
+                            seg.color,
+                            seg.toolnumber,
+                            seg.lineNb,
+                            seg.line,
                         )
                         new_seg.layerIdx = seg.layerIdx
                         new_seg.style = seg.style
@@ -756,13 +761,7 @@ class Segment:
             str: A formatted string representing the object's attributes.
         """
 
-        return " <coords=%s, lineNb=%d, style=%s, layerIdx=%d, color=%s" % (
-            str(self.coords),
-            self.lineNb,
-            self.style,
-            self.layerIdx,
-            str(self.color),
-        )
+        return f" <coords={self.coords}, lineNb={self.lineNb}, style={self.style}, layerIdx={self.layerIdx}, color={self.color}"
 
 
 class Layer:
@@ -773,7 +772,7 @@ class Layer:
         self.extrudate = None
 
     def __str__(self):
-        return "<Layer: Z=%f, len(segments)=%d>" % (self.Z, len(self.segments))
+        return f"<Layer: Z={self.Z}, len(segments)={len(self.segments)}>"
 
 
 if __name__ == "__main__":

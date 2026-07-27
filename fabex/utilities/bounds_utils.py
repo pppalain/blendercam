@@ -38,7 +38,7 @@ def get_bounds_worldspace(obs, use_modifiers=False):
     """
 
     # progress('getting bounds of object(s)')
-    t = time.time()
+    time.time()
 
     maxx = maxy = maxz = -10000000
     minx = miny = minz = 10000000
@@ -183,7 +183,6 @@ def get_bounds(o):
     """
 
     # Track warnings before calculation to avoid popping up on pre-existing warnings
-    initial_warnings = o.info.warnings
 
     if o.geometry_source in ["OBJECT", "COLLECTION", "CURVE"]:
         log.info("Geometry Source: Valid")

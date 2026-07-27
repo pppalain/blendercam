@@ -367,7 +367,6 @@ class CamCurveIntarsion(Operator):
             extrude_curve2mesh(self.base_thickness)
             active_name("intarsion_perimeter")
             move(z=-self.base_thickness)
-            o6 = bpy.context.active_object
             bpy.ops.object.select_all(action="DESELECT")  # deselect new curve
 
         o3.select_set(True)
@@ -1211,10 +1210,9 @@ class CamOffsetSilhouete(Operator):
                 style = "round"
 
             if self.open_type == "leaveopen":
-                new_shape = shapely.offset_curve(
-                    line, self.offset, join_style=style
-                )  # use shapely to expand without closing the curve
-                name = "Offset: " + "%.2f" % round(self.offset * 1000) + "mm - " + ob.name
+                new_shape = shapely.offset_curve(line, self.offset, join_style=style)
+                # use shapely to expand without closing the curve
+                name = f"Offset: {round(self.offset * 1000):.2f}mm - {ob.name}"
             else:
                 new_shape = line.buffer(
                     self.offset,
@@ -1222,8 +1220,9 @@ class CamOffsetSilhouete(Operator):
                     resolution=16,
                     join_style=style,
                     mitre_limit=self.mitre_limit,
-                )  # use shapely to expand, closing the curve
-                name = "Dilation: " + "%.2f" % round(self.offset * 1000) + "mm - " + ob.name
+                )
+                # use shapely to expand, closing the curve
+                name = f"Dilation: {round(self.offset * 1000):.2f}mm - {ob.name}"
 
             # create the actual offset object based on the Shapely offset
             shapely_to_curve(name, new_shape, 0, self.open_type != "leaveopen")

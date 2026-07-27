@@ -88,8 +88,8 @@ async def drill(o):
                 rotation=False,
                 scale=True,
             )
-        except:
-            pass
+        except Exception as e:
+            log.debug(e)
 
         object_location = ob.location
 

@@ -22,6 +22,7 @@ from ..chunk_builder import (
     CamPathChunkBuilder,
 )
 from ..exception import CamException
+from .addon_utils import add_collections
 from .async_utils import progress_async
 from .collision_utils import (
     cleanup_bullet_collision,
@@ -164,8 +165,6 @@ def optimize_chunk(chunk, operation):
         points = chunk.points
         naxispoints = False
         if len(chunk.startpoints) > 0:
-            startpoints = chunk.startpoints
-            endpoints = chunk.endpoints
             naxispoints = True
 
         protect_vertical = operation.movement.protect_vertical and operation.machine_axes == "3"
@@ -320,7 +319,6 @@ def limit_chunks(chunks, o, force=False):
         nchunks = []
 
         for ch in chunks:
-            prevsampled = True
             nch = CamPathChunkBuilder()
             nch1 = None
             closed = True
@@ -339,8 +337,6 @@ def limit_chunks(chunks, o, force=False):
 
                 elif sampled:
                     nch.points.append(s)
-
-                prevsampled = sampled
 
             if (
                 len(nch.points) > 2
@@ -393,7 +389,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
         list: A list of sampled chunks organized by layers.
     """
 
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    _minx, _miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
     # prepare collision world
     if o.update_bullet_collision_tag:
@@ -403,7 +399,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
 
     cutter = o.cutter_shape
     cutterdepth = cutter.dimensions.z / 2
-    t = time.time()
+    time.time()
     totlen = 0  # total length of all chunks, to estimate sampling time.
 
     log.info(heading("Sampling Paths"))
@@ -431,6 +427,9 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
         lastlayer = None
         currentlayer = None
         lastsample = None
+        laststartpoint = None
+        lastendpoint = None
+        lastdistance = None
         lastrotation = (0, 0, 0)
         spl = len(patternchunk.startpoints)
 
@@ -494,6 +493,9 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                             lastsample is not None
                             and lastlayer is not None
                             and currentlayer is not None
+                            and laststartpoint is not None
+                            and lastdistance is not None
+                            and lastendpoint is not None
                             and lastlayer != currentlayer
                         ):  # sampling for sorted paths in layers-
                             # to go to the border of the sampled layer at least...
@@ -501,11 +503,9 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                             if currentlayer < lastlayer:
                                 growing = True
                                 r = range(currentlayer, lastlayer)
-                                spliti = 1
                             else:
                                 r = range(lastlayer, currentlayer)
                                 growing = False
-                                spliti = 0
 
                             for li, ls in enumerate(r):
                                 splitdistance = layers[ls][1]
@@ -563,7 +563,6 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                         ch.rotations.append(rotation)
                         ch.startpoints.append(startp)
                         ch.endpoints.append(endp)
-                        lastdistance = distance
 
                     elif layer[1] > distance:
                         v = sweepvect * layer[1]
@@ -581,6 +580,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
 
             lastsample = newsample
             lastrotation = rotation
+            lastdistance = distance
             laststartpoint = startp
             lastendpoint = endp
 
@@ -711,7 +711,7 @@ async def sample_chunks(o, pathSamples, layers):
             the sampled paths.
     """
 
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    minx, miny, minz, _maxx, _maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     get_ambient(o)
 
     if o.optimisation.use_exact:  # prepare collision world
@@ -733,9 +733,9 @@ async def sample_chunks(o, pathSamples, layers):
         pixsize = o.optimisation.pixsize
         coordoffset = o.borderwidth + pixsize / 2  # -m
         res = ceil(o.cutter_diameter / o.optimisation.pixsize)
-        m = res / 2
+        res / 2
 
-    t = time.time()
+    time.time()
 
     totlen = 0  # total length of all chunks, to estimate sampling time.
 
@@ -752,11 +752,9 @@ async def sample_chunks(o, pathSamples, layers):
         layeractivechunks.append(CamPathChunkBuilder([]))
         lastrunchunks.append([])
 
-    zinvert = 0
-
     if o.inverse:
         ob = bpy.data.objects[o.object_name]
-        zinvert = ob.location.z + maxz  # ob.bound_box[6][2]
+        ob.location.z + maxz  # ob.bound_box[6][2]
 
     log.info(f"Total Sample Points: {totlen}")
     # log.info("-")
@@ -768,7 +766,6 @@ async def sample_chunks(o, pathSamples, layers):
     sortingtime = timing_init()
     totaltime = timing_init()
     timing_start(totaltime)
-    lastz = minz
 
     for patternchunk in pathSamples:
         thisrunchunks = [[] for layer in layers]
@@ -859,11 +856,9 @@ async def sample_chunks(o, pathSamples, layers):
                         if currentlayer < lastlayer:
                             growing = True
                             r = range(currentlayer, lastlayer)
-                            spliti = 1
                         else:
                             r = range(lastlayer, currentlayer)
                             growing = False
-                            spliti = 0
 
                         li = 0
 
@@ -1011,7 +1006,7 @@ async def connect_chunks_low(chunks, o):
     mergedist = min(mergedist, o.cutter_diameter)
     # mergedist=10
     lastch = None
-    i = len(chunks)
+    len(chunks)
     pos = (0, 0, 0)
 
     for ch in chunks:

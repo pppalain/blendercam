@@ -218,7 +218,14 @@ async def offset_area(o, samples):
         numpy.ndarray: The updated offset image after applying the cutter and skin offsets.
     """
     if o.update_offset_image_tag:
-        minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+        _minx, _miny, minz, _maxx, _maxy, _maxz = (
+            o.min.x,
+            o.min.y,
+            o.min.z,
+            o.max.x,
+            o.max.y,
+            o.max.z,
+        )
 
         sourceArray = samples
         cutterArray = get_cutter_array(o, o.optimisation.pixsize)
@@ -752,8 +759,8 @@ def image_edge_search_on_line(o, ar, zimage):
         list: A list of chunks representing the detected edges in the image.
     """
 
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
-    r = ceil((o.cutter_diameter / 12) / o.optimisation.pixsize)  # was commented
+    minx, miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    r = ceil((o.cutter_diameter / 12) / o.optimisation.pixsize)
     coef = 0.75
     maxarx = ar.shape[0]
     maxary = ar.shape[1]
@@ -775,6 +782,12 @@ def image_edge_search_on_line(o, ar, zimage):
     itests = 0
     totaltests = 0
     maxtotaltests = startpix * 4
+
+    # TODO: Added here to fix 'testvect' undefined error
+    # Check that this is the correct calculation for testvect
+    lastvect = Vector((r, 0, 0))
+    # multiply *2 not to get values <1 pixel
+    testvect = lastvect.normalized() * r / 4.0
 
     ar[xs, ys] = False
 
@@ -959,8 +972,8 @@ def image_to_chunks(o, image, with_border=False):
             points that outline the detected edges in the image.
     """
 
-    t = time.time()
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    time.time()
+    minx, miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pixsize = o.optimisation.pixsize
     image = image.astype(np.uint8)
     edges = []
@@ -1089,9 +1102,8 @@ def image_to_chunks(o, image, with_border=False):
                 polychunks.append(ch)
 
                 for si, s in enumerate(ch):
-                    if (
-                        si > 0 and d.get(s, None) is not None and len(d[s]) == 0
-                    ):  # first one was popped
+                    if si > 0 and d.get(s, None) is not None and len(d[s]) == 0:
+                        # first one was popped
                         # this makes the case much less probable, but i think not impossible
                         d.pop(s)
                 if len(d) > 0:

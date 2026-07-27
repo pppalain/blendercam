@@ -5,7 +5,7 @@ except ImportError:
         import opencamlib as ocl
     except ImportError:
         pass
-
+import sys
 
 from ..chunk_builder import CamPathChunk
 from ..constants import (
@@ -88,7 +88,7 @@ async def oclGetWaterline(operation, chunks):
         )
     else:
         log.info(f"Cutter Unsupported: {op_cutter_type}\n")
-        quit()
+        sys.exit()
 
     waterline = ocl.Waterline()
     waterline.setSTL(oclSTL)

@@ -33,8 +33,8 @@ def copy_property_group_data(source, target):
                     target[key] = value
             else:
                 target[key] = value
-        except Exception:
-            pass
+        except Exception as e:
+            log.debug(e)
 
 
 def copy_operation_properties(source, target):
@@ -43,8 +43,8 @@ def copy_operation_properties(source, target):
     for key in source:
         try:
             target[key] = source[key]
-        except Exception:
-            pass
+        except Exception as e:
+            log.debug(e)
 
     # 2. Copy nested PropertyGroups & Collections
     for prop in source.bl_rna.properties:
@@ -64,8 +64,8 @@ def copy_operation_properties(source, target):
                     for item in value:
                         new_item = target_collection.add()
                         copy_property_group_data(item, new_item)
-        except Exception:
-            pass
+        except Exception as e:
+            log.debug(e)
 
 
 def make_unique_operation_name(base_name, existing_names):

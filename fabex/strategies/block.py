@@ -20,7 +20,7 @@ from ..utilities.operation_utils import (
 async def block(o):
     log.info(heading("Strategy: Block"))
 
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    minx, miny, _minz, maxx, maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     zlevel = 1
     pathd = o.distance_between_paths
     pathstep = o.distance_along_paths

@@ -210,12 +210,7 @@ def export_gcode_path(filename, vertslist, operations):
 
         if m.output_tool_definitions:
             c.comment(
-                "Tool: D = %s type %s flutes %s"
-                % (
-                    unit_value_to_string(o.cutter_diameter, 4),
-                    o.cutter_type,
-                    o.cutter_flutes,
-                )
+                f"Tool: D = {unit_value_to_string(o.cutter_diameter, 4)} type {o.cutter_type} flutes {o.cutter_flutes}"
             )
 
         c.flush_nc()

@@ -44,13 +44,23 @@ def shapely_remove_doubles(p, optimize_threshold):
         Shape: A new shape object with simplified boundaries.
     """
 
+    pnew = p
+
     optimize_threshold *= 0.000001
 
-    soptions = ["distance", "distance", 0.0, 5, optimize_threshold, 5, optimize_threshold]
-    for ci, c in enumerate(p.boundary):  # in range(0,len(p)):
-        veclist = [Vector((v[0], v[1])) for v in c]
-        s = curve_simplify.simplify_RDP(veclist, soptions)
-        nc = [c[s[i]] for i in range(len(s))]
+    simplify_options = [
+        "distance",
+        "distance",
+        0.0,
+        5,
+        optimize_threshold,
+        5,
+        optimize_threshold,
+    ]
+    for ci, c in enumerate(p.boundary):
+        vector_list = [Vector((v[0], v[1])) for v in c]
+        simple_curve = curve_simplify.simplify_RDP(vector_list, simplify_options)
+        nc = [c[simple_curve[i]] for i in range(len(simple_curve))]
 
         if len(nc) > 2:
             pnew.addContour(nc, p.isHole(ci))

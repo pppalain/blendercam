@@ -26,7 +26,7 @@ from ..utilities.parent_utils import parent_child_distance
 async def circles(o):
     log.info(heading("Strategy: Circles"))
 
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    _minx, _miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathSamples = []
     zlevel = 1
     pathd = o.distance_between_paths

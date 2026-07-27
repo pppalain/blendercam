@@ -18,6 +18,9 @@ from .image_utils import (
 )
 from .logging_utils import heading, log
 
+rows = 0
+size = 0
+
 
 class ReliefError(Exception):
     pass
@@ -712,8 +715,6 @@ def build_mesh(mesh_z, br):
             thickness, justification, and decimation ratio.
     """
 
-    global rows
-    global size
     scale = 1
     scalez = 1
     decimateRatio = br.decimate_ratio  # get variable from interactive table

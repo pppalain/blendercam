@@ -418,7 +418,7 @@ def safe_filename(name):  # for export gcode
         str: A sanitized version of the input string that contains only valid
         characters for a file name.
     """
-    valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
+    valid_chars = f"-_.(){string.ascii_letters}{string.digits}"
     filename = "".join(c for c in name if c in valid_chars)
     return filename
 

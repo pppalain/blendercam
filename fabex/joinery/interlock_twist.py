@@ -268,6 +268,7 @@ def distributed_interlock(
     j = 0
     log.info(f"Joinery Loop Length: {round(loop_length * 1000)}mm")
     log.info(f"Joint Spacing: {round(spacing * 1000)}mm")
+    oldp = None
 
     for i, p in enumerate(coords):
         if i == 0:
@@ -302,6 +303,7 @@ def distributed_interlock(
 
                 j += 1
                 distance = j * spacing + start
+        oldp = p
 
     join_multiple("_groove")
     active_name("interlock")

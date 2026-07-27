@@ -73,8 +73,8 @@ async def cutout(o):
 
     try:
         cutter_offset = offset_by_type[o.cutter_type]
-    except:
-        pass
+    except Exception as e:
+        log.debug(e)
 
     # Add Skin for Profile
     cutter_offset = (min(cutter_offset, r)) + o.skin
