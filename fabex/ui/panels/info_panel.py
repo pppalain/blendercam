@@ -4,6 +4,7 @@
 """
 
 from datetime import timedelta
+from typing import ClassVar
 
 import bpy
 from bpy.types import Panel
@@ -17,7 +18,7 @@ from .parent_panel import CAMParentPanel
 class CAM_INFO_Panel(CAMParentPanel, Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
-    bl_options = {"HIDE_HEADER"}
+    bl_options: ClassVar = {"HIDE_HEADER"}
 
     bl_label = "Info & Warnings"
     bl_idname = "FABEX_PT_CAM_INFO"

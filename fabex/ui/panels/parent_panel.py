@@ -4,13 +4,15 @@ Parent (Mixin) class for all panels in 'panels'
 Sets up polling and operations to show / hide panels based on Interface Level
 """
 
+from typing import ClassVar
+
 import bpy
 
 
 # Panel definitions
 class CAMParentPanel:
     always_show_panel = False
-    COMPAT_ENGINES = {"FABEX_RENDER"}
+    COMPAT_ENGINES: ClassVar = {"FABEX_RENDER"}
 
     @classmethod
     def poll(cls, context):

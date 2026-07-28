@@ -43,7 +43,7 @@ class Creator(hpgl2d.Creator):
         if mx != self.x or my != self.y or mz != self.z:
             if not self.doing_rapid:
                 self.write("V50.0;")
-            self.write(("Z%i" % mx) + (",%i" % my) + (",%i;\n" % mz))
+            self.write((f"Z{mx}") + (f",{my}") + (f",{mz};\n"))
             self.x = mx
             self.y = my
             self.z = mz
@@ -56,7 +56,7 @@ class Creator(hpgl2d.Creator):
         if mx != self.x or my != self.y or mz != self.z:
             if self.doing_rapid:
                 self.write("V10.0;")
-            self.write(("Z%i" % mx) + (",%i" % my) + (",%i;\n" % mz))
+            self.write((f"Z{mx}") + (f",{my}") + (f",{mz};\n"))
             self.x = mx
             self.y = my
             self.z = mz

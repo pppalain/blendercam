@@ -4,6 +4,8 @@ Functions and Classes to allow asynchronous updates.
 Used to report progress during path calculation.
 """
 
+from typing import ClassVar
+
 import bpy
 
 from ..utilities.async_utils import progress_async
@@ -182,7 +184,7 @@ class AsyncTestOperator(bpy.types.Operator, AsyncOperatorMixin):
 
     bl_idname = "object.cam_async_test_operator"
     bl_label = "Test Operator for Async Stuff"
-    bl_options = {"REGISTER", "UNDO", "BLOCKING"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "BLOCKING"}
 
     async def execute_async(self, context):
         """Execute an asynchronous operation with a progress indicator.

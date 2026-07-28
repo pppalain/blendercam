@@ -67,7 +67,7 @@ class Creator(nc.Creator):
         # ignore the z, any rapid will be assumed to be done with the pen up
         mx, my = self.get_machine_x_y(x, y)
         if mx != self.x or my != self.y:
-            self.write(("PU%i" % mx) + (" %i;\n" % my))
+            self.write((f"PU{mx}") + (f" {my};\n"))
             self.x = mx
             self.y = my
 
@@ -75,7 +75,7 @@ class Creator(nc.Creator):
         # ignore the z, any feed will be assumed to be done with the pen down
         mx, my = self.get_machine_x_y(x, y)
         if mx != self.x or my != self.y:
-            self.write(("PD%i" % mx) + (" %i;\n" % my))
+            self.write((f"PD{mx}") + (f" {my};\n"))
             self.x = mx
             self.y = my
 
@@ -103,7 +103,7 @@ class Creator(nc.Creator):
 
             mcx, mcy = self.get_machine_x_y(cx, cy)
 
-            self.write(("AA%i" % mcx) + (",%i" % mcy) + (",%d;\n" % (a * 180 / math.pi)))
+            self.write((f"AA{mcx}") + (f",{mcy}") + (f",{(a * 180 / math.pi)};\n"))
 
     def arc_cw(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         self.arc(True, x, y, z, i, j, k, r)

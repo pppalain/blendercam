@@ -7,6 +7,7 @@ from math import (
     pi,
     tan,
 )
+from typing import ClassVar
 
 import bpy
 import shapely
@@ -57,7 +58,7 @@ class CamCurveBoolean(Operator):
 
     bl_idname = "object.curve_boolean"
     bl_label = "Curve Boolean"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     boolean_type: EnumProperty(
         name="Type",
@@ -91,7 +92,7 @@ class CamCurveConvexHull(Operator):
 
     bl_idname = "object.convex_hull"
     bl_label = "Convex Hull"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
@@ -129,7 +130,7 @@ class CamCurveIntarsion(Operator):
 
     bl_idname = "object.curve_intarsion"
     bl_label = "Intarsion"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     diameter: FloatProperty(
         name="Cutter Diameter",
@@ -502,7 +503,7 @@ class CamCurveSimpleOvercuts(Operator):
 
     bl_idname = "object.curve_overcuts"
     bl_label = "Simple Fillet Overcuts"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     diameter: FloatProperty(
         name="Diameter",
@@ -614,7 +615,7 @@ class CamCurveBoneFilletOvercuts(Operator):
 
     bl_idname = "object.curve_overcuts_b"
     bl_label = "Bone Fillet Overcuts"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     diameter: FloatProperty(
         name="Tool Diameter",
@@ -885,7 +886,7 @@ class CamCurveRemoveDoubles(Operator):
 
     bl_idname = "object.curve_remove_doubles"
     bl_label = "Validate/Remove Curve Doubles"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     validateCurve: BoolProperty(
         name="Validate curve",
@@ -964,7 +965,7 @@ class CamMeshGetPockets(Operator):
 
     bl_idname = "object.mesh_get_pockets"
     bl_label = "Get Pocket Surfaces"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     threshold: FloatProperty(
         name="Horizontal Threshold",
@@ -1075,7 +1076,7 @@ class CamOffsetSilhouete(Operator):
 
     bl_idname = "object.silhouette_offset"
     bl_label = "Silhouette & Offset"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     offset: FloatProperty(
         name="Offset",
@@ -1259,7 +1260,7 @@ class CamObjectSilhouette(Operator):
 
     bl_idname = "object.silhouette"
     bl_label = "Object Silhouette"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):

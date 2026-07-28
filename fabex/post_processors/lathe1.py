@@ -197,9 +197,7 @@ class CreatorIso(nc.Creator):
         if (id >= 1) and (id <= 6):
             self.g += iso.codes.WORKPLANE() % (id + iso.codes.WORKPLANE_BASE())
         if (id >= 7) and (id <= 9):
-            self.g += (iso.codes.WORKPLANE() % (6 + iso.codes.WORKPLANE_BASE())) + (
-                ".%i" % (id - 6)
-            )
+            self.g += (iso.codes.WORKPLANE() % (6 + iso.codes.WORKPLANE_BASE())) + (f".{(id - 6)}")
 
     ############################################################################
     ##  Rates + Modes
@@ -243,7 +241,7 @@ class CreatorIso(nc.Creator):
         if gear <= 0:
             self.m.append(iso.codes.GEAR_OFF())
         elif gear <= 4:
-            self.m.append(iso.codes.GEAR() % (gear + GEAR_BASE()))
+            self.m.append(iso.codes.GEAR() % (gear + self.GEAR_BASE()))
 
     ############################################################################
     # Moves
@@ -361,17 +359,11 @@ class CreatorIso(nc.Creator):
         self.write("\n")
 
     def same_xyz(self, x=None, y=None, z=None):
-        if x is not None:
-            if (self.fmt % x) != (self.fmt % self.x):
-                return False
-        if y is not None:
-            if (self.fmt % y) != (self.fmt % self.y):
-                return False
-        if z is not None:
-            if (self.fmt % z) != (self.fmt % self.z):
-                return False
-
-        return True
+        if x is not None and (self.fmt % x) != (self.fmt % self.x):
+            return False
+        if y is not None and (self.fmt % y) != (self.fmt % self.y):
+            return False
+        return not (z is not None and self.fmt % z != self.fmt % self.z)
 
     def arc(self, cw, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         if self.same_xyz(x, y, z):

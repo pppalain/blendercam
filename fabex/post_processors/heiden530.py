@@ -45,7 +45,7 @@ class Creator(iso.Creator):
         return "%i"
 
     def COMMENT(self, comment):
-        return ";%s" % comment
+        return f";{comment}"
 
     def BEGIN_PGM(self):
         return "BEGIN PGM %i"

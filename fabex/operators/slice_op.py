@@ -4,6 +4,8 @@ Blender Operator definitions are in this file.
 They mostly call the functions from 'utils.py'
 """
 
+from typing import ClassVar
+
 import bpy
 from bpy.props import (
     BoolProperty,
@@ -26,7 +28,7 @@ class CamSliceObjects(Operator):
     # warning, this is a separate and neglected feature, it's a mess - by now it just slices up the object.
     bl_idname = "object.cam_slice_objects"
     bl_label = "Slice Object - Useful for Lasercut Puzzles etc"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     slice_distance: FloatProperty(
         name="Slicing Distance",

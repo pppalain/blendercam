@@ -9,7 +9,7 @@ class Creator(iso.Creator):
         return " "
 
     def COMMENT(self, comment):
-        return ";%s" % comment
+        return f";{comment}"
 
     def PROGRAM(self):
         return None

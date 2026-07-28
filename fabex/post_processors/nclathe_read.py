@@ -104,13 +104,13 @@ class Parser:
                 self.currentz = z
             else:
                 self.currentz = self.currentz + z
-            self.file_out.write(' x="%.6f"' % self.currentz)
+            self.file_out.write(f' x="{self.currentz:.6f}"')
         if a is not None:
-            self.file_out.write(' a="%.6f"' % a)
+            self.file_out.write(f' a="{a:.6f}"')
         if b is not None:
-            self.file_out.write(' b="%.6f"' % b)
+            self.file_out.write(f' b="{b:.6f}"')
         if c is not None:
-            self.file_out.write(' c="%.6f"' % c)
+            self.file_out.write(f' c="{c:.6f}"')
         self.file_out.write(" />\n")
 
     def add_lathe_increment_line(self, u=None, w=None):
@@ -124,7 +124,7 @@ class Parser:
             self.file_out.write(' y="%.6f"' % (self.currentx / 2))
         if w is not None:
             self.currentz = self.currentz + w
-            self.file_out.write(' x="%.6f"' % self.currentz)
+            self.file_out.write(f' x="{self.currentz:.6f}"')
         self.file_out.write(" />\n")
 
     def add_arc(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None, d=None):
@@ -157,23 +157,23 @@ class Parser:
                 self.currentz = z
             else:
                 self.currentz = self.currentz + z
-            self.file_out.write(' x="%.6f"' % self.currentz)
+            self.file_out.write(f' x="{self.currentz:.6f}"')
 
         # if (j != None) : self.file_out.write(' i="%.6f"' % j)
         # if (i != None) : self.file_out.write(' j="%.6f"' % i)
         # if (k != None) : self.file_out.write(' k="%.6f"' % k)
 
         if k is not None:
-            self.file_out.write(' i="%.6f"' % k)
+            self.file_out.write(f' i="{k:.6f}"')
         if i is not None:
-            self.file_out.write(' j="%.6f"' % i)
+            self.file_out.write(f' j="{i:.6f}"')
         if j is not None:
-            self.file_out.write(' k="%.6f"' % j)
+            self.file_out.write(f' k="{j:.6f}"')
 
         if r is not None:
-            self.file_out.write(' r="%.6f"' % r)
+            self.file_out.write(f' r="{r:.6f}"')
         if d is not None:
-            self.file_out.write(' d="%i"' % d)
+            self.file_out.write(f' d="{d}"')
         self.file_out.write(" />\n")
 
     def incremental(self):

@@ -133,7 +133,7 @@ class Creator(nc.Creator):
         return "N%i"
 
     def COMMENT(self, comment):
-        return "(%s)" % comment
+        return f"({comment})"
 
     def VARIABLE(self):
         return "#%i"
@@ -440,9 +440,8 @@ class Creator(nc.Creator):
                 break
             f_out.write(self.BLOCK() % n + self.SPACE() + line)
             n += self.block_number_increment
-            if self.block_number_restart_after is not None:
-                if n >= self.block_number_restart_after:
-                    n = self.start_block_number
+            if self.block_number_restart_after is not None and n >= self.block_number_restart_after:
+                n = self.start_block_number
         f_in.close()
         f_out.close()
 
@@ -608,9 +607,8 @@ class Creator(nc.Creator):
     # Tools
 
     def tool_change(self, id):
-        if self.output_comment_before_tool_change:
-            if id in self.tool_defn_params:
-                self.comment("tool change to " + self.tool_defn_params[id]["name"])
+        if self.output_comment_before_tool_change and id in self.tool_defn_params:
+            self.comment("tool change to " + self.tool_defn_params[id]["name"])
 
         if self.output_cutviewer_comments:
             import cutviewer
@@ -634,13 +632,13 @@ class Creator(nc.Creator):
         self.tool_defn_params[id] = params
         if self.output_tool_definitions:
             self.write(self.SPACE() + self.TOOL_DEFINITION())
-            self.write(self.SPACE() + ("P%i" % id) + " ")
+            self.write(self.SPACE() + (f"P{id}" % id) + " ")
 
             if params["diameter"] is not None:
                 self.write(self.SPACE() + ("R%.3f" % (float(params["diameter"]) / 2)))
 
             if params["cutting edge height"] is not None:
-                self.write(self.SPACE() + "Z%.3f" % float(params["cutting edge height"]))
+                self.write(self.SPACE() + "Z{:.3f}".format(float(params["cutting edge height"])))
 
             self.write("\n")
 
@@ -668,9 +666,7 @@ class Creator(nc.Creator):
         if (id >= 1) and (id <= 6):
             self.g_list.append(self.WORKPLANE() % (id + self.WORKPLANE_BASE()))
         if (id >= 7) and (id <= 9):
-            self.g_list.append(
-                (self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (".%i" % (id - 6))
-            )
+            self.g_list.append((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (f".{(id - 6)}"))
 
     ############################################################################
     ##  Rates + Modes
@@ -758,7 +754,7 @@ class Creator(nc.Creator):
         if gear <= 0:
             self.m.append(self.GEAR_OFF())
         elif gear <= 4:
-            self.m.append(self.GEAR() % (gear + GEAR_BASE()))
+            self.m.append(self.GEAR() % (gear + self.GEAR_BASE()))
 
     ############################################################################
     # Moves
@@ -1099,31 +1095,27 @@ class Creator(nc.Creator):
             if not self.arc_centre_absolute:
                 i = i - self.x
             s = self.fmt.string(i)
-            if self.arc_centre_positive:
-                if s[0] == "-":
-                    s = s[1:]
+            if self.arc_centre_positive and s[0] == "-":
+                s = s[1:]
             self.write(self.SPACE() + self.CENTRE_X() + s)
         if j is not None:
             if not self.arc_centre_absolute:
                 j = j - self.y
             s = self.fmt.string(j)
-            if self.arc_centre_positive:
-                if s[0] == "-":
-                    s = s[1:]
+            if self.arc_centre_positive and s[0] == "-":
+                s = s[1:]
             self.write(self.SPACE() + self.CENTRE_Y() + s)
         if k is not None:
             if not self.arc_centre_absolute:
                 k = k - self.z
             s = self.fmt.string(k)
-            if self.arc_centre_positive:
-                if s[0] == "-":
-                    s = s[1:]
+            if self.arc_centre_positive and s[0] == "-":
+                s = s[1:]
             self.write(self.SPACE() + self.CENTRE_Z() + s)
         if r is not None:
             s = self.fmt.string(r)
-            if self.arc_centre_positive:
-                if s[0] == "-":
-                    s = s[1:]
+            if self.arc_centre_positive and s[0] == "-":
+                s = s[1:]
             self.write(self.SPACE() + self.RADIUS() + s)
         #       use horizontal feed rate
         if self.fhv:
@@ -1252,10 +1244,9 @@ class Creator(nc.Creator):
         self.write_internal_coolant_commands(internal_coolant_on)
 
         drillExpanded = self.drillExpanded
-        if (depthparams.step_down != 0) and (dwell != 0):
+        if (depthparams.step_down != 0) and (dwell != 0) and not self.dwell_allowed_in_G83:
             # pecking and dwell together
-            if not self.dwell_allowed_in_G83:
-                drillExpanded = True
+            drillExpanded = True
 
         if drillExpanded:
             # for machines which don't understand G81, G82 etc.
@@ -1296,13 +1287,13 @@ class Creator(nc.Creator):
             return
 
         if self.output_g98_and_g99:
-            if rapid_to_clearance:
-                if self.output_g43_z_before_drilling_if_g98:
-                    if self.fmt.string(depthparams.clearance_height) != self.z_for_g43:
-                        self.z_for_g43 = self.fmt.string(depthparams.clearance_height)
-                        self.write(
-                            self.SPACE() + "G43" + self.SPACE() + "Z" + self.z_for_g43 + "\n"
-                        )
+            if (
+                rapid_to_clearance
+                and self.output_g43_z_before_drilling_if_g98
+                and self.fmt.string(depthparams.clearance_height) != self.z_for_g43
+            ):
+                self.z_for_g43 = self.fmt.string(depthparams.clearance_height)
+                self.write(self.SPACE() + "G43" + self.SPACE() + "Z" + self.z_for_g43 + "\n")
 
             if self.first_drill_pos and rapid_to_clearance:
                 self.rapid(x, y)

@@ -12,6 +12,7 @@ from math import (
     sin,  # noqa: F401
     sqrt,  # noqa: F401
 )
+from typing import ClassVar
 
 import bpy
 from bpy.props import (
@@ -169,7 +170,7 @@ class CamCurveHatch(Operator):
 
     bl_idname = "object.curve_hatch"
     bl_label = "CrossHatch Curve"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     angle: FloatProperty(
         default=0,
@@ -303,7 +304,7 @@ class CamCurvePlate(Operator):
 
     bl_idname = "object.curve_plate"
     bl_label = "Sign Plate"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     radius: FloatProperty(
         name="Corner Radius",
@@ -713,7 +714,7 @@ class CamCurveFlatCone(Operator):
 
     bl_idname = "object.curve_flat_cone"
     bl_label = "Cone Flat Calculator"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     small_d: FloatProperty(
         name="Small Diameter",
@@ -851,7 +852,7 @@ class CamCurveMortise(Operator):
 
     bl_idname = "object.curve_mortise"
     bl_label = "Mortise"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     # finger_size: BoolProperty(
     #     name="Kurf Bending only",
@@ -1043,7 +1044,7 @@ class CamCurveInterlock(Operator):
 
     bl_idname = "object.curve_interlock"
     bl_label = "Interlock"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     finger_size: FloatProperty(
         name="Finger Size",
@@ -1199,7 +1200,7 @@ class CamCurveDrawer(Operator):
 
     bl_idname = "object.curve_drawer"
     bl_label = "Drawer"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     depth: FloatProperty(
         name="Drawer Depth",
@@ -1455,7 +1456,7 @@ class CamCurvePuzzle(Operator):
 
     bl_idname = "object.curve_puzzle"
     bl_label = "Puzzle Joints"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     diameter: FloatProperty(
         name="Tool Diameter",
@@ -1999,7 +2000,7 @@ class CamCurveGear(Operator):
 
     bl_idname = "object.curve_gear"
     bl_label = "Gears"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     tooth_spacing: FloatProperty(
         name="Distance per Tooth",

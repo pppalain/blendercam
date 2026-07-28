@@ -55,7 +55,7 @@ class Creator(nc.Creator):
         return "%.3f"
 
     def COMMENT(self, comment):
-        return "(%s)" % comment
+        return f"({comment})"
 
     def write_feedrate(self):
         # self.write(self.f)
@@ -245,7 +245,7 @@ class Creator(nc.Creator):
 
     def gearrange(self, gear=0):
         # if (gear <= 0) : self.m.append(iso.GEAR_OFF)
-        # elif (gear <= 4) : self.m.append(iso.GEAR % (gear + GEAR_BASE))
+        # elif (gear <= 4) : self.m.append(iso.GEAR % (gear + self.GEAR_BASE))
         pass
 
     ############################################################################
@@ -254,9 +254,8 @@ class Creator(nc.Creator):
     # def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
     def rapid(self, x=0.0000, y=0.0000, z=0.0000, a=0.0000, b=0.0000, c=0.0000, how=False):
         # self.write_blocknum()
-        if x is None:
-            if y is None:
-                return
+        if x is None and y is None:
+            return
         print("rychlopsuv")
         print(x)
         print(y)
@@ -286,10 +285,10 @@ class Creator(nc.Creator):
         # if (c != None) : self.write(iso.C + (iso.FORMAT_ANG % c))
         # self.write_spindle()
         # self.write_misc()
-        self.write(" %.4f" % x)
+        self.write(f" {x:.4f}")
         # self.write(('%f' %x) )
         self.write(" , ")
-        self.write(" %.4f" % y)
+        self.write(f" {y:.4f}")
         self.write("\n")
         self.write("SS\n")
         self.write("AD_W\n")
@@ -301,9 +300,8 @@ class Creator(nc.Creator):
     def feed(self, x=0.0000, y=0.0000, z=0.0000, how=False):
         if self.same_xyz(x, y, z):
             return
-        if x is None:
-            if y is None:
-                return
+        if x is None and y is None:
+            return
 
         print("MA rez")
         print(x)
@@ -330,33 +328,26 @@ class Creator(nc.Creator):
         # self.write_spindle()
         # self.write_misc()
         self.write("MA ")
-        self.write(" %.4f" % x)
+        self.write(f" {x:.4f}")
         # self.write(('%f' %x) )
         self.write(" , ")
-        self.write(" %.4f" % y)
+        self.write(f" {y:.4f}")
         self.write("\n")
         self.x = x
         self.y = y
 
     def same_xyz(self, x=None, y=None, z=None):
-        if x is not None:
-            if (self.fmt % x) != (self.fmt % self.x):
-                return False
-        if y is not None:
-            if (self.fmt % y) != (self.fmt % self.y):
-                return False
-        if z is not None:
-            if (self.fmt % z) != (self.fmt % self.z):
-                return False
-
-        return True
+        if x is not None and (self.fmt % x) != (self.fmt % self.x):
+            return False
+        if y is not None and (self.fmt % y) != (self.fmt % self.y):
+            return False
+        return not (z is not None and self.fmt % z != self.fmt % self.z)
 
     def arc(self, cw, x=0.0000, y=0.0000, z=0.0000, i=0.0000, j=0.0000, k=0.0000, r=0.0000):
         if self.same_xyz(x, y, z):
             return
-        if x is None:
-            if y is None:
-                return
+        if x is None and y is None:
+            return
         # self.write_blocknum()
         print("ARC rez")
         print(x)
@@ -427,22 +418,22 @@ class Creator(nc.Creator):
         if cw:
             self.write(" %.4f" % (-angle))
         else:
-            self.write(" %.4f" % (angle))
+            self.write(f" {angle:.4f}")
 
         # self.write((', %.4f' % ))
         self.write("\n")
         self.x = x
         self.y = y
         self.write("// stred")
-        self.write(" %f" % i)
+        self.write(f" {i:f}")
         self.write(" ")
-        self.write(" %f" % j)
+        self.write(f" {j:f}")
         self.write("\n")
 
         self.write("// koniec")
-        self.write(" %f" % self.x)
+        self.write(f" {self.x:f}")
         self.write(" ")
-        self.write(" %f" % self.y)
+        self.write(f" {self.y:f}")
         self.write("\n")
 
     def arc_cw(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
@@ -531,8 +522,12 @@ class Creator(nc.Creator):
         self,
         x=None,
         y=None,
+        z=None,
+        standoff=None,
         dwell=None,
+        depth=None,
         depthparams=None,
+        peck_depth=None,
         retract_mode=None,
         spindle_mode=None,
         internal_coolant_on=None,

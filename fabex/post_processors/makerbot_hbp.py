@@ -6,7 +6,7 @@ import iso_modal
 from . import makerbot_codes as maker
 from . import nc
 
-now = datetime.datetime.now()
+now = datetime.datetime.now(datetime.UTC)
 
 ################################################################################
 
@@ -233,17 +233,11 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
         self.write("\n")
 
     def same_xyz(self, x=None, y=None, z=None):
-        if x is not None:
-            if (self.fmt % x) != (self.fmt % self.x):
-                return False
-        if y is not None:
-            if (self.fmt % y) != (self.fmt % self.y):
-                return False
-        if z is not None:
-            if (self.fmt % z) != (self.fmt % self.z):
-                return False
-
-        return True
+        if x is not None and (self.fmt % x) != (self.fmt % self.x):
+            return False
+        if y is not None and (self.fmt % y) != (self.fmt % self.y):
+            return False
+        return not (z is not None and self.fmt % z != self.fmt % self.z)
 
     def arc(self, cw, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         if self.same_xyz(x, y, z):

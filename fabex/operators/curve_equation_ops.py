@@ -9,6 +9,7 @@ from math import (
     sin,  # noqa: F401
     sqrt,  # noqa: F401
 )
+from typing import ClassVar
 
 import numpy as np
 from bpy.props import (
@@ -32,7 +33,7 @@ class CamSineCurve(Operator):
 
     bl_idname = "object.sine"
     bl_label = "Periodic Wave"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     # zstring: StringProperty(name="Z equation", description="Equation for z=F(u,v)", default="0.05*sin(2*pi*4*t)" )
     axis: EnumProperty(
@@ -256,7 +257,7 @@ class CamLissajousCurve(Operator):
 
     bl_idname = "object.lissajous"
     bl_label = "Lissajous Figure"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     amplitude_a: FloatProperty(
         name="Amplitude A",
@@ -407,7 +408,7 @@ class CamHypotrochoidCurve(Operator):
 
     bl_idname = "object.hypotrochoid"
     bl_label = "Spirograph Type Figure"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     typecurve: EnumProperty(
         name="Type of Curve",
@@ -509,7 +510,7 @@ class CamCustomCurve(Operator):
 
     bl_idname = "object.customcurve"
     bl_label = "Custom Curve"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     x_string: StringProperty(
         name="X Equation",

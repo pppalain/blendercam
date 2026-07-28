@@ -7,6 +7,7 @@ They mostly call the functions from 'utils.py'
 import random
 import time
 from math import pi
+from typing import ClassVar
 
 import bpy
 import shapely
@@ -39,7 +40,7 @@ class CamPackObjects(Operator):
 
     bl_idname = "object.cam_pack_objects"
     bl_label = "Pack Curves on Sheet"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     sheet_fill_direction: EnumProperty(
         name="Fill Direction",

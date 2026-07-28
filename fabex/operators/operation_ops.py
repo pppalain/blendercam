@@ -5,6 +5,7 @@ They mostly call the functions from 'utils.py'
 """
 
 import re
+from typing import ClassVar
 
 import bpy
 from bpy.props import EnumProperty
@@ -96,7 +97,7 @@ class CamOperationAdd(Operator):
 
     bl_idname = "scene.cam_operation_add"
     bl_label = "Add New CAM Operation"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
@@ -154,7 +155,7 @@ class CamOperationCopy(Operator):
 
     bl_idname = "scene.cam_operation_copy"
     bl_label = "Copy Active CAM Operation"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
@@ -212,7 +213,7 @@ class CamOperationRemove(Operator):
 
     bl_idname = "scene.cam_operation_remove"
     bl_label = "Remove CAM Operation"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
@@ -270,7 +271,7 @@ class CamOperationMove(Operator):
 
     bl_idname = "scene.cam_operation_move"
     bl_label = "Move CAM Operation in List"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     direction: EnumProperty(
         name="Direction",

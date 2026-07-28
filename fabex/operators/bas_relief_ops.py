@@ -4,6 +4,8 @@ Module to allow the creation of reliefs from Images or View Layers.
 (https://en.wikipedia.org/wiki/Relief#Bas-relief_or_low_relief)
 """
 
+from typing import ClassVar
+
 import bpy
 from bpy.props import (
     BoolProperty,
@@ -28,9 +30,9 @@ class DoBasRelief(Operator):
 
     bl_idname = "scene.calculate_bas_relief"
     bl_label = "Calculate Bas Relief"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
-    processes = []
+    processes: ClassVar = []
 
     # Bas Relief Properties
     use_image_source: BoolProperty(
@@ -372,9 +374,9 @@ class ProblemAreas(Operator):
 
     bl_idname = "scene.problemareas_bas_relief"
     bl_label = "Problem Areas Bas Relief"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
-    processes = []
+    processes: ClassVar = []
 
     # @classmethod
     # def poll(cls, context):

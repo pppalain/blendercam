@@ -61,9 +61,8 @@ class Format:
 
         s = ""
 
-        if not minus:
-            if self.add_plus:
-                s += "+"
+        if not minus and self.add_plus:
+            s += "+"
         s += before_dp
         if len(after_dp):
             if self.dp_wanted:

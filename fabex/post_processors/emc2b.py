@@ -2,7 +2,7 @@ import datetime
 
 from . import iso_modal, nc
 
-now = datetime.datetime.now()
+now = datetime.datetime.now(datetime.UTC)
 
 
 class Creator(iso_modal.Creator):

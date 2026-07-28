@@ -39,10 +39,9 @@ class Parser(nc.Parser):
                 self.col = "tool call"
                 self.move = False
             elif self.col == "tool call":
-                if not self.t > 0:
-                    if word[0] >= "0" and word[0] <= "9":
-                        self.t = eval(word[0:])
-                        self.col = "tool no"
+                if not self.t > 0 and word[0] >= "0" and word[0] <= "9":
+                    self.t = eval(word[0:])
+                    self.col = "tool no"
         except:
             pass
 

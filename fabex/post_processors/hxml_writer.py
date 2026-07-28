@@ -92,17 +92,17 @@ class HxmlWriter:
     def add_line(self, x, y, z, a=None, b=None, c=None):
         self.file_out.write("\t\t\t<line")
         if x is not None:
-            self.file_out.write(' x="%.6f"' % x)
+            self.file_out.write(f' x="{x:.6f}"')
         if y is not None:
-            self.file_out.write(' y="%.6f"' % y)
+            self.file_out.write(f' y="{y:.6f}"')
         if z is not None:
-            self.file_out.write(' z="%.6f"' % z)
+            self.file_out.write(f' z="{z:.6f}"')
         if a is not None:
-            self.file_out.write(' a="%.6f"' % a)
+            self.file_out.write(f' a="{a:.6f}"')
         if b is not None:
-            self.file_out.write(' b="%.6f"' % b)
+            self.file_out.write(f' b="{b:.6f}"')
         if c is not None:
-            self.file_out.write(' c="%.6f"' % c)
+            self.file_out.write(f' c="{c:.6f}"')
         self.file_out.write(" />\n")
         if x is not None:
             self.oldx = x
@@ -114,11 +114,11 @@ class HxmlWriter:
     def add_arc(self, x, y, z, i, j, k, r=None, d=None):
         self.file_out.write("\t\t\t<arc")
         if x is not None:
-            self.file_out.write(' x="%.6f"' % x)
+            self.file_out.write(f' x="{x:.6f}"')
         if y is not None:
-            self.file_out.write(' y="%.6f"' % y)
+            self.file_out.write(f' y="{y:.6f}"')
         if z is not None:
-            self.file_out.write(' z="%.6f"' % z)
+            self.file_out.write(f' z="{z:.6f}"')
         if i is not None:
             self.file_out.write(' i="%.6f"' % (i - self.oldx))
         if j is not None:
@@ -126,9 +126,9 @@ class HxmlWriter:
         if k is not None:
             self.file_out.write(' k="%.6f"' % (k - self.oldz))
         if r is not None:
-            self.file_out.write(' r="%.6f"' % r)
+            self.file_out.write(f' r="{r:.6f}"')
         if d is not None:
-            self.file_out.write(' d="%i"' % d)
+            self.file_out.write(f' d="{d}"')
         self.file_out.write(" />\n")
         if x is not None:
             self.oldx = x

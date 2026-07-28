@@ -96,7 +96,7 @@ class Creator(nc.Creator):
         return "%i"
 
     def COMMENT(self, comment):
-        return "(%s)" % comment
+        return f"({comment})"
 
     def VARIABLE(self):
         return "#%i"
@@ -308,7 +308,7 @@ class Creator(nc.Creator):
         # 1 BEGIN PGM 0011 MM
         self.write_blocknum()
         self.program_id = id
-        self.write(self.SPACE() + ("BEGIN PGM %i MM" % id))
+        self.write(self.SPACE() + (f"BEGIN PGM {id} MM"))
         self.write("\n")
 
     def program_stop(self, optional=False):
@@ -322,7 +322,7 @@ class Creator(nc.Creator):
 
     def program_end(self):
         self.write_blocknum()
-        self.write(self.SPACE() + ("END PGM %i MM" % self.program_id) + "\n")
+        self.write(self.SPACE() + (f"END PGM {self.program_id} MM") + "\n")
 
     def flush_nc(self):
         if len(self.g_list) == 0 and len(self.m) == 0:
@@ -422,13 +422,13 @@ class Creator(nc.Creator):
     def tool_defn(self, id, name="", params=None):
         self.write_blocknum()
         self.write(self.SPACE() + self.TOOL_DEFINITION())
-        self.write(self.SPACE() + ("P%i" % id) + " ")
+        self.write(self.SPACE() + (f"P{id}") + " ")
 
         if radius is not None:
             self.write(self.SPACE() + ("R%.3f" % (float(params["diameter"]) / 2)))
 
         if length is not None:
-            self.write(self.SPACE() + "Z%.3f" % float(params["cutting edge height"]))
+            self.write(self.SPACE() + "Z{:.3f}".format(float(params["cutting edge height"])))
 
         self.write("\n")
 
@@ -456,9 +456,7 @@ class Creator(nc.Creator):
         if (id >= 1) and (id <= 6):
             self.g_list.append(self.WORKPLANE() % (id + self.WORKPLANE_BASE()))
         if (id >= 7) and (id <= 9):
-            self.g_list.append(
-                (self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (".%i" % (id - 6))
-            )
+            self.g_list.append((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (f".{(id - 6)}"))
 
     ############################################################################
     ##	Rates + Modes
@@ -498,7 +496,7 @@ class Creator(nc.Creator):
         if gear <= 0:
             self.m.append(self.SPACE() + self.GEAR_OFF())
         elif gear <= 4:
-            self.m.append(self.SPACE() + self.GEAR() % (gear + GEAR_BASE()))
+            self.m.append(self.SPACE() + self.GEAR() % (gear + self.GEAR_BASE()))
 
     ############################################################################
     # Moves
@@ -607,17 +605,11 @@ class Creator(nc.Creator):
         self.write("\n")
 
     def same_xyz(self, x=None, y=None, z=None):
-        if x is not None:
-            if (self.fmt.string(x + self.shift_x)) != (self.fmt.string(self.x)):
-                return False
-        if y is not None:
-            if (self.fmt.string(y + self.shift_y)) != (self.fmt.string(self.y)):
-                return False
-        if z is not None:
-            if (self.fmt.string(z + self.shift_z)) != (self.fmt.string(self.z)):
-                return False
-
-        return True
+        if x is not None and (self.fmt.string(x + self.shift_x)) != (self.fmt.string(self.x)):
+            return False
+        if y is not None and (self.fmt.string(y + self.shift_y)) != (self.fmt.string(self.y)):
+            return False
+        return not (z is not None and self.fmt.string(z + self.shift_z) != self.fmt.string(self.z))
 
     def get_quadrant(self, dx, dy):
         if dx < 0:
@@ -791,31 +783,27 @@ class Creator(nc.Creator):
             if not self.arc_centre_absolute:
                 i = i - self.x
             s = self.fmt.string(i)
-            if self.arc_centre_positive:
-                if s[0] == "-":
-                    s = s[1:]
+            if self.arc_centre_positive and s[0] == "-":
+                s = s[1:]
             self.write(self.SPACE() + self.CENTRE_X() + s)
         if j is not None:
             if not self.arc_centre_absolute:
                 j = j - self.y
             s = self.fmt.string(j)
-            if self.arc_centre_positive:
-                if s[0] == "-":
-                    s = s[1:]
+            if self.arc_centre_positive and s[0] == "-":
+                s = s[1:]
             self.write(self.SPACE() + self.CENTRE_Y() + s)
         if k is not None:
             if not self.arc_centre_absolute:
                 k = k - self.z
             s = self.fmt.string(k)
-            if self.arc_centre_positive:
-                if s[0] == "-":
-                    s = s[1:]
+            if self.arc_centre_positive and s[0] == "-":
+                s = s[1:]
             self.write(self.SPACE() + self.CENTRE_Z() + s)
         if r is not None:
             s = self.fmt.string(r)
-            if self.arc_centre_positive:
-                if s[0] == "-":
-                    s = s[1:]
+            if self.arc_centre_positive and s[0] == "-":
+                s = s[1:]
             self.write(self.SPACE() + self.RADIUS() + s)
         # 		use horizontal feed rate
         if self.fhv:
@@ -912,8 +900,12 @@ class Creator(nc.Creator):
         self,
         x=None,
         y=None,
+        z=None,
         dwell=None,
+        depth=None,
+        standoff=None,
         depthparams=None,
+        peck_depth=None,
         retract_mode=None,
         spindle_mode=None,
         internal_coolant_on=None,
@@ -1510,31 +1502,11 @@ class Creator(nc.Creator):
         self.write("	   " + ub + "=[" + ub_numerator + " / " + ua_denominator + "]\n")
         self.write_blocknum()
         self.write(
-            "	   "
-            + intersection_x
-            + "=["
-            + x1
-            + " + [["
-            + ua
-            + " * ["
-            + x2
-            + " - "
-            + x1
-            + "]]]]\n"
+            "	   " + intersection_x + "=[" + x1 + " + [[" + ua + " * [" + x2 + " - " + x1 + "]]]]\n"
         )
         self.write_blocknum()
         self.write(
-            "	   "
-            + intersection_y
-            + "=["
-            + y1
-            + " + [["
-            + ua
-            + " * ["
-            + y2
-            + " - "
-            + y1
-            + "]]]]\n"
+            "	   " + intersection_y + "=[" + y1 + " + [[" + ua + " * [" + y2 + " - " + y1 + "]]]]\n"
         )
         self.write_blocknum()
         self.write("	   " + self.RAPID())

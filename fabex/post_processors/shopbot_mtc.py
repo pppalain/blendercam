@@ -49,7 +49,7 @@ class Creator(nc.Creator):
         return ""
 
     def COMMENT(self, comment):
-        return "' %s" % comment
+        return f"' {comment}"
 
     def TOOL(self):
         return "T%i" + self.SPACE() + "M06"

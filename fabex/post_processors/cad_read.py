@@ -263,7 +263,7 @@ class CAD_backplot(iso.Parser):
                             y = oldy
                         if z is None:
                             z = oldz
-                        scr_line = "line %s,%s,%s %s,%s,%s \n" % (oldx, oldy, oldz, x, y, z)
+                        scr_line = f"line {oldx},{oldy},{oldz} {x},{y},{z} \n"
                         # print scr_line
 
                         # FILE.write(scr_line)

@@ -4,6 +4,8 @@ Blender Operator definitions are in this file.
 They mostly call the functions from 'utils.py'
 """
 
+from typing import ClassVar
+
 import bpy
 from bpy.props import StringProperty
 from bpy.types import Operator
@@ -27,7 +29,7 @@ class CAMSimulate(Operator, AsyncOperatorMixin):
 
     bl_idname = "object.cam_simulate"
     bl_label = "CAM Simulation"
-    bl_options = {"REGISTER", "UNDO", "BLOCKING"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "BLOCKING"}
 
     operation: StringProperty(
         name="Operation",
@@ -98,7 +100,7 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
 
     bl_idname = "object.cam_simulate_chain"
     bl_label = "CAM Simulation"
-    bl_options = {"REGISTER", "UNDO", "BLOCKING"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "BLOCKING"}
 
     def __init__(self, *args, **kwargs):
         Operator.__init__(self, *args, **kwargs)

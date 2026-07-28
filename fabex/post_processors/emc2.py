@@ -69,7 +69,7 @@ class Creator(iso.Creator):
             )
         if (id >= 7) and (id <= 9):
             self.write(
-                ((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (".%i" % (id - 6)))
+                ((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (f".{(id - 6)}"))
                 + "\t (Select Relative Coordinate System)\n"
             )
 

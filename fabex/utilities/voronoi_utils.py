@@ -31,6 +31,7 @@ Steve Fortune's homepage: http://netlib.bell-labs.com/cm/cs/who/sjf/index.html
 """
 
 import math
+from typing import ClassVar
 
 from ..constants import (
     BIG_FLOAT,
@@ -737,7 +738,7 @@ class Edge:
     LE = 0  # left end indice --> edge.ep[Edge.LE]
     RE = 1  # right end indice
     EDGE_NUM = 0
-    DELETED = {}  # marker value
+    DELETED: ClassVar = {}  # marker value
 
     def __init__(self):
         """Init function."""
