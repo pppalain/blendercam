@@ -209,6 +209,7 @@ def shapely_to_curve(name, p, z, cyclic=True):
 
 
 def shapely_validate(chunks):
+    validity_error = "Valid Geometry"
     remove_multiple("Invalid_Geometry_Marker")  # remove old errors
     for ch in chunks:  # first convert chunk to poly
         if len(ch.points) > 2:
@@ -248,7 +249,7 @@ def shapely_validate(chunks):
                     raise CamException(f"Invalid curve geometry: {validity_error}")
         else:
             ch.poly = Polygon()
-
+    return validity_error
 
 # this does more cleve chunks to Poly with hierarchies... ;)
 def chunks_to_shapely(chunks):

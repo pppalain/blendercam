@@ -31,12 +31,13 @@ def curve_validate():
     the problem error message
     """
     obj = bpy.context.active_object
-    chunks = curve_to_chunks(obj)
+    #chunks =
     try:
-        shapely_validate(chunks=chunks)
+        validity = shapely_validate(curve_to_chunks(obj))
     except:
+        validity = ""
         log.info("Invalid Curve Geometry")
-
+    return validity
 
 def curve_to_shapely(cob, use_modifiers=False):
     """Convert a curve object to Shapely polygons.
