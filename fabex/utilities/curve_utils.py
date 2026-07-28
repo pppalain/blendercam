@@ -31,7 +31,6 @@ def curve_validate():
     the problem error message
     """
     obj = bpy.context.active_object
-    #chunks =
     try:
         validity = shapely_validate(curve_to_chunks(obj))
     except:

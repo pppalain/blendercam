@@ -14,6 +14,8 @@ from shapely.geometry import (
 from shapely.validation import explain_validity
 
 from mathutils import Vector
+import warnings
+
 
 try:
     import bl_ext.blender_org.simplify_curves_plus as curve_simplify
@@ -245,8 +247,8 @@ def shapely_validate(chunks):
                         if space and space.type == 'VIEW_3D':
                             rv3d = space.region_3d
                             rv3d.view_distance *= 0.01
-
-                    raise CamException(f"Invalid curve geometry: {validity_error}")
+                    warnings.warn(f"Invalid curve geometry: {validity_error}")
+                    #raise CamException(f"Invalid curve geometry: {validity_error}")
         else:
             ch.poly = Polygon()
     return validity_error
