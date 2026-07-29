@@ -6,9 +6,8 @@ The functions here are called with operators defined in 'ops.py'
 
 from math import pi
 
-import numpy as np
-
 import bpy
+import numpy as np
 from mathutils import (
     Euler,
     Vector,
@@ -380,7 +379,7 @@ def parallel_pattern(o, angle):
     e = Euler((0, 0, angle))
     reverse = False
 
-    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
+    _climb_CW, climb_CCW, conventional_CW, _conventional_CCW = get_move_and_spin(o)
     meander_reverse = reverse and o.movement.type == "MEANDER"
     step_back_reverse = reverse and o.movement.parallel_step_back
 
@@ -451,7 +450,7 @@ def parallel_pattern(o, angle):
         progress(axis_along_paths)
         chunks = []
 
-        for a in range(0, len(axis_across_paths[0])):
+        for a in range(len(axis_across_paths[0])):
             nax = axis_along_paths.copy()
             nax[0] += axis_across_paths[0][a]
             nax[1] += axis_across_paths[1][a]

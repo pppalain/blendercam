@@ -7,14 +7,13 @@ from math import (
 import bpy
 
 from ..bridges import use_bridges
-
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     limit_chunks,
     sort_chunks,
 )
 from ..utilities.curve_utils import curve_to_chunks
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
     check_min_z,
     get_layers,
@@ -74,11 +73,11 @@ async def cutout(o):
 
     try:
         cutter_offset = offset_by_type[o.cutter_type]
-    except:
-        pass
+    except Exception as e:
+        log.debug(e)
 
     # Add Skin for Profile
-    cutter_offset = (r if cutter_offset > r else cutter_offset) + o.skin
+    cutter_offset = (min(cutter_offset, r)) + o.skin
 
     log.info(f"Offset: {cutter_offset}")
 
@@ -143,7 +142,7 @@ async def cutout(o):
     if o.outlines_count == 1:
         chunks_from_curve = await sort_chunks(chunks_from_curve, o)
 
-    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
+    _climb_CW, climb_CCW, conventional_CW, _conventional_CCW = get_move_and_spin(o)
 
     if climb_CCW or conventional_CW:
         [chunk.reverse() for chunk in chunks_from_curve]
@@ -178,9 +177,9 @@ async def cutout(o):
                 if (not chunk.closed) and o.movement.type == "MEANDER":
                     dir_switch = not dir_switch
     else:
-        for layer in layers:
-            for chunk in chunks_from_curve:
-                chunk_copies.append([chunk.copy(), layer])
+        chunk_copies.extend(
+            [chunk.copy(), layer] for chunk in chunks_from_curve for layer in layers
+        )
 
     # Set Z for all Chunks
     for i, chunk_layer in enumerate(chunk_copies):
@@ -254,7 +253,6 @@ async def cutout(o):
                     )
                     chunks.append(chunk)
     else:
-        for chunk_layer in chunk_copies:
-            chunks.append(chunk_layer[0])
+        chunks.extend(chunk_layer[0] for chunk_layer in chunk_copies)
 
     chunks_to_mesh(chunks, o)

@@ -4,8 +4,9 @@
 # Simple ISO NC code parsing
 #
 
-import nc_read as nc
 import re
+
+import nc_read as nc
 
 ################################################################################
 
@@ -16,11 +17,11 @@ class Parser(nc.Parser):
 
         self.pattern_main = re.compile(
             "([(!;].*"
-            "|\s+|[a-zA-Z0-9_:](?:[+-])?\d*(?:\.\d*)?"
-            "|\w\#\d+|\(.*?\)"
-            "|\#\d+\=(?:[+-])?\d*(?:\.\d*)? )"
+            r"|\s+|[a-zA-Z0-9_:](?:[+-])?\d*(?:\.\d*)?"
+            r"|\w\#\d+|\(.*?\)"
+            r"|\#\d+\=(?:[+-])?\d*(?:\.\d*)? )"
         )
-        self.pattern_tool = re.compile("([(!;].*|\S+|\s+|\d)")
+        self.pattern_tool = re.compile(r"([(!;].*|\S+|\s+|\d)")
         self.oldx = 0
         self.oldy = 0
         self.oldz = 150
@@ -38,10 +39,9 @@ class Parser(nc.Parser):
                 self.col = "tool call"
                 self.move = False
             elif self.col == "tool call":
-                if not self.t > 0:
-                    if word[0] >= "0" and word[0] <= "9":
-                        self.t = eval(word[0:])
-                        self.col = "tool no"
+                if not self.t > 0 and word[0] >= "0" and word[0] <= "9":
+                    self.t = eval(word[0:])
+                    self.col = "tool no"
         except:
             pass
 

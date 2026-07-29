@@ -201,7 +201,7 @@ def make_edge_loops(*objects):
     # Convert all curves to meshes
     for obj in objects:
         # Unlink old object
-        unlink_object(obj)
+        # unlink_object(obj)
 
         # Convert curve to a mesh
         if bpy.app.version >= (2, 80):

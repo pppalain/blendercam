@@ -1,27 +1,24 @@
 from math import pi
 
+import bpy
 from shapely.geometry import Point
 
-import bpy
-
-from .mortise import mortise
-
 from ..constants import DT  # DT = Bit diameter tolerance
-
 from ..utilities.compare_utils import angle
 from ..utilities.logging_utils import log
 from ..utilities.simple_utils import (
     active_name,
-    mirror_x,
-    union,
-    move,
-    join_multiple,
+    difference,
     duplicate,
+    join_multiple,
     make_active,
+    mirror_x,
+    move,
     remove_multiple,
     rename,
-    difference,
+    union,
 )
+from .mortise import mortise
 
 
 def finger(diameter, stem=2):
@@ -365,6 +362,7 @@ def variable_finger(
     hpos = []  # hpos is the horizontal positions of the middle of the mortise
     # slope_array(loop)
     log.info(f"Joinery Loop Length: {round(loop_length * 1000)}mm")
+    oldp = None
     for i, p in enumerate(coords):
         if i == 0:
             p_start = p
@@ -436,6 +434,7 @@ def variable_finger(
 
                 oldfinger_sz = finger_sz
                 old_mortise_angle = mortise_angle
+        oldp = p
     if base:
         join_multiple("_base")
         active_name("base")

@@ -7,8 +7,7 @@
 #
 ################################################################################
 
-from . import nc
-from . import iso
+from . import iso, nc
 from .format import Format
 
 

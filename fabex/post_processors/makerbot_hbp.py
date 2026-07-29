@@ -1,11 +1,12 @@
-from . import nc
-from . import makerbot_codes as maker
 import datetime
-import iso_modal
 import math
 
+import iso_modal
 
-now = datetime.datetime.now()
+from . import makerbot_codes as maker
+from . import nc
+
+now = datetime.datetime.now(datetime.UTC)
 
 ################################################################################
 
@@ -21,7 +22,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
     # program begin and end
 
     def program_begin(self, id, name=""):
-        self.write((maker.codes.COMMENT(now)))
+        self.write(maker.codes.COMMENT(now))
         self.write((maker.codes.EXTRUDER_TEMP("220")) + (maker.codes.COMMENT("Extruder Temp")))
         self.write((maker.codes.BUILD_BED_TEMP("110")) + (maker.codes.COMMENT("Build Bed Temp")))
         self.write((maker.codes.FAN_OFF()) + (maker.codes.COMMENT("Fan Off")))
@@ -43,7 +44,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
         self.write("G0 Z0    (Go back to zero.)\n")
 
     def program_end(self):
-        self.write((maker.codes.COMMENT("End of the file. Begin cool-down")))
+        self.write(maker.codes.COMMENT("End of the file. Begin cool-down"))
         self.write((maker.codes.EXTRUDER_TEMP("0")) + (maker.codes.COMMENT("Extruder Temp")))
         self.write((maker.codes.BUILD_BED_TEMP("0")) + (maker.codes.COMMENT("Build Bed Temp")))
         self.write((maker.codes.FAN_ON()) + (maker.codes.COMMENT("Fan On")))
@@ -53,9 +54,9 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
         self.write((maker.codes.STEPPERS_OFF()) + (maker.codes.COMMENT("Steppers Off")))
 
     def program_stop(self):
-        self.write((maker.codes.EXTRUDER_TEMP("0")))
-        self.write((maker.codes.BUILD_BED_TEMP("0")))
-        self.write((maker.codes.STEPPERS_OFF()))
+        self.write(maker.codes.EXTRUDER_TEMP("0"))
+        self.write(maker.codes.BUILD_BED_TEMP("0"))
+        self.write(maker.codes.STEPPERS_OFF())
 
     ################################################################################
     # general
@@ -106,13 +107,13 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
     # Custom routines
 
     def wipe(self):
-        self.write(("(This would be a good place for a custom wipe routine)\n"))
+        self.write("(This would be a good place for a custom wipe routine)\n")
 
     ################################################################################
     # APT style INSERT- insert anything into program
 
     def insert(self, text):
-        self.write((text + "\n"))
+        self.write(text + "\n")
 
     ################################################################################
     # tool info
@@ -232,17 +233,11 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
         self.write("\n")
 
     def same_xyz(self, x=None, y=None, z=None):
-        if x is not None:
-            if (self.fmt % x) != (self.fmt % self.x):
-                return False
-        if y is not None:
-            if (self.fmt % y) != (self.fmt % self.y):
-                return False
-        if z is not None:
-            if (self.fmt % z) != (self.fmt % self.z):
-                return False
-
-        return True
+        if x is not None and (self.fmt % x) != (self.fmt % self.x):
+            return False
+        if y is not None and (self.fmt % y) != (self.fmt % self.y):
+            return False
+        return not (z is not None and self.fmt % z != self.fmt % self.z)
 
     def arc(self, cw, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         if self.same_xyz(x, y, z):

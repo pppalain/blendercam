@@ -4,8 +4,7 @@
 # Post Processor for the Heidenhain TNC151 machine
 #
 
-from . import nc
-from . import iso_modal
+from . import iso_modal, nc
 
 ################################################################################
 

@@ -1,6 +1,5 @@
-from bpy.types import Operator
 from bpy.props import StringProperty
-
+from bpy.types import Operator
 
 from ...utilities.logging_utils import log
 
@@ -57,6 +56,6 @@ class CAM_Popup_Panel(Operator):
                             icon = "MOD_WIREFRAME"
                         if line.startswith(("Memory", "Detail")):
                             icon = "MEMORY"
-                        if line.startswith(("!!!")):
+                        if line.startswith("!!!"):
                             icon = "ERROR"
                         col.label(text=line, icon=icon)

@@ -11,7 +11,7 @@ class FabexGcodeTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         path = "test_func.py"
-        Path(path).write_text(GCODE_SCRIPT)
+        Path(path).write_text("GCODE_SCRIPT")
         command = f'blender -noaudio -b -P "{path}" --factory-startup'
         print(f"Executing: {command}")
         subprocess.run(command, shell=True, check=True)
@@ -29,7 +29,7 @@ class FabexGcodeTest(unittest.TestCase):
             for file in files:
                 if file.endswith(".blend"):
                     blend_file = file
-                elif file.startswith("_") and (file.endswith(".gcode") or file.endswith(".tap")):
+                elif file.startswith("_") and (file.endswith((".gcode", ".tap"))):
                     gcode_files = gcode_files or []
                     gcode_files.append(file)
 
@@ -61,7 +61,7 @@ class FabexGcodeTest(unittest.TestCase):
 
     def execute_blender(self, blend_file):
         path = "test_func.py"
-        Path(path).write_text(GCODE_SCRIPT)
+        Path(path).write_text("GCODE_SCRIPT")
         command = f'blender -noaudio -b "{blend_file}" -P "{path}" --factory-startup'
         print(f"Executing: {command}")
         subprocess.run(command, shell=True, check=True)

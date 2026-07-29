@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
 ################################################################################
 # iso_.py
 #
 
-import nc_read as nc
-import re
 import math
+import re
+
+import nc_read as nc
 
 ################################################################################
 
@@ -276,9 +276,7 @@ class Parser(nc.Parser):
                     col = "comment"
                 elif word[0] == "#":
                     col = "variable"
-                elif words[0] == ("//" + self.SPACE):
-                    col = "comment"
-                elif words[0] == ("/*" + self.SPACE):
+                elif words[0] == ("//" + self.SPACE) or words[0] == ("/*" + self.SPACE):
                     col = "comment"
                 # self.add_text(word, col)
 

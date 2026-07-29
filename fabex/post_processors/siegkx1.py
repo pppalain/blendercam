@@ -6,8 +6,7 @@
 #
 # Dan Heeks, 5th March 2009
 
-from . import nc
-from . import iso_modal
+from . import iso_modal, nc
 
 ################################################################################
 

@@ -5,13 +5,12 @@ from math import (
 
 from ..bridges import use_bridges
 from ..chunk_builder import CamPathChunkBuilder
-
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     connect_chunks_low,
     sample_chunks,
 )
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import (
     get_layers,
     get_move_and_spin,
@@ -21,7 +20,7 @@ from ..utilities.operation_utils import (
 async def block(o):
     log.info(heading("Strategy: Block"))
 
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    minx, miny, _minz, maxx, maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     zlevel = 1
     pathd = o.distance_between_paths
     pathstep = o.distance_along_paths
@@ -34,7 +33,7 @@ async def block(o):
     chunk = CamPathChunkBuilder([])
     i = 0
 
-    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
+    climb_CW, _climb_CCW, _conventional_CW, conventional_CCW = get_move_and_spin(o)
 
     while maxxp - minxp > 0 and maxyp - minyp > 0:
         y = minyp
@@ -77,7 +76,7 @@ async def block(o):
         chunk.points.reverse()
 
     if climb_CW or conventional_CCW:
-        for si in range(0, len(chunk.points)):
+        for si in range(len(chunk.points)):
             s = chunk.points[si]
             chunk.points[si] = (o.max.x + o.min.x - s[0], s[1], s[2])
 

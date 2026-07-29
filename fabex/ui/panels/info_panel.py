@@ -4,13 +4,13 @@
 """
 
 from datetime import timedelta
+from typing import ClassVar
 
 import bpy
 from bpy.types import Panel
 
-from .parent_panel import CAMParentPanel
-
 from ...utilities.version_utils import get_fabex_version
+from .parent_panel import CAMParentPanel
 
 
 # Info panel
@@ -18,7 +18,7 @@ from ...utilities.version_utils import get_fabex_version
 class CAM_INFO_Panel(CAMParentPanel, Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
-    bl_options = {"HIDE_HEADER"}
+    bl_options: ClassVar = {"HIDE_HEADER"}
 
     bl_label = "Info & Warnings"
     bl_idname = "FABEX_PT_CAM_INFO"
@@ -66,12 +66,12 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
                             icon = "MOD_WIREFRAME"
                         if line.startswith(("Memory", "Detail")):
                             icon = "MEMORY"
-                        if line.startswith(("!!!")):
+                        if line.startswith("!!!"):
                             icon = "ERROR"
                         col.label(text=line, icon=icon)
 
             # Cutter Engagement
-            if not self.op.strategy == "CUTOUT" and self.op.cutter_type not in ["LASER", "PLASMA"]:
+            if self.op.strategy != "CUTOUT" and self.op.cutter_type not in ["LASER", "PLASMA"]:
                 box = main.box()
                 col = box.column(align=True)
                 # Warns if cutter engagement is greater than 50%

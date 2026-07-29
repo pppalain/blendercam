@@ -5,9 +5,11 @@
 #
 # Dan Falck 2010/09/28
 
+import math
+
+from ..exception import CamException
 from . import iso_lathe_codes as iso
 from . import nc
-import math
 
 ################################################################################
 
@@ -145,7 +147,7 @@ class CreatorIso(nc.Creator):
             self.g += iso.codes.PLANE_YZ()
 
     def set_temporary_origin(self, x=None, y=None, z=None, a=None, b=None, c=None):
-        self.write((iso.codes.SET_TEMPORARY_COORDINATE_SYSTEM()))
+        self.write(iso.codes.SET_TEMPORARY_COORDINATE_SYSTEM())
         if x is not None:
             self.write(iso.codes.SPACE() + "X " + (self.fmt % x))
         if y is not None:
@@ -161,7 +163,7 @@ class CreatorIso(nc.Creator):
         self.write("\n")
 
     def remove_temporary_origin(self):
-        self.write((iso.codes.REMOVE_TEMPORARY_COORDINATE_SYSTEM()))
+        self.write(iso.codes.REMOVE_TEMPORARY_COORDINATE_SYSTEM())
         self.write("\n")
 
     ############################################################################
@@ -195,9 +197,7 @@ class CreatorIso(nc.Creator):
         if (id >= 1) and (id <= 6):
             self.g += iso.codes.WORKPLANE() % (id + iso.codes.WORKPLANE_BASE())
         if (id >= 7) and (id <= 9):
-            self.g += (iso.codes.WORKPLANE() % (6 + iso.codes.WORKPLANE_BASE())) + (
-                ".%i" % (id - 6)
-            )
+            self.g += (iso.codes.WORKPLANE() % (6 + iso.codes.WORKPLANE_BASE())) + (f".{(id - 6)}")
 
     ############################################################################
     ##  Rates + Modes
@@ -241,7 +241,7 @@ class CreatorIso(nc.Creator):
         if gear <= 0:
             self.m.append(iso.codes.GEAR_OFF())
         elif gear <= 4:
-            self.m.append(iso.codes.GEAR() % (gear + GEAR_BASE()))
+            self.m.append(iso.codes.GEAR() % (gear + self.GEAR_BASE()))
 
     ############################################################################
     # Moves
@@ -359,17 +359,11 @@ class CreatorIso(nc.Creator):
         self.write("\n")
 
     def same_xyz(self, x=None, y=None, z=None):
-        if x is not None:
-            if (self.fmt % x) != (self.fmt % self.x):
-                return False
-        if y is not None:
-            if (self.fmt % y) != (self.fmt % self.y):
-                return False
-        if z is not None:
-            if (self.fmt % z) != (self.fmt % self.z):
-                return False
-
-        return True
+        if x is not None and (self.fmt % x) != (self.fmt % self.x):
+            return False
+        if y is not None and (self.fmt % y) != (self.fmt % self.y):
+            return False
+        return not (z is not None and self.fmt % z != self.fmt % self.z)
 
     def arc(self, cw, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         if self.same_xyz(x, y, z):
@@ -462,7 +456,8 @@ class CreatorIso(nc.Creator):
     def start_CRC(self, left=True, radius=0.0):
         # set up prep code, to be output on next line
         if self.t is None:
-            raise "No tool specified for start_CRC()"
+            message = "No tool specified for start_CRC()"
+            raise CamException(message)
         self.g = ("G41" + iso.codes.SPACE() + "D%i") % self.t
 
     def end_CRC(self):
@@ -494,7 +489,7 @@ class CreatorIso(nc.Creator):
     # Misc
 
     def comment(self, text):
-        self.write((iso.codes.COMMENT(text) + "\n"))
+        self.write(iso.codes.COMMENT(text) + "\n")
 
     def insert(self, text):
         pass

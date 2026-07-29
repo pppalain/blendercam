@@ -32,10 +32,7 @@ class Parser:
 
     def readline(self):
         self.line = self.file_in.readline().rstrip()
-        if len(self.line):
-            return True
-        else:
-            return False
+        return bool(len(self.line))
 
     def write(self, s):
         self.file_out.write(s)
@@ -84,9 +81,7 @@ class Parser:
             y = self.currenty
         if z is None:
             z = self.currentz
-        self.file_out.write(
-            "line %s,%s,%s %s,%s,%s\n" % (self.currentx, self.currenty, self.currentz, x, y, z)
-        )
+        self.file_out.write(f"line {self.currentx},{self.currenty},{self.currentz} {x},{y},{z}\n")
         self.currentx = x
         self.currenty = y
         self.currentz = z
@@ -112,19 +107,15 @@ class Parser:
         if z is None:
             z = self.currentz
         if d == 1:
-            self.file_out.write("arc %s,%s,%s\n" % (self.currentx, self.currenty, self.currentz))
+            self.file_out.write(f"arc {self.currentx},{self.currenty},{self.currentz}\n")
             self.file_out.write("c\n")
-            self.file_out.write(
-                "%s,%s,%s\n" % (self.currentx + i, self.currenty + j, self.currentz)
-            )
-            self.file_out.write("%s,%s,%s" % (x, y, z))
+            self.file_out.write(f"{self.currentx + i},{self.currenty + j},{self.currentz}\n")
+            self.file_out.write(f"{x},{y},{z}")
         else:
-            self.file_out.write("arc %s,%s,%s\n" % (x, y, z))
+            self.file_out.write(f"arc {x},{y},{z}\n")
             self.file_out.write("c\n")
-            self.file_out.write(
-                "%s,%s,%s\n" % (self.currentx + i, self.currenty + j, self.currentz)
-            )
-            self.file_out.write("%s,%s,%s" % (self.currentx, self.currenty, self.currentz))
+            self.file_out.write(f"{self.currentx + i},{self.currenty + j},{self.currentz}\n")
+            self.file_out.write(f"{self.currentx},{self.currenty},{self.currentz}")
         self.currentx = x
         self.currenty = y
         self.currentz = z

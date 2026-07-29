@@ -3,6 +3,7 @@
 Functions for Bullet and Cutter collision checks.
 """
 
+import time
 from math import (
     cos,
     pi,
@@ -10,7 +11,6 @@ from math import (
     sin,
     tan,
 )
-import time
 
 import bpy
 from mathutils import (
@@ -22,7 +22,7 @@ from ..constants import (
     BULLET_SCALE,
     CUTTER_OFFSET,
 )
-from .logging_utils import log, heading
+from .logging_utils import heading, log
 from .simple_utils import (
     activate,
     delete_object,

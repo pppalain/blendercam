@@ -11,11 +11,11 @@
 # 		4.	get arcs working
 #
 
-from . import nc
-from .format import Format
-
 # to allow access to other CAM data:
 import bpy
+
+from . import nc
+from .format import Format
 
 ################################################################################
 
@@ -49,7 +49,7 @@ class Creator(nc.Creator):
         return ""
 
     def COMMENT(self, comment):
-        return "' %s" % comment
+        return f"' {comment}"
 
     def TOOL(self):
         return "T%i" + self.SPACE() + "M06"
@@ -206,7 +206,6 @@ class Creator(nc.Creator):
             self.write("," + self.fmt.string(j * self.unitscale))
             self.write(",T,1")
             self.write("\n")
-        return
 
     ############################################################################
     # CRC
@@ -218,7 +217,7 @@ class Creator(nc.Creator):
     # Misc
 
     def comment(self, text):
-        self.write((self.COMMENT(text) + "\n"))
+        self.write(self.COMMENT(text) + "\n")
 
     def variable(self, id):
         return self.VARIABLE() % id
