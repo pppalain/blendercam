@@ -4,20 +4,22 @@ Module to allow the creation of reliefs from Images or View Layers.
 (https://en.wikipedia.org/wiki/Relief#Bas-relief_or_low_relief)
 """
 
-from math import ceil, floor, sqrt
 import re
 import time
-
-import numpy as np
+from math import ceil, floor, sqrt
 
 import bpy
+import numpy as np
 
 from ..constants import EPS, NUMPYALG
 from .image_utils import (
     image_to_numpy,
     numpy_to_image,
 )
-from .logging_utils import log, heading
+from .logging_utils import heading, log
+
+rows = 0
+size = 0
 
 
 class ReliefError(Exception):
@@ -104,13 +106,12 @@ def restrict_buffer(inbuf, outbuf):
         outbuf[:] = tempbuf.reshape((outx, outy))
 
     else:  # old method
-        for y in range(0, outy):
+        for y in range(outy):
             sx = dx / 2 - 0.5
-            for x in range(0, outx):
+            for x in range(outx):
                 pixVal = 0
                 w = 0
 
-                #
                 for ix in range(
                     max(0, ceil(sx - dx * filterSize)),
                     min(floor(sx + dx * filterSize), inx - 1) + 1,
@@ -188,9 +189,9 @@ def prolongate(inbuf, outbuf):
 
     else:
         sy = -dy / 2
-        for y in range(0, outy):
+        for y in range(outy):
             sx = -dx / 2
-            for x in range(0, outx):
+            for x in range(outx):
                 pixVal = 0
                 weight = 0
 
@@ -347,7 +348,7 @@ def solve_pde_multigrid(
     IU = []
     VF = []
     PLANAR = []
-    for a in range(0, levels + 1):
+    for a in range(levels + 1):
         RHS.append(None)
         IU.append(None)
         VF.append(None)
@@ -362,7 +363,7 @@ def solve_pde_multigrid(
     sx = xmax
     sy = ymax
     # print(planar)
-    for k in range(0, levels):
+    for k in range(levels):
         # calculate size of next level
         sx = int(sx / 2)
         sy = int(sy / 2)
@@ -400,7 +401,7 @@ def solve_pde_multigrid(
 
         # 5. V-cycle (twice repeated)
 
-        for cycle in range(0, vcycleiterations):
+        for cycle in range(vcycleiterations):
             log.info(f"V-Cycle Iteration: {cycle}")
 
             # 6. downward stroke of V
@@ -411,7 +412,7 @@ def solve_pde_multigrid(
                 if k2 != k:
                     IU[k2].fill(0.0)
 
-                for i in range(0, smoothiterations):
+                for i in range(smoothiterations):
                     smooth(IU[k2], VF[k2], linbcgiterations, PLANAR[k2])
 
                 # 8. calculate defect at level
@@ -450,7 +451,7 @@ def solve_pde_multigrid(
                 add_correction(IU[k2], C)
 
                 # 14. post-smoothing of current sollution using target function
-                for i in range(0, smoothiterations):
+                for i in range(smoothiterations):
                     smooth(IU[k2], VF[k2], linbcgiterations, PLANAR[k2])
 
                 if useplanar and k2 == 0:
@@ -714,8 +715,6 @@ def build_mesh(mesh_z, br):
             thickness, justification, and decimation ratio.
     """
 
-    global rows
-    global size
     scale = 1
     scalez = 1
     decimateRatio = br.decimate_ratio  # get variable from interactive table
@@ -730,15 +729,15 @@ def build_mesh(mesh_z, br):
     numX = mesh_z.shape[0]
     log.info(f"{numX}, {numY}")
 
-    verts = list()
-    faces = list()
+    verts = []
+    faces = []
 
     for i, row in enumerate(mesh_z):
         for j, col in enumerate(row):
             verts.append(vert(i, j, col, scale, scalez))
 
     count = 0
-    for i in range(0, numY * (numX - 1)):
+    for i in range(numY * (numX - 1)):
         if count < numY - 1:
             A = i  # the first vertex
             B = i + 1  # the second vertex
@@ -962,10 +961,10 @@ def problem_areas(br):
     # planar = nar < (nar.min() + 0.0001)
     # sqrt for silhouettes recovery:
     sqrarx = np.abs(gx)
-    for iter in range(0, br.silhouette_exponent):
+    for iter in range(br.silhouette_exponent):
         sqrarx = np.sqrt(sqrarx)
     sqrary = np.abs(gy)
-    for iter in range(0, br.silhouette_exponent):
+    for iter in range(br.silhouette_exponent):
         sqrary = np.sqrt(sqrary)
 
     # detect and also recover silhouettes:
@@ -992,7 +991,7 @@ def problem_areas(br):
     divga = np.abs(divg)
     divgp = divga > silh_thres / 4.0
     divgp = 1 - divgp
-    for a in range(0, 2):
+    for a in range(2):
         atimes(divgp, divga)
         divga = divgp
 
@@ -1070,9 +1069,8 @@ def relief(br):
     nar = 1 - nar  # reverse z buffer+ add something
     log.info(f"Range: {nar.min()}, {nar.max()}")
     if nar.min() - nar.max() == 0:
-        raise ReliefError(
-            "Input Image Is Blank - Check You Have the Correct View Layer or Input Image Set."
-        )
+        message = "Input Image Is Blank - Check You Have the Correct View Layer or Input Image Set."
+        raise ReliefError(message)
 
     gx = nar.copy()
     gx.fill(0)
@@ -1087,10 +1085,10 @@ def relief(br):
     planar = nar < (nar.min() + 0.0001)
     # sqrt for silhouettes recovery:
     sqrarx = np.abs(gx)
-    for iter in range(0, br.silhouette_exponent):
+    for iter in range(br.silhouette_exponent):
         sqrarx = np.sqrt(sqrarx)
     sqrary = np.abs(gy)
-    for iter in range(0, br.silhouette_exponent):
+    for iter in range(br.silhouette_exponent):
         sqrary = np.sqrt(sqrary)
 
     # detect and also recover silhouettes:
@@ -1131,7 +1129,7 @@ def relief(br):
         # pos = np.array((crow, ccol))
 
         def filterwindow(x, y, cx=0, cy=0):
-            return abs((cx - x)) + abs((cy - y))
+            return abs(cx - x) + abs(cy - y)
 
         mask = np.fromfunction(filterwindow, divg.shape, cx=crow, cy=ccol)
         mask = np.sqrt(mask)

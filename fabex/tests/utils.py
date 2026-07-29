@@ -1,5 +1,5 @@
-from pathlib import Path
 import shutil
+from pathlib import Path
 
 import bpy
 
@@ -144,6 +144,7 @@ def build_extension(blender):
             output_dir,
             # "--split-platforms",
         ],
+        check=False,
     )
 
 

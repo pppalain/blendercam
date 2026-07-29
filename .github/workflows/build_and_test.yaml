@@ -12,7 +12,7 @@ jobs:
         # Enter the OS to use
         # And the version of Blender to install
         os: ['ubuntu-latest','windows-latest', 'macos-latest']
-        blender_version: ['5.1.2', '5.2']
+        blender_version: ['5.2']
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -31,6 +31,7 @@ jobs:
     - name: Test
       run: |
         uv sync --locked --all-extras --dev
+        uv run ruff format .
         uv run pytest -vvv -rA --ignore=blender --capture=sys
 
     - uses: actions/upload-artifact@v4

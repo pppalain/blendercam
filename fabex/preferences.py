@@ -12,10 +12,10 @@ from bpy.types import AddonPreferences
 
 from . import __package__ as base_package
 from .utilities.version_utils import (
+    get_llvmlite_version,
+    get_numba_version,
     opencamlib_version,
     shapely_version,
-    get_numba_version,
-    get_llvmlite_version,
 )
 
 

@@ -3,31 +3,28 @@ from math import (
     pi,
 )
 
-
 import bpy
 
+from ..constants import DT  # Bit Diameter Tolerance
+from ..utilities.logging_utils import log
+from ..utilities.simple_utils import (
+    active_name,
+    difference,
+    duplicate,
+    make_active,
+    mirror_x,
+    mirror_y,
+    move,
+    remove_multiple,
+    rename,
+    rotate,
+    select_multiple,
+    union,
+)
 from .finger import fingers
 from .interlock_twist import (
     twist_female,
     twist_male,
-)
-
-from ..constants import DT  # Bit Diameter Tolerance
-
-from ..utilities.logging_utils import log
-from ..utilities.simple_utils import (
-    duplicate,
-    mirror_x,
-    mirror_y,
-    union,
-    rename,
-    difference,
-    active_name,
-    move,
-    rotate,
-    make_active,
-    remove_multiple,
-    select_multiple,
 )
 
 

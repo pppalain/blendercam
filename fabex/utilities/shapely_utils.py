@@ -3,13 +3,15 @@
 Functions to handle shapely operations and conversions - curve, coords, polygon
 """
 
+import re
+
+import bpy
 import numpy as np
 import shapely
-import bpy
-import re
+from mathutils import Vector
 from shapely.geometry import (
-    Polygon,
     MultiPolygon,
+    Polygon,
 )
 from shapely.validation import explain_validity
 
@@ -23,9 +25,9 @@ except ImportError:
     pass
 
 from ..chunk_builder import CamPathChunkBuilder
-from .simple_utils import remove_multiple
-from .logging_utils import log
 from ..exception import CamException
+from .logging_utils import log
+from .simple_utils import remove_multiple
 
 
 def shapely_remove_doubles(p, optimize_threshold):
@@ -46,17 +48,23 @@ def shapely_remove_doubles(p, optimize_threshold):
         Shape: A new shape object with simplified boundaries.
     """
 
+    pnew = p
+
     optimize_threshold *= 0.000001
 
-    soptions = ["distance", "distance", 0.0, 5, optimize_threshold, 5, optimize_threshold]
-    for ci, c in enumerate(p.boundary):  # in range(0,len(p)):
-        veclist = []
-        for v in c:
-            veclist.append(Vector((v[0], v[1])))
-        s = curve_simplify.simplify_RDP(veclist, soptions)
-        nc = []
-        for i in range(0, len(s)):
-            nc.append(c[s[i]])
+    simplify_options = [
+        "distance",
+        "distance",
+        0.0,
+        5,
+        optimize_threshold,
+        5,
+        optimize_threshold,
+    ]
+    for ci, c in enumerate(p.boundary):
+        vector_list = [Vector((v[0], v[1])) for v in c]
+        simple_curve = curve_simplify.simplify_RDP(vector_list, simplify_options)
+        nc = [c[simple_curve[i]] for i in range(len(simple_curve))]
 
         if len(nc) > 2:
             pnew.addContour(nc, p.isHole(ci))
@@ -218,7 +226,8 @@ def shapely_validate(chunks):
             try:
                 ch.poly = Polygon(ch.points[:, :2])
             except Exception as exc:
-                raise CamException("Invalid Curve Geometry") from exc
+                message = "Invalid Curve Geometry"
+                raise CamException(message) from exc
 
             if not ch.poly.is_valid:
                 validity_error = explain_validity(ch.poly)
@@ -238,13 +247,13 @@ def shapely_validate(chunks):
                     # Get 3D View Context for overrides
                     # So that 3D View Operators will still run
                     # When called from Calculate Path button in Properties
-                    area = [a for a in bpy.context.screen.areas if a.type == "VIEW_3D"][0]
-                    region = [r for r in area.regions if r.type == "WINDOW"][0]
+                    area = next(a for a in bpy.context.screen.areas if a.type == "VIEW_3D")
+                    region = next(r for r in area.regions if r.type == "WINDOW")
                     with bpy.context.temp_override(area=area, region=region):
                         bpy.ops.view3d.view_axis(type="TOP")
                         bpy.ops.view3d.view_selected()
                         space = area.spaces.active
-                        if space and space.type == 'VIEW_3D':
+                        if space and space.type == "VIEW_3D":
                             rv3d = space.region_3d
                             rv3d.view_distance *= 0.01
                     warnings.warn(f"Invalid curve geometry: {validity_error}")
@@ -260,11 +269,14 @@ def chunks_to_shapely(chunks):
 
     for ppart in chunks:  # then add hierarchy relations
         for ptest in chunks:
-            if ppart != ptest:
-                if not ppart.poly.is_empty and not ptest.poly.is_empty:
-                    if ptest.poly.contains(ppart.poly):
-                        # hierarchy works like this: - children get milled first.
-                        ppart.parents.append(ptest)
+            if (
+                ppart != ptest
+                and not ppart.poly.is_empty
+                and not ptest.poly.is_empty
+                and ptest.poly.contains(ppart.poly)
+            ):
+                # hierarchy works like this: - children get milled first.
+                ppart.parents.append(ptest)
 
     for ch in chunks:  # now make only simple polygons with holes, not more polys inside others
         found = False
@@ -369,12 +381,11 @@ def chunks_to_shapely(chunks):
 
     returnpolys = []
 
-    for polyi in range(0, len(chunks)):  # export only the booleaned polygons
+    for polyi in range(len(chunks)):  # export only the booleaned polygons
         ch = chunks[polyi]
 
-        if not ch.poly.is_empty:
-            if len(ch.parents) == 0:
-                returnpolys.append(ch.poly)
+        if not ch.poly.is_empty and len(ch.parents) == 0:
+            returnpolys.append(ch.poly)
 
     polys = MultiPolygon(returnpolys)
     return polys
@@ -383,9 +394,8 @@ def chunks_to_shapely(chunks):
 def shapely_to_chunks(p, zlevel):
     chunk_builders = []
     seq = shapely_to_coordinates(p)
-    i = 0
 
-    for s in seq:
+    for i, s in enumerate(seq):
         if len(s) > 1:
             chunk = CamPathChunkBuilder([])
 
@@ -396,6 +406,6 @@ def shapely_to_chunks(p, zlevel):
                     chunk.points.append((v[0], v[1], zlevel))
 
             chunk_builders.append(chunk)
-        i += 1
+
     chunk_builders.reverse()  # this is for smaller shapes first.
     return [c.to_chunk() for c in chunk_builders]

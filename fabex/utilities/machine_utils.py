@@ -6,10 +6,9 @@ The functions here are called with operators defined in 'ops.py'
 
 import bpy
 
+from ..constants import _IS_LOADING_DEFAULTS
 from .logging_utils import log
 from .simple_utils import activate
-
-from ..constants import _IS_LOADING_DEFAULTS
 
 
 def add_machine_area_object():

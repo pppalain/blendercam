@@ -5,10 +5,13 @@
 #
 # Hirutso Enni, 2009-01-13
 
-from . import nc
 import math
-from .format import Address, AddressPlusMinus, Format
+
 import bpy
+
+from ..exception import CamException
+from . import nc
+from .format import Address, AddressPlusMinus, Format
 
 ################################################################################
 
@@ -130,7 +133,7 @@ class Creator(nc.Creator):
         return "N%i"
 
     def COMMENT(self, comment):
-        return "(%s)" % comment
+        return f"({comment})"
 
     def VARIABLE(self):
         return "#%i"
@@ -369,11 +372,12 @@ class Creator(nc.Creator):
             self.g_list.append("G" + str(self.current_fixture))
 
     def increment_fixture(self):
-        for i in range(0, len(self.fixture_order) - 1):
+        for i in range(len(self.fixture_order) - 1):
             if self.fixture_order[i] == self.fixture_wanted:
                 self.fixture_wanted = self.fixture_order[i + 1]
                 return
-        raise "too many fixtures wanted!"
+        message = "too many fixtures wanted!"
+        raise CamException(message)
 
     def get_fixture(self):
         return self.fixture_wanted
@@ -436,9 +440,8 @@ class Creator(nc.Creator):
                 break
             f_out.write(self.BLOCK() % n + self.SPACE() + line)
             n += self.block_number_increment
-            if self.block_number_restart_after is not None:
-                if n >= self.block_number_restart_after:
-                    n = self.start_block_number
+            if self.block_number_restart_after is not None and n >= self.block_number_restart_after:
+                n = self.start_block_number
         f_in.close()
         f_out.close()
 
@@ -484,7 +487,7 @@ class Creator(nc.Creator):
 
     def make_subroutine_name(self, id):
         s = self.filename
-        for i in reversed(range(0, len(s))):
+        for i in reversed(range(len(s))):
             if s[i] == ".":
                 return s[0:i] + "sub" + str(id) + s[i:]
 
@@ -604,9 +607,8 @@ class Creator(nc.Creator):
     # Tools
 
     def tool_change(self, id):
-        if self.output_comment_before_tool_change:
-            if id in self.tool_defn_params:
-                self.comment("tool change to " + self.tool_defn_params[id]["name"])
+        if self.output_comment_before_tool_change and id in self.tool_defn_params:
+            self.comment("tool change to " + self.tool_defn_params[id]["name"])
 
         if self.output_cutviewer_comments:
             import cutviewer
@@ -630,13 +632,13 @@ class Creator(nc.Creator):
         self.tool_defn_params[id] = params
         if self.output_tool_definitions:
             self.write(self.SPACE() + self.TOOL_DEFINITION())
-            self.write(self.SPACE() + ("P%i" % id) + " ")
+            self.write(self.SPACE() + (f"P{id}") + " ")
 
             if params["diameter"] is not None:
                 self.write(self.SPACE() + ("R%.3f" % (float(params["diameter"]) / 2)))
 
             if params["cutting edge height"] is not None:
-                self.write(self.SPACE() + "Z%.3f" % float(params["cutting edge height"]))
+                self.write(self.SPACE() + "Z{:.3f}".format(float(params["cutting edge height"])))
 
             self.write("\n")
 
@@ -664,9 +666,7 @@ class Creator(nc.Creator):
         if (id >= 1) and (id <= 6):
             self.g_list.append(self.WORKPLANE() % (id + self.WORKPLANE_BASE()))
         if (id >= 7) and (id <= 9):
-            self.g_list.append(
-                ((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (".%i" % (id - 6)))
-            )
+            self.g_list.append((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (f".{(id - 6)}"))
 
     ############################################################################
     ##  Rates + Modes
@@ -754,7 +754,7 @@ class Creator(nc.Creator):
         if gear <= 0:
             self.m.append(self.GEAR_OFF())
         elif gear <= 4:
-            self.m.append(self.GEAR() % (gear + GEAR_BASE()))
+            self.m.append(self.GEAR() % (gear + self.GEAR_BASE()))
 
     ############################################################################
     # Moves
@@ -986,7 +986,7 @@ class Creator(nc.Creator):
                 z_step = float(z - self.z) / segments
                 next_z = self.z
 
-            for p in range(0, segments):
+            for p in range(segments):
                 angle = angle + angle_step
                 next_x = i + radius * math.cos(angle)
                 next_y = j + radius * math.sin(angle)
@@ -1095,31 +1095,27 @@ class Creator(nc.Creator):
             if not self.arc_centre_absolute:
                 i = i - self.x
             s = self.fmt.string(i)
-            if self.arc_centre_positive:
-                if s[0] == "-":
-                    s = s[1:]
+            if self.arc_centre_positive and s[0] == "-":
+                s = s[1:]
             self.write(self.SPACE() + self.CENTRE_X() + s)
         if j is not None:
             if not self.arc_centre_absolute:
                 j = j - self.y
             s = self.fmt.string(j)
-            if self.arc_centre_positive:
-                if s[0] == "-":
-                    s = s[1:]
+            if self.arc_centre_positive and s[0] == "-":
+                s = s[1:]
             self.write(self.SPACE() + self.CENTRE_Y() + s)
         if k is not None:
             if not self.arc_centre_absolute:
                 k = k - self.z
             s = self.fmt.string(k)
-            if self.arc_centre_positive:
-                if s[0] == "-":
-                    s = s[1:]
+            if self.arc_centre_positive and s[0] == "-":
+                s = s[1:]
             self.write(self.SPACE() + self.CENTRE_Z() + s)
         if r is not None:
             s = self.fmt.string(r)
-            if self.arc_centre_positive:
-                if s[0] == "-":
-                    s = s[1:]
+            if self.arc_centre_positive and s[0] == "-":
+                s = s[1:]
             self.write(self.SPACE() + self.RADIUS() + s)
         #       use horizontal feed rate
         if self.fhv:
@@ -1174,7 +1170,8 @@ class Creator(nc.Creator):
     def start_CRC(self, left=True, radius=0.0):
         # set up prep code, to be output on next line
         if self.t is None:
-            raise "No tool specified for start_CRC()"
+            message = "No tool specified for start_CRC()"
+            raise CamException(message)
         if left:
             self.write(self.SPACE() + "G41")
         else:
@@ -1247,10 +1244,9 @@ class Creator(nc.Creator):
         self.write_internal_coolant_commands(internal_coolant_on)
 
         drillExpanded = self.drillExpanded
-        if (depthparams.step_down != 0) and (dwell != 0):
+        if (depthparams.step_down != 0) and (dwell != 0) and not self.dwell_allowed_in_G83:
             # pecking and dwell together
-            if not self.dwell_allowed_in_G83:
-                drillExpanded = True
+            drillExpanded = True
 
         if drillExpanded:
             # for machines which don't understand G81, G82 etc.
@@ -1291,13 +1287,13 @@ class Creator(nc.Creator):
             return
 
         if self.output_g98_and_g99:
-            if rapid_to_clearance:
-                if self.output_g43_z_before_drilling_if_g98:
-                    if self.fmt.string(depthparams.clearance_height) != self.z_for_g43:
-                        self.z_for_g43 = self.fmt.string(depthparams.clearance_height)
-                        self.write(
-                            self.SPACE() + "G43" + self.SPACE() + "Z" + self.z_for_g43 + "\n"
-                        )
+            if (
+                rapid_to_clearance
+                and self.output_g43_z_before_drilling_if_g98
+                and self.fmt.string(depthparams.clearance_height) != self.z_for_g43
+            ):
+                self.z_for_g43 = self.fmt.string(depthparams.clearance_height)
+                self.write(self.SPACE() + "G43" + self.SPACE() + "Z" + self.z_for_g43 + "\n")
 
             if self.first_drill_pos and rapid_to_clearance:
                 self.rapid(x, y)
@@ -1407,7 +1403,7 @@ class Creator(nc.Creator):
     # Misc
 
     def comment(self, text):
-        self.write((self.COMMENT(text) + "\n"))
+        self.write(self.COMMENT(text) + "\n")
 
     def insert(self, text):
         pass
@@ -1469,16 +1465,14 @@ class Creator(nc.Creator):
         self.feed(z=depth)
 
         self.write(
-            (
-                self.PROBE_TOWARDS_WITH_SIGNAL()
-                + (
-                    " X "
-                    + (self.fmt.string(destination_point_x))
-                    + " Y "
-                    + (self.fmt.string(destination_point_y))
-                )
-                + ("\t(Probe towards our destination point)\n")
+            self.PROBE_TOWARDS_WITH_SIGNAL()
+            + (
+                " X "
+                + (self.fmt.string(destination_point_x))
+                + " Y "
+                + (self.fmt.string(destination_point_y))
             )
+            + ("\t(Probe towards our destination point)\n")
         )
 
         self.comment("Back off the workpiece and re-probe more slowly")
@@ -1515,44 +1509,34 @@ class Creator(nc.Creator):
         self.write(self.SPACE() + self.FEEDRATE() + self.ffmt.string(self.fh / 2.0) + "\n")
 
         self.write(
-            (
-                self.SPACE()
-                + self.PROBE_TOWARDS_WITH_SIGNAL()
-                + (
-                    " X "
-                    + (self.fmt.string(destination_point_x))
-                    + " Y "
-                    + (self.fmt.string(destination_point_y))
-                )
-                + ("\t(Probe towards our destination point)\n")
+            self.SPACE()
+            + self.PROBE_TOWARDS_WITH_SIGNAL()
+            + (
+                " X "
+                + (self.fmt.string(destination_point_x))
+                + " Y "
+                + (self.fmt.string(destination_point_y))
             )
+            + ("\t(Probe towards our destination point)\n")
         )
 
         self.comment("Store the probed location somewhere we can get it again later")
         self.write(
-            (
-                "#"
-                + intersection_variable_x
-                + "="
-                + probe_offset_x_component
-                + " (Portion of probe radius that contributes to the X coordinate)\n"
-            )
+            "#"
+            + intersection_variable_x
+            + "="
+            + probe_offset_x_component
+            + " (Portion of probe radius that contributes to the X coordinate)\n"
         )
+        self.write("#" + intersection_variable_x + "=[#" + intersection_variable_x + " + #5061]\n")
         self.write(
-            ("#" + intersection_variable_x + "=[#" + intersection_variable_x + " + #5061]\n")
+            "#"
+            + intersection_variable_y
+            + "="
+            + probe_offset_y_component
+            + " (Portion of probe radius that contributes to the Y coordinate)\n"
         )
-        self.write(
-            (
-                "#"
-                + intersection_variable_y
-                + "="
-                + probe_offset_y_component
-                + " (Portion of probe radius that contributes to the Y coordinate)\n"
-            )
-        )
-        self.write(
-            ("#" + intersection_variable_y + "=[#" + intersection_variable_y + " + #5062]\n")
-        )
+        self.write("#" + intersection_variable_y + "=[#" + intersection_variable_y + " + #5062]\n")
 
         self.comment("Now move back to the original location")
         self.rapid(retracted_point_x, retracted_point_y)
@@ -1561,19 +1545,15 @@ class Creator(nc.Creator):
         self.rapid(x=0, y=0)
 
         self.write(
-            (
-                self.REMOVE_TEMPORARY_COORDINATE_SYSTEM()
-                + ("\t(Restore the previous coordinate system)\n")
-            )
+            self.REMOVE_TEMPORARY_COORDINATE_SYSTEM()
+            + ("\t(Restore the previous coordinate system)\n")
         )
 
     def probe_downward_point(self, x=None, y=None, depth=None, intersection_variable_z=None):
         self.write(
-            (
-                self.SET_TEMPORARY_COORDINATE_SYSTEM()
-                + (" X 0 Y 0 Z 0")
-                + ("\t(Temporarily make this the origin)\n")
-            )
+            self.SET_TEMPORARY_COORDINATE_SYSTEM()
+            + (" X 0 Y 0 Z 0")
+            + ("\t(Temporarily make this the origin)\n")
         )
         if self.fhv:
             self.calc_feedrate_hv(1, 0)
@@ -1585,26 +1565,22 @@ class Creator(nc.Creator):
             self.write(" X " + x + " Y " + y + "\n")
 
         self.write(
-            (
-                self.PROBE_TOWARDS_WITH_SIGNAL()
-                + " Z "
-                + (self.fmt.string(depth))
-                + ("\t(Probe towards our destination point)\n")
-            )
+            self.PROBE_TOWARDS_WITH_SIGNAL()
+            + " Z "
+            + (self.fmt.string(depth))
+            + ("\t(Probe towards our destination point)\n")
         )
 
         self.comment("Store the probed location somewhere we can get it again later")
-        self.write(("#" + intersection_variable_z + "= #5063\n"))
+        self.write("#" + intersection_variable_z + "= #5063\n")
 
         self.comment("Now move back to the original location")
         self.rapid(z=0)
         self.rapid(x=0, y=0)
 
         self.write(
-            (
-                self.REMOVE_TEMPORARY_COORDINATE_SYSTEM()
-                + ("\t(Restore the previous coordinate system)\n")
-            )
+            self.REMOVE_TEMPORARY_COORDINATE_SYSTEM()
+            + ("\t(Restore the previous coordinate system)\n")
         )
 
     def report_probe_results(
@@ -1650,13 +1626,13 @@ class Creator(nc.Creator):
     def rapid_to_midpoint(self, x1=None, y1=None, z1=None, x2=None, y2=None, z2=None):
         self.write(self.RAPID())
         if (x1 is not None) and (x2 is not None):
-            self.write((" X " + "[[[" + x1 + " - " + x2 + "] / 2.0] + " + x2 + "]"))
+            self.write(" X " + "[[[" + x1 + " - " + x2 + "] / 2.0] + " + x2 + "]")
 
         if (y1 is not None) and (y2 is not None):
-            self.write((" Y " + "[[[" + y1 + " - " + y2 + "] / 2.0] + " + y2 + "]"))
+            self.write(" Y " + "[[[" + y1 + " - " + y2 + "] / 2.0] + " + y2 + "]")
 
         if (z1 is not None) and (z2 is not None):
-            self.write((" Z " + "[[[" + z1 + " - " + z2 + "] / 2.0] + " + z2 + "]"))
+            self.write(" Z " + "[[[" + z1 + " - " + z2 + "] / 2.0] + " + z2 + "]")
 
         self.write("\n")
 

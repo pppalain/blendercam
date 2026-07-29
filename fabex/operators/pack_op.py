@@ -4,35 +4,34 @@ Blender Operator definitions are in this file.
 They mostly call the functions from 'utils.py'
 """
 
-from math import pi
 import random
 import time
-
-import shapely
-from shapely.geometry import (
-    Point,
-    Polygon,
-    MultiPolygon,
-)
-from shapely import (
-    affinity,
-    prepared,
-    speedups,
-)
+from math import pi
+from typing import ClassVar
 
 import bpy
+import shapely
 from bpy.props import (
     BoolProperty,
     EnumProperty,
     FloatProperty,
 )
 from bpy.types import Operator
+from shapely import (
+    affinity,
+    prepared,
+    speedups,
+)
+from shapely.geometry import (
+    MultiPolygon,
+    Point,
+    Polygon,
+)
 
 from ..constants import PRECISION
-
 from ..utilities.curve_utils import curve_to_chunks
 from ..utilities.logging_utils import log
-from ..utilities.shapely_utils import shapely_to_curve, chunks_to_shapely
+from ..utilities.shapely_utils import chunks_to_shapely, shapely_to_curve
 from ..utilities.simple_utils import activate
 
 
@@ -41,7 +40,7 @@ class CamPackObjects(Operator):
 
     bl_idname = "object.cam_pack_objects"
     bl_label = "Pack Curves on Sheet"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     sheet_fill_direction: EnumProperty(
         name="Fill Direction",
@@ -171,11 +170,11 @@ class CamPackObjects(Operator):
             mindist = -xmin
         else:
             mindist = -ymin
-        i = 0
+
         p = polyfield[0][2]
         placedpolys = []
         rotcenter = Point(0, 0)
-        for pf in polyfield:
+        for i, pf in enumerate(polyfield):
             log.info(f"Polygon: {i}")
             rot = 0
             porig = pf[2]
@@ -212,36 +211,30 @@ class CamPackObjects(Operator):
                         (direction == "Y" and xmax < sheetsizex)
                         or (direction == "X" and ymax < sheetsizey)
                     )
-                ):
-                    if not allpoly.intersects(ptrans):
-                        # we do more good solutions, choose best out of them:
-                        hits += 1
-                        if best is None:
+                ) and not allpoly.intersects(ptrans):
+                    # we do more good solutions, choose best out of them:
+                    hits += 1
+                    if best is None:
+                        best = [x, y, rot, xmax, ymax]
+                        besthit = hits
+                    if direction == "X":
+                        if xmax < best[3]:
                             best = [x, y, rot, xmax, ymax]
                             besthit = hits
-                        if direction == "X":
-                            if xmax < best[3]:
-                                best = [x, y, rot, xmax, ymax]
-                                besthit = hits
-                        elif ymax < best[4]:
-                            best = [x, y, rot, xmax, ymax]
-                            besthit = hits
+                    elif ymax < best[4]:
+                        best = [x, y, rot, xmax, ymax]
+                        besthit = hits
 
-                if hits >= 15 or (
-                    itera > 20000 and hits > 0
-                ):  # here was originally more, but 90% of best solutions are still 1
+                if hits >= 15 or (itera > 20000 and hits > 0):
+                    # here was originally more, but 90% of best solutions are still 1
                     placed = True
                     pf[3].location.x = best[0]
                     pf[3].location.y = best[1]
                     pf[3].location.z = pf[4]
                     pf[3].rotation_euler.z = best[2]
-
                     pf[3].select_set(state=True)
 
-                    # print(mindist)
                     mindist = mindist - 0.5 * (xmax - xmin)
-                    # print(mindist)
-                    # print(iter)
 
                     # reset polygon to best position here:
                     ptrans = affinity.rotate(porig, best[2], rotcenter, use_radians=True)
@@ -257,23 +250,28 @@ class CamPackObjects(Operator):
                     log.info(f"Iteration: {itera}")
                     log.info(f"Hits: {hits}")
                     log.info(f"Best Hit: {besthit}")
+
                 if not placed:
                     if direction == "Y":
                         x += shift
                         mindist = y
+
                         if xmax + shift > sheetsizex:
                             x = x - xmin
                             y += shift
+
                     if direction == "X":
                         y += shift
                         mindist = x
+
                         if ymax + shift > sheetsizey:
                             y = y - ymin
                             x += shift
+
                     if rotate:
                         rot += rotchange
+
                 itera += 1
-            i += 1
         t = time.time() - t
 
         shapely_to_curve("test", MultiPolygon(placedpolys), 0)

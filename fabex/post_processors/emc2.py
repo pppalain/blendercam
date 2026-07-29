@@ -1,5 +1,5 @@
-from . import nc
-from . import iso
+from ..exception import CamException
+from . import iso, nc
 
 
 class Creator(iso.Creator):
@@ -25,7 +25,7 @@ class Creator(iso.Creator):
         return ("G89") + self.SPACE() + (format.string(dwell))
 
     def program_begin(self, id, comment):
-        self.write(("(" + comment + ")" + "\n"))
+        self.write("(" + comment + ")" + "\n")
 
     ############################################################################
     # Settings
@@ -69,7 +69,7 @@ class Creator(iso.Creator):
             )
         if (id >= 7) and (id <= 9):
             self.write(
-                ((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (".%i" % (id - 6)))
+                ((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (f".{(id - 6)}"))
                 + "\t (Select Relative Coordinate System)\n"
             )
 
@@ -248,7 +248,8 @@ class Creator(iso.Creator):
 
     def start_CRC(self, left=True, radius=0.0):
         if self.t is None:
-            raise "No tool specified for start_CRC()"
+            message = "No tool specified for start_CRC()"
+            raise CamException(message)
         if left:
             self.write(
                 ("G41" + self.SPACE() + "D%i") % self.t

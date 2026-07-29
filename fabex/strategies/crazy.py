@@ -1,5 +1,4 @@
 from ..bridges import use_bridges
-
 from ..utilities.chunk_utils import (
     chunks_refine,
     chunks_to_mesh,
@@ -7,7 +6,7 @@ from ..utilities.chunk_utils import (
     sort_chunks,
 )
 from ..utilities.image_utils import prepare_area
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
 from ..utilities.operation_utils import get_layers
 from ..utilities.stroke_utils import crazy_stroke_image_binary
 

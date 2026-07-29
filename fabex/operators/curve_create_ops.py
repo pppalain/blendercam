@@ -12,13 +12,7 @@ from math import (
     sin,  # noqa: F401
     sqrt,  # noqa: F401
 )
-
-from shapely import affinity
-from shapely.geometry import (
-    LineString,
-    MultiLineString,
-    box,
-)
+from typing import ClassVar
 
 import bpy
 from bpy.props import (
@@ -28,7 +22,19 @@ from bpy.props import (
     IntProperty,
 )
 from bpy.types import Operator
+from shapely import affinity
+from shapely.geometry import (
+    LineString,
+    MultiLineString,
+    box,
+)
 
+from ..joinery.arc_bar import (
+    arc,
+    arc_bar,
+    arc_bar_arc,
+    bar,
+)
 from ..joinery.finger import (
     finger,
     finger_amount,
@@ -42,29 +48,23 @@ from ..joinery.finger import (
 from ..joinery.flex import (
     create_base_plate,
     create_flex_side,
-    make_variable_flex_pocket,
     make_flex_pocket,
+    make_variable_flex_pocket,
 )
 from ..joinery.interlock_twist import (
     distributed_interlock,
-    single_interlock,
     interlock_twist_separator,
-)
-from ..joinery.arc_bar import (
-    arc,
-    bar,
-    arc_bar,
-    arc_bar_arc,
+    single_interlock,
 )
 from ..joinery.multiangle import (
+    curved_t,
     mitre,
     multiangle,
-    t,
-    curved_t,
-    tile,
     open_curve,
+    t,
+    tile,
 )
-
+from ..utilities.curve_utils import curve_to_shapely
 from ..utilities.gear_utils import (
     gear,
     rack,
@@ -74,24 +74,23 @@ from ..utilities.polygon_utils import (
     polygon_boolean,
     polygon_convex_hull,
 )
+from ..utilities.shapely_utils import shapely_to_curve
 from ..utilities.simple_utils import (
-    remove_multiple,
-    select_multiple,
+    active_name,
+    add_overcut,
+    deselect,
+    difference,
+    duplicate,
     join_multiple,
     make_active,
-    deselect,
-    active_name,
-    remove_doubles,
-    rename,
-    duplicate,
-    add_overcut,
     move,
-    difference,
-    union,
+    remove_doubles,
+    remove_multiple,
+    rename,
     rotate,
+    select_multiple,
+    union,
 )
-from ..utilities.curve_utils import curve_to_shapely
-from ..utilities.shapely_utils import shapely_to_curve
 
 
 def generate_crosshatch(context, angle, distance, offset, pocket_shape, join, ob=None):
@@ -171,7 +170,7 @@ class CamCurveHatch(Operator):
 
     bl_idname = "object.curve_hatch"
     bl_label = "CrossHatch Curve"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     angle: FloatProperty(
         default=0,
@@ -305,7 +304,7 @@ class CamCurvePlate(Operator):
 
     bl_idname = "object.curve_plate"
     bl_label = "Sign Plate"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     radius: FloatProperty(
         name="Corner Radius",
@@ -715,7 +714,7 @@ class CamCurveFlatCone(Operator):
 
     bl_idname = "object.curve_flat_cone"
     bl_label = "Cone Flat Calculator"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     small_d: FloatProperty(
         name="Small Diameter",
@@ -853,12 +852,12 @@ class CamCurveMortise(Operator):
 
     bl_idname = "object.curve_mortise"
     bl_label = "Mortise"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
-    finger_size: BoolProperty(
-        name="Kurf Bending only",
-        default=False,
-    )
+    # finger_size: BoolProperty(
+    #     name="Kurf Bending only",
+    #     default=False,
+    # )
     finger_size: FloatProperty(
         name="Maximum Finger Size",
         default=0.015,
@@ -958,9 +957,8 @@ class CamCurveMortise(Operator):
         active_name("_temp_mesh")
 
         if self.opencurve:
-            coords = []
-            for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-                coords.append((v.co.x, v.co.y))
+            # extract X,Y coordinates from the vertices data
+            coords = [(v.co.x, v.co.y) for v in obj.data.vertices]
             # convert coordinates to shapely LineString datastructure
             line = LineString(coords)
             remove_multiple("-converted")
@@ -1046,7 +1044,7 @@ class CamCurveInterlock(Operator):
 
     bl_idname = "object.curve_interlock"
     bl_label = "Interlock"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     finger_size: FloatProperty(
         name="Finger Size",
@@ -1141,9 +1139,8 @@ class CamCurveInterlock(Operator):
             active_name("_temp_mesh")
 
             if self.opencurve:
-                coords = []
-                for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-                    coords.append((v.co.x, v.co.y))
+                # extract X,Y coordinates from the vertices data
+                coords = [(v.co.x, v.co.y) for v in obj.data.vertices]
                 # convert coordinates to shapely LineString datastructure
                 line = LineString(coords)
                 remove_multiple("-converted")
@@ -1203,7 +1200,7 @@ class CamCurveDrawer(Operator):
 
     bl_idname = "object.curve_drawer"
     bl_label = "Drawer"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     depth: FloatProperty(
         name="Drawer Depth",
@@ -1459,7 +1456,7 @@ class CamCurvePuzzle(Operator):
 
     bl_idname = "object.curve_puzzle"
     bl_label = "Puzzle Joints"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     diameter: FloatProperty(
         name="Tool Diameter",
@@ -2003,7 +2000,7 @@ class CamCurveGear(Operator):
 
     bl_idname = "object.curve_gear"
     bl_label = "Gears"
-    bl_options = {"REGISTER", "UNDO", "PRESET"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     tooth_spacing: FloatProperty(
         name="Distance per Tooth",

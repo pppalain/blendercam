@@ -4,6 +4,7 @@ Main functionality of Fabex.
 The functions here are called with operators defined in 'ops.py'
 """
 
+import pickle
 from math import (
     acos,
     ceil,
@@ -15,26 +16,22 @@ from math import (
     tan,
 )
 
-import numpy as np
-import pickle
-
-from shapely.geometry import Polygon
-from shapely.ops import unary_union
-
 import bpy
+import numpy as np
 from bpy_extras import object_utils
 from mathutils import Vector
-
-from .curve_utils import curve_to_shapely
-from .logging_utils import log, heading
-from .simple_utils import (
-    get_cache_path,
-    unit_value_to_string,
-)
+from shapely.geometry import Polygon
+from shapely.ops import unary_union
 
 from .. import __package__ as base_package
 from ..constants import was_hidden_dict
 from ..exception import CamException
+from .curve_utils import curve_to_shapely
+from .logging_utils import heading, log
+from .simple_utils import (
+    get_cache_path,
+    unit_value_to_string,
+)
 
 
 def get_operation_sources(o):
@@ -66,23 +63,27 @@ def get_operation_sources(o):
         o.objects = [ob]
         ob.select_set(True)
         bpy.context.view_layer.objects.active = ob
-        if o.enable_b_axis or o.enable_a_axis:
-            if o.old_rotation_a != o.rotation_a or o.old_rotation_b != o.rotation_b:
-                o.old_rotation_a = o.rotation_a
-                o.old_rotation_b = o.rotation_b
-                ob = bpy.data.objects[o.object_name]
-                ob.select_set(True)
-                bpy.context.view_layer.objects.active = ob
-                if o.a_along_x:  # A parallel with X
-                    if o.enable_a_axis:
-                        bpy.context.active_object.rotation_euler.x = o.rotation_a
-                    if o.enable_b_axis:
-                        bpy.context.active_object.rotation_euler.y = o.rotation_b
-                else:  # A parallel with Y
-                    if o.enable_a_axis:
-                        bpy.context.active_object.rotation_euler.y = o.rotation_a
-                    if o.enable_b_axis:
-                        bpy.context.active_object.rotation_euler.x = o.rotation_b
+        if (
+            o.enable_b_axis
+            or o.enable_a_axis
+            and o.old_rotation_a != o.rotation_a
+            or o.old_rotation_b != o.rotation_b
+        ):
+            o.old_rotation_a = o.rotation_a
+            o.old_rotation_b = o.rotation_b
+            ob = bpy.data.objects[o.object_name]
+            ob.select_set(True)
+            bpy.context.view_layer.objects.active = ob
+            if o.a_along_x:  # A parallel with X
+                if o.enable_a_axis:
+                    bpy.context.active_object.rotation_euler.x = o.rotation_a
+                if o.enable_b_axis:
+                    bpy.context.active_object.rotation_euler.y = o.rotation_b
+            else:  # A parallel with Y
+                if o.enable_a_axis:
+                    bpy.context.active_object.rotation_euler.y = o.rotation_a
+                if o.enable_b_axis:
+                    bpy.context.active_object.rotation_euler.x = o.rotation_b
 
     elif o.geometry_source == "COLLECTION":
         collection = bpy.data.collections[o.collection_name]
@@ -115,19 +116,19 @@ def reload_paths(o):
 
     s = bpy.context.scene
     oname = s.cam_names.path_name_full
-    ob = s.objects[oname] if oname in s.objects else None
+    ob = s.objects.get(oname, None)
     old_pathmesh = s.objects[oname].data if oname in s.objects else None
 
     picklepath = get_cache_path(o) + ".pickle"
-    f = open(picklepath, "rb")
-    d = pickle.load(f)
-    f.close()
+    with open(picklepath, "rb") as f:
+        d = pickle.load(f)
+        # f.close()
 
     o.info.warnings = d["warnings"]
     o.info.duration = d["duration"]
 
     verts = d["path"]
-    edges = [(a, a + 1) for a in range(0, len(verts) - 1)]
+    edges = [(a, a + 1) for a in range(len(verts) - 1)]
 
     # for a in range(0, len(verts) - 1):
     #     edges.append((a, a + 1))
@@ -222,19 +223,20 @@ def source_valid(o, context):
     """
 
     valid = True
-    if o.geometry_source == "OBJECT":
-        if not o.object_name.endswith("_cut_bridges"):  # let empty bridge cut be valid
-            if o.object_name not in bpy.data.objects:
-                valid = False
-    if o.geometry_source == "COLLECTION":
-        if o.collection_name not in bpy.data.collections:
-            valid = False
-        elif len(bpy.data.collections[o.collection_name].objects) == 0:
-            valid = False
+    if (
+        o.geometry_source == "OBJECT"
+        and not o.object_name.endswith("_cut_bridges")
+        and o.object_name not in bpy.data.objects
+    ):
+        valid = False
+    if o.geometry_source == "COLLECTION" and (
+        o.collection_name not in bpy.data.collections
+        or len(bpy.data.collections[o.collection_name].objects) == 0
+    ):
+        valid = False
 
-    if o.geometry_source == "IMAGE":
-        if o.source_image_name not in bpy.data.images:
-            valid = False
+    if o.geometry_source == "IMAGE" and o.source_image_name not in bpy.data.images:
+        valid = False
     return valid
 
 
@@ -266,28 +268,27 @@ def operation_valid(o, context):
 
     # Safely retrieve the operation
     o = scene.cam_operations[scene.cam_active_operation]
-    
+
     o.changed = True
-    
+
     # Check if this operation ALREADY has the warning so we don't trigger duplicate popups
-    already_warned = "Invalid Source Object" in o.info.warnings
-    
+
     o.valid = source_valid(o, context)
     invalidmsg = "Invalid Source Object for Operation.\n"
-    
+
     if o.valid:
         o.info.warnings = ""
     else:
         o.info.warnings = invalidmsg
         addon_prefs = bpy.context.preferences.addons[base_package].preferences
-        
+
         # Only trigger popup if user isn't copying/initializing in background
         if addon_prefs.show_popups and context.window_manager is not None:
             bpy.ops.cam.popup("INVOKE_DEFAULT")
 
     if o.geometry_source == "IMAGE":
         o.optimisation.use_exact = False
-        
+
     o.update_offset_image_tag = True
     o.update_z_buffer_image_tag = True
     log.info("Validity checked for operation: %s", o.name)
@@ -416,7 +417,7 @@ def update_image_size_y(self, context):
         i = bpy.data.images[self.source_image_name]
         if i is not None:
             size_x = self.source_image_size_x / i.size[0]
-            size_y = int(size_x * i.size[1] * 1000000) / 1000
+            int(size_x * i.size[1] * 1000000) / 1000
             # col.label(text="Image Size on Y Axis: " + unit_value_to_string(size_y, 8))
             # col.separator()
 
@@ -617,7 +618,7 @@ def check_memory_limit(o):
         o.info.warnings += "Memory Limit Exceeded!\n"
         o.info.warnings += f"Detail Size Increased to {round(o.optimisation.pixsize, 5)}\n"
 
-        log.info("Changing Sampling Resolution to %f" % o.optimisation.pixsize)
+        log.info(f"Changing Sampling Resolution to {o.optimisation.pixsize:f}")
 
     # Also check simulation_detail — governed by a separate array in simulation.py
     sim_res = (sx / o.optimisation.simulation_detail) * (sy / o.optimisation.simulation_detail)
@@ -682,17 +683,17 @@ def get_ambient(o):
                 )
             )
 
-        if o.use_limit_curve:
-            if o.limit_curve is not None:  #!= "":
-                limit_curve = bpy.data.objects[o.limit_curve.name]
-                polys = curve_to_shapely(limit_curve)
-                o.limit_poly = unary_union(polys)
+        if o.use_limit_curve and o.limit_curve is not None:
+            limit_curve = bpy.data.objects[o.limit_curve.name]
+            polys = curve_to_shapely(limit_curve)
+            o.limit_poly = unary_union(polys)
 
-                if o.ambient_cutter_restrict:
-                    o.limit_poly = o.limit_poly.buffer(
-                        o.cutter_diameter / 2, resolution=o.optimisation.circle_detail
-                    )
-                o.ambient = o.ambient.intersection(o.limit_poly)
+            if o.ambient_cutter_restrict:
+                o.limit_poly = o.limit_poly.buffer(
+                    o.cutter_diameter / 2,
+                    resolution=o.optimisation.circle_detail,
+                )
+            o.ambient = o.ambient.intersection(o.limit_poly)
     o.update_ambient_tag = False
 
 
@@ -723,10 +724,10 @@ def get_cutter_array(operation, pixsize):
     ps = pixsize
 
     if cutter_type == "END":
-        for a in range(0, res):
+        for a in range(res):
             v.x = (a + 0.5 - m) * ps
 
-            for b in range(0, res):
+            for b in range(res):
                 v.y = (b + 0.5 - m) * ps
 
                 if v.length <= r:
@@ -734,10 +735,10 @@ def get_cutter_array(operation, pixsize):
                     # car.itemset((a, b), 0)
 
     elif cutter_type in ["BALL", "BALLNOSE"]:
-        for a in range(0, res):
+        for a in range(res):
             v.x = (a + 0.5 - m) * ps
 
-            for b in range(0, res):
+            for b in range(res):
                 v.y = (b + 0.5 - m) * ps
 
                 if v.length <= r:
@@ -749,10 +750,10 @@ def get_cutter_array(operation, pixsize):
         angle = operation.cutter_tip_angle
         s = tan(pi * (90 - angle / 2) / 180)  # angle in degrees
 
-        for a in range(0, res):
+        for a in range(res):
             v.x = (a + 0.5 - m) * ps
 
-            for b in range(0, res):
+            for b in range(res):
                 v.y = (b + 0.5 - m) * ps
 
                 if v.length <= r:
@@ -765,10 +766,10 @@ def get_cutter_array(operation, pixsize):
         cyl_r = operation.cylcone_diameter / 2
         s = tan(pi * (90 - angle / 2) / 180)  # angle in degrees
 
-        for a in range(0, res):
+        for a in range(res):
             v.x = (a + 0.5 - m) * ps
 
-            for b in range(0, res):
+            for b in range(res):
                 v.y = (b + 0.5 - m) * ps
 
                 if v.length <= r:
@@ -784,15 +785,15 @@ def get_cutter_array(operation, pixsize):
         angle = radians(operation.cutter_tip_angle) / 2
         ball_r = operation.ball_radius
         cutter_r = operation.cutter_diameter / 2
-        conedepth = (cutter_r - ball_r) / tan(angle)
+        (cutter_r - ball_r) / tan(angle)
         Ball_R = ball_r / cos(angle)
         D_ofset = ball_r * tan(angle)
         s = tan(pi / 2 - angle)
 
-        for a in range(0, res):
+        for a in range(res):
             v.x = (a + 0.5 - m) * ps
 
-            for b in range(0, res):
+            for b in range(res):
                 v.y = (b + 0.5 - m) * ps
 
                 if v.length <= cutter_r:
@@ -806,17 +807,17 @@ def get_cutter_array(operation, pixsize):
 
     elif cutter_type == "CUSTOM":
         cutob = bpy.data.objects[operation.cutter_object_name]
-        scale = ((cutob.dimensions.x / cutob.scale.x) / 2) / r  #
+        scale = ((cutob.dimensions.x / cutob.scale.x) / 2) / r
         vstart = Vector((0, 0, -10))
         vend = Vector((0, 0, 10))
         log.info("Sampling Custom Cutter")
         maxz = -1
 
-        for a in range(0, res):
+        for a in range(res):
             vstart.x = (a + 0.5 - m) * ps * scale
             vend.x = vstart.x
 
-            for b in range(0, res):
+            for b in range(res):
                 vstart.y = (b + 0.5 - m) * ps * scale
                 vend.y = vstart.y
                 v = vend - vstart
@@ -826,8 +827,7 @@ def get_cutter_array(operation, pixsize):
                     z = -c[1][2] / scale
 
                     if z > -9:
-                        if z > maxz:
-                            maxz = z
+                        maxz = max(maxz, z)
 
                         car[a, b] = z
                         # car.itemset((a, b), z)
@@ -902,7 +902,7 @@ def get_layers(operation, start_depth, end_depth):
 
         layer_start = operation.max_z
 
-        for x in range(0, layer_count):
+        for x in range(layer_count):
             layer_end = round(
                 max(start_depth - ((x + 1) * operation.stepdown), end_depth),
                 6,

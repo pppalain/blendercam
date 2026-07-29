@@ -4,8 +4,8 @@ import bpy
 
 from .utils import (
     activate_dependencies,
-    zip_extension,
     install_extension,
+    zip_extension,
 )
 
 

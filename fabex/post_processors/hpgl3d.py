@@ -4,14 +4,13 @@
 # This program is released under the BSD license. See the file COPYING for details.
 #
 
-from . import nc
-from . import hpgl2d
+from . import hpgl2d, nc
 
 
 class Creator(hpgl2d.Creator):
     def __init__(self):
         hpgl2d.Creator.__init__(self)
-        self.z = int(0)
+        self.z = 0
         self.metric()  # set self.units_to_mc_units
         self.doing_rapid = True
 
@@ -44,7 +43,7 @@ class Creator(hpgl2d.Creator):
         if mx != self.x or my != self.y or mz != self.z:
             if not self.doing_rapid:
                 self.write("V50.0;")
-            self.write(("Z%i" % mx) + (",%i" % my) + (",%i;\n" % mz))
+            self.write((f"Z{mx}") + (f",{my}") + (f",{mz};\n"))
             self.x = mx
             self.y = my
             self.z = mz
@@ -57,7 +56,7 @@ class Creator(hpgl2d.Creator):
         if mx != self.x or my != self.y or mz != self.z:
             if self.doing_rapid:
                 self.write("V10.0;")
-            self.write(("Z%i" % mx) + (",%i" % my) + (",%i;\n" % mz))
+            self.write((f"Z{mx}") + (f",{my}") + (f",{mz};\n"))
             self.x = mx
             self.y = my
             self.z = mz

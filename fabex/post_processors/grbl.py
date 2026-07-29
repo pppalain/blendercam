@@ -1,8 +1,8 @@
-from . import nc
-from . import iso_modal
 import datetime
 
-now = datetime.datetime.now()
+from . import iso_modal, nc
+
+now = datetime.datetime.now(datetime.UTC)
 
 
 class Creator(iso_modal.Creator):
@@ -31,21 +31,17 @@ class Creator(iso_modal.Creator):
     def program_begin(self, id, comment):
         if not self.useCrc:
             self.write(
-                (
-                    "(Created with grbl post processor "
-                    + str(now.strftime("%Y/%m/%d %H:%M"))
-                    + ")"
-                    + "\n"
-                )
+                "(Created with grbl post processor "
+                + str(now.strftime("%Y/%m/%d %H:%M"))
+                + ")"
+                + "\n"
             )
         else:
             self.write(
-                (
-                    "(Created with grbl Cutter Radius Compensation post processor "
-                    + str(now.strftime("%Y/%m/%d %H:%M"))
-                    + ")"
-                    + "\n"
-                )
+                "(Created with grbl Cutter Radius Compensation post processor "
+                + str(now.strftime("%Y/%m/%d %H:%M"))
+                + ")"
+                + "\n"
             )
 
     ############################################################################
@@ -70,7 +66,7 @@ class Creator(iso_modal.Creator):
         if (id >= 7) and (id <= 9):
             self.write_blocknum()
             self.write(
-                ((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (".%i" % (id - 6)))
+                ((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + (f".{(id - 6)}"))
                 + "\t (Select Relative Coordinate System)\n"
             )
 

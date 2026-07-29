@@ -1,27 +1,15 @@
-import warnings
-
 import bpy
-import re
-
-from mathutils import Vector
 
 from ..chunk_builder import (
     CamPathChunkBuilder,
 )
+from ..exception import CamException
 from .logging_utils import log
 from .shapely_utils import chunks_to_shapely, shapely_validate
 from .simple_utils import (
     activate,
     progress,
-    active_name,
-    remove_multiple,
-    active_to_shapely_poly,
 )
-
-from shapely.geometry import Polygon
-from shapely.validation import explain_validity
-
-from ..exception import CamException
 
 
 def curve_validate():
@@ -81,7 +69,8 @@ def mesh_from_curve(o, use_modifiers=False):
         bpy.ops.object.convert(target="CURVE", keep_original=False)
     elif co.type != "CURVE":  # curve must be a curve...
         bpy.ops.object.delete()  # delete temporary object
-        raise CamException("Source Curve Object Must Be of Type Curve")
+        message = "Source Curve Object Must Be of Type Curve"
+        raise CamException(message)
 
     co.data.dimensions = "3D"
     co.data.bevel_depth = 0
@@ -104,8 +93,8 @@ def mesh_from_curve(o, use_modifiers=False):
         bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
-    except:
-        pass
+    except Exception as e:
+        log.debug(e)
 
     return bpy.context.active_object
 
@@ -138,7 +127,7 @@ def mesh_from_curve_to_chunk(object):
     progress("Processing Curve: Start")
     log.info(f"Vertices: {vtotal}")
 
-    for vi in range(0, len(mesh.vertices) - 1):
+    for vi in range(len(mesh.vertices) - 1):
         co = (mesh.vertices[vi].co + object.location).to_tuple()
 
         if not dk.isdisjoint([(vi, vi + 1)]) and d[(vi, vi + 1)] == 1:

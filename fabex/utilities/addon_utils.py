@@ -1,16 +1,15 @@
 """Fabex 'addon_utils.py' © 2012 Vilem Novak"""
 
-from pathlib import Path
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 
 import bpy
 
-from .logging_utils import log
-
-from ..exception import CamException
 from .. import __package__ as base_package
+from ..exception import CamException
+from .logging_utils import log
 
 
 def addon_dependencies():
@@ -22,7 +21,6 @@ def addon_dependencies():
     can't find them, attempts to download them from Blender.
     """
     preferences = bpy.context.preferences
-    addons = preferences.addons
     preferences.system.use_online_access = True
 
     modules = [
@@ -68,9 +66,8 @@ def python_dependencies():
                 subprocess.check_call([sys.executable, "-m", "pip", "install", module])
             except:
                 log.debug("Python Dependencies Not Found!")
-                raise CamException(
-                    "Fabex couldn't install required Python libraries! Check your Blender Python Version and Location!"
-                )
+                message = "Fabex couldn't install required Python libraries! Check your Blender Python Version and Location!"
+                raise CamException(message)
 
 
 def load_defaults(addon_prefs):
@@ -397,7 +394,7 @@ def edit_user_post_processor():
 
     try:
         areas = bpy.data.workspaces["Scripting"].screens["Scripting"].areas
-        text_editor = [area.spaces[0] for area in areas if area.type == "TEXT_EDITOR"][0]
+        text_editor = next(area.spaces[0] for area in areas if area.type == "TEXT_EDITOR")
 
         with bpy.context.temp_override(space=text_editor):
             text_editor.text = bpy.data.texts["user.py"]

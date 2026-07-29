@@ -1,25 +1,23 @@
 import time
 
+import bmesh
+import bpy
 import numpy as np
-from shapely.ops import unary_union
 from shapely.geometry import (
     MultiPolygon,
     Polygon,
 )
-
-import bpy
-import bmesh
+from shapely.ops import unary_union
 
 from .curve_utils import (
-    curve_to_shapely,
     curve_to_chunks,
+    curve_to_shapely,
 )
 from .image_utils import (
     image_to_chunks,
     render_sample_image,
 )
-
-from .logging_utils import log, heading
+from .logging_utils import heading, log
 from .shapely_utils import (
     chunks_to_shapely,
     shapely_to_curve,
@@ -328,19 +326,16 @@ def get_object_outline(radius, o, Offset):
     # circle detail, optimize, optimize thresold.
 
     polygons = get_operation_silhouette(o)
-    i = 0
 
     offset = 1 if Offset else -1
 
     outlines = []
-    i = 0
 
     join = 2 if o.straight else 1
 
     polygon_list = polygons if isinstance(polygons, list) else polygons.geoms
 
-    for p1 in polygon_list:  # sort by size before this???
-        i += 1
+    for i, p1 in enumerate(polygon_list):  # sort by size before this???
         if radius > 0:
             p1 = p1.buffer(
                 radius * offset,

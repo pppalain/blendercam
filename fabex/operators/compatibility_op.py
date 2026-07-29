@@ -1,9 +1,9 @@
-import sys
 import platform
+import sys
 
 import bpy
-from bpy.types import Operator
 from bpy.props import StringProperty
+from bpy.types import Operator
 
 
 class Fabex_Compatibility_Panel(Operator):

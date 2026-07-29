@@ -4,21 +4,17 @@ Blender Operator definitions are in this file.
 They mostly call the functions from 'utils.py'
 """
 
-from importlib import import_module
-from math import pi
 import os
 import subprocess
 import textwrap
 import threading
 import traceback
+from importlib import import_module
+from math import pi
+from typing import ClassVar
 
 import bpy
 from bpy.types import Operator
-
-from .async_op import (
-    AsyncCancelledException,
-    AsyncOperatorMixin,
-)
 
 from .. import __package__ as base_package
 from ..exception import CamException
@@ -27,18 +23,22 @@ from ..toolpath import get_path
 
 # from ..utilities.addon_utils import add_collections
 from ..utilities.async_utils import progress_async
-from ..utilities.logging_utils import log, heading
+from ..utilities.logging_utils import heading, log
+from ..utilities.operation_utils import (
+    chain_valid,
+    get_chain_operations,
+    source_valid,
+)
 from ..utilities.simple_utils import (
     safe_filename,
 )
 from ..utilities.thread_utils import (
-    threadCom,
     thread_read,
+    threadCom,
 )
-from ..utilities.operation_utils import (
-    chain_valid,
-    source_valid,
-    get_chain_operations,
+from .async_op import (
+    AsyncCancelledException,
+    AsyncOperatorMixin,
 )
 
 
@@ -47,7 +47,7 @@ class PathsBackground(Operator):
 
     bl_idname = "object.calculate_cam_paths_background"
     bl_label = "Calculate CAM Paths in Background"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     def execute(self, context):
         """Execute the CAM operation in the background.
@@ -106,7 +106,7 @@ class KillPathsBackground(Operator):
 
     bl_idname = "object.kill_calculate_cam_paths_background"
     bl_label = "Kill Background Computation of an Operation"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     def execute(self, context):
         """Execute the CAM operation in the given context.
@@ -418,7 +418,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
 
     bl_idname = "object.calculate_cam_path"
     bl_label = "Calculate CAM Paths"
-    bl_options = {"REGISTER", "UNDO", "BLOCKING"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "BLOCKING"}
 
     def __init__(self, *args, **kwargs):
         Operator.__init__(self, *args, **kwargs)
@@ -444,10 +444,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
         s = context.scene
         o = s.cam_operations[s.cam_active_operation] if len(s.cam_operations) > 0 else None
 
-        if o is not None:
-            if source_valid(o, context):
-                return True
-        return False
+        return bool(o is not None and source_valid(o, context))
 
     async def execute_async(self, context):
         """Execute an asynchronous calculation of a path.
@@ -517,7 +514,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
 
         try:
             areas = bpy.data.workspaces["Scripting"].screens["Scripting"].areas
-            text_editor = [area.spaces[0] for area in areas if area.type == "TEXT_EDITOR"][0]
+            text_editor = next(area.spaces[0] for area in areas if area.type == "TEXT_EDITOR")
 
             with context.temp_override(space=text_editor):
                 text_editor.text = bpy.data.texts[f"{name}{extension}"]
@@ -533,7 +530,7 @@ class PathsAll(Operator):
 
     bl_idname = "object.calculate_cam_paths_all"
     bl_label = "Calculate All CAM Paths"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     def execute(self, context):
         """Execute CAM operations in the current Blender context.
@@ -552,12 +549,10 @@ class PathsAll(Operator):
                 typically {'FINISHED'}.
         """
 
-        i = 0
-        for o in bpy.context.scene.cam_operations:
+        for i, o in enumerate(bpy.context.scene.cam_operations):
             bpy.context.scene.cam_active_operation = i
             log.info(heading(f"Calculating Path : {o.name}"))
             bpy.ops.object.calculate_cam_paths_background()
-            i += 1
 
         return {"FINISHED"}
 
@@ -582,7 +577,7 @@ class PathsChain(Operator, AsyncOperatorMixin):
 
     bl_idname = "object.calculate_cam_paths_chain"
     bl_label = "Calculate CAM Paths in Current Chain and Export Chain G-code"
-    bl_options = {"REGISTER", "UNDO", "BLOCKING"}
+    bl_options: ClassVar = {"REGISTER", "UNDO", "BLOCKING"}
 
     def __init__(self, *args, **kwargs):
         Operator.__init__(self, *args, **kwargs)
@@ -631,7 +626,7 @@ class PathsChain(Operator, AsyncOperatorMixin):
         s = context.scene
 
         # Ensure there is an active object, and force Object Mode
-        if not context.mode == "OBJECT":
+        if context.mode != "OBJECT":
             operations = context.scene.cam_operations
             active_operation = operations[context.scene.cam_active_operation]
             context_object = context.scene.objects[active_operation.object_name]
@@ -643,7 +638,7 @@ class PathsChain(Operator, AsyncOperatorMixin):
         meshes = []
 
         try:
-            for i in range(0, len(chainops)):
+            for i in range(len(chainops)):
                 s.cam_active_operation = s.cam_operations.find(chainops[i].name)
                 self.report({"INFO"}, f"Calculating Path: {chainops[i].name}")
                 result, success = await _calc_path(self, context)
@@ -670,7 +665,7 @@ class PathExportChain(Operator):
 
     bl_idname = "object.cam_export_paths_chain"
     bl_label = "Export CAM Paths in Current Chain as G-code"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     @classmethod
     def poll(cls, context):
@@ -727,7 +722,7 @@ class PathExport(Operator):
 
     bl_idname = "object.cam_export"
     bl_label = "Export Operation G-code"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     def execute(self, context):
         """Execute the CAM operation and export the G-code path.

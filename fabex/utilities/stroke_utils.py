@@ -1,13 +1,11 @@
+import random
 from math import (
     ceil,
     pi,
 )
-import random
 
 import numpy as np
-
-from mathutils import Vector, Euler
-
+from mathutils import Euler, Vector
 
 from ..chunk_builder import (
     CamPathChunk,
@@ -18,7 +16,7 @@ from .image_utils import (
     prepare_area,
 )
 from .logging_utils import log
-from .operation_utils import get_move_and_spin, get_cutter_array
+from .operation_utils import get_cutter_array, get_move_and_spin
 from .parent_utils import (
     parent_child_distance,
 )
@@ -46,7 +44,7 @@ def crazy_stroke_image(o):
     """
 
     # this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    minx, miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
 
     r = int((o.cutter_diameter / 2.0) / o.optimisation.pixsize)
@@ -62,17 +60,15 @@ def crazy_stroke_image(o):
     satisfypix = cutterimagepix * o.crazy_threshold_1
     toomuchpix = cutterimagepix * o.crazy_threshold_2
     indices = ar.nonzero()  # first get white pixels
-    startpix = ar.sum()  #
+    startpix = ar.sum()
     totpix = startpix
     chunk_builders = []
     xs = indices[0][0] - r
 
-    if xs < r:
-        xs = r
+    xs = max(xs, r)
     ys = indices[1][0] - r
 
-    if ys < r:
-        ys = r
+    ys = max(ys, r)
 
     nchunk = CamPathChunkBuilder([(xs, ys)])  # startposition
     log.info(indices)
@@ -105,7 +101,6 @@ def crazy_stroke_image(o):
     elif conventional_CCW or climb_CW:
         anglerange = [0, pi]
         testangleinit = -1
-        angleincrement = angleincrement
 
     while totpix > 0 and totaltests < maxtotaltests:  # a ratio when the algorithm is allowed to end
         success = False
@@ -136,9 +131,8 @@ def crazy_stroke_image(o):
                 angle = testvect.to_2d().angle_signed(v)
                 # this could be righthanded milling? lets see :)
 
-                if anglerange[0] < angle < anglerange[1]:
-                    if toomuchpix > eatpix > satisfypix:
-                        success = True
+                if anglerange[0] < angle < anglerange[1] and toomuchpix > eatpix > satisfypix:
+                    success = True
 
             if success:
                 nchunk.points.append([xs, ys])
@@ -198,12 +192,10 @@ def crazy_stroke_image(o):
                 if len(indices[0]) > 0:
                     xs = indices[0][0] - r
 
-                    if xs < r:
-                        xs = r
+                    xs = max(xs, r)
                     ys = indices[1][0] - r
 
-                    if ys < r:
-                        ys = r
+                    ys = max(ys, r)
                     nchunk = CamPathChunkBuilder([(xs, ys)])  # startposition
                     ar[xs - r : xs - r + d, ys - r : ys - r + d] = (
                         ar[xs - r : xs - r + d, ys - r : ys - r + d] * cutterArrayNegative
@@ -229,7 +221,7 @@ def crazy_stroke_image(o):
     for ch in chunk_builders:
         ch = ch.points
 
-        for i in range(0, len(ch)):
+        for i in range(len(ch)):
             ch[i] = (
                 (ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
                 (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny,
@@ -267,7 +259,7 @@ def crazy_stroke_image_binary(o, ar, avoidar):
     # try to go in various directions.
     # if somewhere the cutter load is appropriate - it is correct magnitude and side, continue in that directon
     # try to continue straight or around that, looking
-    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    minx, miny, _minz, _maxx, _maxy, _maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
     # TODO this should be somewhere else, but here it is now to get at least some ambient for start of the operation.
     ar[: o.borderwidth, :] = 0
@@ -295,18 +287,17 @@ def crazy_stroke_image_binary(o, ar, avoidar):
     optimalpix = cutterimagepix * o.crazy_threshold_5
 
     indices = ar.nonzero()  # first get white pixels
-    startpix = ar.sum()  #
+    startpix = ar.sum()
     totpix = startpix
 
     chunk_builders = []
     # try to find starting point here
+    chunks = []
 
     xs = indices[0][0] - radius / 2
-    if xs < radius:
-        xs = radius
+    xs = max(xs, radius)
     ys = indices[1][0] - radius
-    if ys < radius:
-        ys = radius
+    ys = max(ys, radius)
 
     nchunk = CamPathChunkBuilder([(xs, ys)])  # startposition
     log.info(indices)
@@ -340,7 +331,6 @@ def crazy_stroke_image_binary(o, ar, avoidar):
     elif conventional_CCW or climb_CW:
         anglerange = [0, pi]
         testangleinit = -anglelimit
-        angleincrement = angleincrement
 
     while totpix > 0 and totaltests < maxtotaltests:  # a ratio when the algorithm is allowed to end
         success = False
@@ -359,28 +349,25 @@ def crazy_stroke_image_binary(o, ar, avoidar):
                 and xs < ar.shape[0] - radius - margin
                 and ys > radius + margin
                 and ys < ar.shape[1] - radius - margin
-            ):
-                # avoidtest=avoidar[xs-r:xs+r,ys-r:ys+r]*cutterArray
-                if not avoidar[xs, ys]:
-                    testar = ar[xs - radius : xs + radius, ys - radius : ys + radius] * cutterArray
-                    eatpix = testar.sum()
-                    cindices = testar.nonzero()
-                    cx = cindices[0].sum() / eatpix
-                    cy = cindices[1].sum() / eatpix
-                    v = Vector((cx - radius, cy - radius))
+            ) and not avoidar[xs, ys]:
+                testar = ar[xs - radius : xs + radius, ys - radius : ys + radius] * cutterArray
+                eatpix = testar.sum()
+                cindices = testar.nonzero()
+                cx = cindices[0].sum() / eatpix
+                cy = cindices[1].sum() / eatpix
+                v = Vector((cx - radius, cy - radius))
 
-                    if v.length != 0:
-                        angle = testvect.to_2d().angle_signed(v)
-                        if (
-                            anglerange[0] < angle < anglerange[1]
-                            and toomuchpix > eatpix > satisfypix
-                        ) or (eatpix > 0 and totpix < startpix * 0.025):
-                            # this could be righthanded milling?
-                            # lets see :)
-                            foundsolutions.append([testvect.copy(), eatpix])
-                            # or totpix < startpix*0.025:
-                            if len(foundsolutions) >= 10:
-                                success = True
+                if v.length != 0:
+                    angle = testvect.to_2d().angle_signed(v)
+                    if (
+                        anglerange[0] < angle < anglerange[1] and toomuchpix > eatpix > satisfypix
+                    ) or (eatpix > 0 and totpix < startpix * 0.025):
+                        # this could be righthanded milling?
+                        # lets see :)
+                        foundsolutions.append([testvect.copy(), eatpix])
+                        # or totpix < startpix*0.025:
+                        if len(foundsolutions) >= 10:
+                            success = True
             itests += 1
             totaltests += 1
 
@@ -465,10 +452,8 @@ def crazy_stroke_image_binary(o, ar, avoidar):
                             xs += int(v.x)
                             ys += int(v.y)
 
-                            if xs < radius:
-                                xs = radius
-                            if ys < radius:
-                                ys = radius
+                            xs = max(xs, radius)
+                            ys = max(ys, radius)
                             if avoidar[xs, ys] == 0:
                                 testarsum = (
                                     ar[
@@ -517,7 +502,7 @@ def crazy_stroke_image_binary(o, ar, avoidar):
     for ch in chunk_builders:
         ch = ch.points
 
-        for i in range(0, len(ch)):
+        for i in range(len(ch)):
             ch[i] = (
                 (ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
                 (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny,
@@ -589,7 +574,7 @@ def build_stroke(start, end, cutterArray):
     samplesy = np.round(np.linspace(start[1], end[1], strokelength))
     samplesz = np.round(np.linspace(start[2], end[2], strokelength))
 
-    for i in range(0, len(strokelength)):
+    for i in range(len(strokelength)):
         strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r] = (
             np.maximum(
                 strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r],

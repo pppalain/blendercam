@@ -92,7 +92,10 @@ def parent_child_poly(parents, children, o):
                 child_x = child.poly.bounds[0]
                 child_z = child.poly.bounds[2]
 
-                if parent_x <= child_x and parent_z >= child_z:
-                    if parent.poly.contains(child.poly.representative_point()):
-                        parent.children.append(child)
-                        child.parents.append(parent)
+                if (
+                    parent_x <= child_x
+                    and parent_z >= child_z
+                    and parent.poly.contains(child.poly.representative_point())
+                ):
+                    parent.children.append(child)
+                    child.parents.append(parent)

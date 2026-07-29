@@ -3,10 +3,10 @@ from unittest import TestCase
 import bpy
 
 from .utils import (
-    zip_extension,
-    install_extension,
     activate_engine,
     add_collections,
+    install_extension,
+    zip_extension,
 )
 
 

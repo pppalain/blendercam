@@ -7,8 +7,7 @@
 #
 ################################################################################
 
-from . import nc
-from . import iso
+from . import iso, nc
 from .format import Format
 
 
@@ -46,7 +45,7 @@ class Creator(iso.Creator):
         return "%i"
 
     def COMMENT(self, comment):
-        return ";%s" % comment
+        return f";{comment}"
 
     def BEGIN_PGM(self):
         return "BEGIN PGM %i"
@@ -184,7 +183,7 @@ class Creator(iso.Creator):
         self.write_misc()
 
     def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
-        (x, y, z, a, b, c, axis_count) = self.filter_xyz(x, y, z)
+        (x, y, z, _a, _b, _c, axis_count) = self.filter_xyz(x, y, z)
         if axis_count == 0:
             return
 
@@ -227,7 +226,7 @@ class Creator(iso.Creator):
     # Misc
 
     def comment(self, text):
-        self.write((self.COMMENT(text) + "\n"))
+        self.write(self.COMMENT(text) + "\n")
 
 
 nc.creator = Creator()

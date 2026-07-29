@@ -4,8 +4,9 @@
 # Base class for NC code parsing
 
 ################################################################################
-import area
 import math
+
+import area
 
 count = 0
 
@@ -28,10 +29,7 @@ class Parser:
 
     def readline(self):
         self.line = self.file_in.readline().rstrip()
-        if len(self.line):
-            return True
-        else:
-            return False
+        return bool(len(self.line))
 
     def set_current_pos(self, x, y, z):
         if x is not None:
@@ -105,9 +103,8 @@ class Parser:
                 self.ParseWord(word)
                 self.writer.add_text(word, self.col, self.cdata)
 
-            if self.t is not None:
-                if (self.m6) or (not self.need_m6_for_t_change):
-                    self.writer.tool_change(self.t)
+            if self.t is not None and ((self.m6) or (not self.need_m6_for_t_change)):
+                self.writer.tool_change(self.t)
 
             if self.drill:
                 if self.z is not None:

@@ -3,8 +3,9 @@
 'CAM Material' properties and panel in Properties > Render
 """
 
-import bpy
+from typing import ClassVar
 
+import bpy
 from bpy.types import Operator
 
 from ..utilities.bounds_utils import position_object
@@ -16,7 +17,7 @@ from ..utilities.logging_utils import log
 class CAM_MATERIAL_PositionObject(Operator):
     bl_idname = "object.material_cam_position"
     bl_label = "Position Object for CAM Operation"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options: ClassVar = {"REGISTER", "UNDO"}
 
     def execute(self, context):
         scene = context.scene

@@ -1,5 +1,7 @@
 import nc
 
+from ..exception import CamException
+
 units = 1.0
 
 
@@ -207,7 +209,8 @@ class Redirector(nc.Creator):
 
     def arc(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None, ccw=True):
         if self.x is None or self.y is None or self.z is None:
-            raise "first attached move can't be an arc"
+            message = "first attached move can't be an arc"
+            raise CamException(message)
         px = self.x
         py = self.y
         pz = self.z

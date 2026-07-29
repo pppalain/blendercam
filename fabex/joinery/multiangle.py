@@ -8,6 +8,27 @@ from math import (
 
 import bpy
 
+from ..constants import DT
+from ..utilities.compare_utils import angle as compare_angle
+from ..utilities.logging_utils import log
+from ..utilities.shapely_utils import shapely_to_curve
+from ..utilities.simple_utils import (
+    active_name,
+    add_rectangle,
+    difference,
+    duplicate,
+    intersect,
+    join_multiple,
+    make_active,
+    mirror_x,
+    mirror_y,
+    move,
+    remove_doubles,
+    remove_multiple,
+    rename,
+    rotate,
+    union,
+)
 from .arc_bar import (
     arc,
     bar,
@@ -17,29 +38,6 @@ from .interlock_twist import (
     distributed_interlock,
     twist_female,
     twist_male,
-)
-
-from ..constants import DT
-
-from ..utilities.compare_utils import angle as compare_angle
-from ..utilities.logging_utils import log
-from ..utilities.shapely_utils import shapely_to_curve
-from ..utilities.simple_utils import (
-    duplicate,
-    mirror_x,
-    mirror_y,
-    union,
-    intersect,
-    rename,
-    difference,
-    active_name,
-    move,
-    rotate,
-    make_active,
-    remove_multiple,
-    join_multiple,
-    remove_doubles,
-    add_rectangle,
 )
 
 

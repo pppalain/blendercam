@@ -3,26 +3,25 @@
 Various helper functions, less complex than those found in the 'utils' files.
 """
 
+import os
+import string
+
+# import sys
+import time
 from math import (
     cos,
     hypot,
     pi,
     sin,
 )
-import os
-import string
-import numpy
-
-# import sys
-import time
-
-from shapely.geometry import Polygon
 
 import bpy
+import numpy
 from mathutils import Vector
+from shapely.geometry import Polygon
 
-from .logging_utils import log
 from ..constants import BULLET_SCALE
+from .logging_utils import log
 
 
 def tuple_add(t, t1):  # add two tuples as Vectors
@@ -320,9 +319,7 @@ def compare(v1, v2, vmiddle, e):
     vect1.normalize()
     vect1 *= vect2.length
     v = vect2 - vect1
-    if v.length < e:
-        return True
-    return False
+    return v.length < e
 
 
 def is_vertical_limit(v1, v2, limit):
@@ -421,7 +418,7 @@ def safe_filename(name):  # for export gcode
         str: A sanitized version of the input string that contains only valid
         characters for a file name.
     """
-    valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
+    valid_chars = f"-_.(){string.ascii_letters}{string.digits}"
     filename = "".join(c for c in name if c in valid_chars)
     return filename
 
@@ -863,9 +860,9 @@ def active_to_coords():
     bpy.ops.object.convert(target="MESH")
     active_name("_tmp_mesh")
 
-    coords = []
-    for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-        coords.append((v.co.x, v.co.y))
+    # extract X,Y coordinates from the vertices data
+    coords = [(v.co.x, v.co.y) for v in obj.data.vertices]
+
     remove_multiple("_tmp_mesh")
     return coords
 
@@ -895,7 +892,7 @@ def make_visible(o):
     bpy.context.scene.collection.children.link(cam_collection)
     cam_collection.objects.link(bpy.context.object)
 
-    for i in range(0, 20):
+    for i in range(20):
         storage[1].append(o.layers[i])
 
         o.layers[i] = bpy.context.scene.layers[i]
@@ -906,7 +903,7 @@ def make_visible(o):
 def restore_visibility(o, storage):
     o.hide_viewport = storage[0]
     # print(storage)
-    for i in range(0, 20):
+    for i in range(20):
         o.layers[i] = storage[1][i]
 
 
@@ -1047,7 +1044,7 @@ def dilate_array(ar, cycles):
 
 def rotate_point_by_point(originp, p, ang):  # rotate point around another point with angle
     ox, oy, oz = originp
-    px, py, pz = p
+    px, py, _pz = p
 
     if ang == abs(pi / 2):
         d = ang / abs(ang)

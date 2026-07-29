@@ -7,7 +7,8 @@
 
 import area
 import nc
-from kurve_funcs import cut_curve as cut_curve
+from kurve_funcs import cut_curve
+
 from . import recreator
 
 dragging = False

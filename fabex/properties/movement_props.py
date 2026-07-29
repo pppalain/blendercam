@@ -12,10 +12,10 @@ from bpy.props import (
 )
 from bpy.types import PropertyGroup
 
-from ..utilities.operation_utils import update_operation
 from ..constants import (
     PRECISION,
 )
+from ..utilities.operation_utils import update_operation
 
 
 class CAM_MOVEMENT_Properties(PropertyGroup):
