@@ -15,6 +15,10 @@ from shapely.geometry import (
 )
 from shapely.validation import explain_validity
 
+from mathutils import Vector
+import warnings
+
+
 try:
     import bl_ext.blender_org.simplify_curves_plus as curve_simplify
 except ImportError:
@@ -215,6 +219,7 @@ def shapely_to_curve(name, p, z, cyclic=True):
 
 
 def shapely_validate(chunks):
+    validity_error = "Valid Geometry"
     remove_multiple("Invalid_Geometry_Marker")  # remove old errors
     for ch in chunks:  # first convert chunk to poly
         if len(ch.points) > 2:
@@ -251,12 +256,11 @@ def shapely_validate(chunks):
                         if space and space.type == "VIEW_3D":
                             rv3d = space.region_3d
                             rv3d.view_distance *= 0.01
-
-                    message = f"Invalid curve geometry: {validity_error}"
-                    raise CamException(message)
+                    warnings.warn(f"Invalid curve geometry: {validity_error}")
+                    #raise CamException(f"Invalid curve geometry: {validity_error}")
         else:
             ch.poly = Polygon()
-
+    return validity_error
 
 # this does more cleve chunks to Poly with hierarchies... ;)
 def chunks_to_shapely(chunks):
