@@ -144,10 +144,15 @@ def update_layout(self, context):
         ]
 
         for cls in unregister_classes:
-            bpy.utils.unregister_class(cls)
+            for child in bpy.types.Panel.__subclasses__():
+                if child.__name__ == cls.__name__:
+                    try:
+                        bpy.utils.unregister_class(child)
+                    except RuntimeError:  # This one is not registered
+                        pass
 
-    except AttributeError:
-        pass
+    except AttributeError as e:
+        print(e)
 
     main_classes = [
         CAM_CHAINS_Panel,
@@ -201,27 +206,36 @@ def update_layout(self, context):
     # Assign Panels to their location
     # Main Panels
     if main_location == "PROPERTIES":
-        properties_area_classes = list(main_classes)
+        for cls in main_classes:
+            properties_area_classes.append(cls)
     elif main_location == "SIDEBAR":
-        sidebar_area_classes = list(main_classes)
+        for cls in main_classes:
+            sidebar_area_classes.append(cls)
     elif main_location == "TOOLS":
-        tools_area_classes = list(main_classes)
+        for cls in main_classes:
+            tools_area_classes.append(cls)
 
     # Operation Panels
     if operation_location == "PROPERTIES":
-        properties_area_classes = list(operation_classes)
+        for cls in operation_classes:
+            properties_area_classes.append(cls)
     elif operation_location == "SIDEBAR":
-        sidebar_area_classes = list(operation_classes)
+        for cls in operation_classes:
+            sidebar_area_classes.append(cls)
     elif operation_location == "TOOLS":
-        tools_area_classes = list(operation_classes)
+        for cls in operation_classes:
+            tools_area_classes.append(cls)
 
     # Tools Panels
     if tools_location == "PROPERTIES":
-        properties_area_classes = list(tools_classes)
+        for cls in tools_classes:
+            properties_area_classes.append(cls)
     elif tools_location == "SIDEBAR":
-        sidebar_area_classes = list(tools_classes)
+        for cls in tools_classes:
+            sidebar_area_classes.append(cls)
     elif tools_location == "TOOLS":
-        tools_area_classes = list(tools_classes)
+        for cls in tools_classes:
+            tools_area_classes.append(cls)
 
     # Re-register the panels in their new areas
     # Properties Area
