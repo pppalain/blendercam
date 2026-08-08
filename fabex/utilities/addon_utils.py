@@ -38,9 +38,13 @@ def addon_dependencies():
 
     try:
         for module in modules:
+            addon_id = f"bl_ext.blender_org.{module}"
+            if addon_id in bpy.context.preferences.addons:
+                continue
             try:
-                bpy.ops.preferences.addon_enable(module=f"bl_ext.blender_org.{module}")
-            except KeyError:
+                bpy.ops.preferences.addon_enable(module=addon_id)
+            except RuntimeError:
+                bpy.ops.extensions.repo_sync_all(use_active_only=False)
                 bpy.ops.extensions.package_install(repo_index=0, pkg_id=module)
     except:
         log.debug("Could not Access Online Addon Repository!")
