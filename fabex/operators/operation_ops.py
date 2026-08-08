@@ -41,7 +41,7 @@ def copy_property_group_data(source, target):
 def copy_operation_properties(source, target):
     """Copy all writable CAM operation properties from source to target."""
     # 1. Direct key assignment (bypasses update callbacks)
-    for key in source:
+    for key in source.keys():
         try:
             target[key] = source[key]
         except Exception as e:
