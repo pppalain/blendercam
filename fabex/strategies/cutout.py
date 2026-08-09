@@ -177,9 +177,10 @@ async def cutout(o):
                 if (not chunk.closed) and o.movement.type == "MEANDER":
                     dir_switch = not dir_switch
     else:
-        chunk_copies.extend(
-            [chunk.copy(), layer] for chunk in chunks_from_curve for layer in layers
-        )
+        for layer in layers:
+            for chunk in chunks_from_curve:
+                chunk_copies.append([chunk.copy(), layer])
+
 
     # Set Z for all Chunks
     for i, chunk_layer in enumerate(chunk_copies):
