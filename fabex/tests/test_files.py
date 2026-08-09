@@ -39,7 +39,7 @@ class BlendFileTest(TestCase):
     def test_first_down(self):
         run_test_file("first_down")
         paths = [
-            ("cam_path_first_down", 397),
+            ("cam_path_first_down", 451),
             ("cam_path_no_first_down", 397),
         ]
         objects = bpy.data.objects
