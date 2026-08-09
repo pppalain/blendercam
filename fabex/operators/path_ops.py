@@ -365,7 +365,7 @@ async def _calc_path(operator, context):
     if not o.valid:
         operator.report({"ERROR_INVALID_INPUT"}, text)
         progress_async(text)
-        return {"FINISHED", False}
+        return ("FINISHED", False)
 
     # check for free movement height < maxz and return with error
     if o.movement.free_height < o.max_z:
@@ -374,10 +374,10 @@ async def _calc_path(operator, context):
             "Free Movement Height Is Less than Operation Depth Start \n Correct and Try Again.",
         )
         progress_async("Operation Can't Be Performed, See Warnings for Info")
-        return {"FINISHED", False}
+        return ("FINISHED", False)
 
     if o.computing:
-        return {"FINISHED", False}
+        return ("FINISHED", False)
 
     o.operator = operator
 
@@ -393,24 +393,24 @@ async def _calc_path(operator, context):
         traceback.print_tb(e.__traceback__)
         error_str = "\n".join(textwrap.wrap(str(e), width=80))
         operator.report({"ERROR"}, error_str)
-        return {"FINISHED", False}
+        return ("FINISHED", False)
 
     except AsyncCancelledException as e:
         log.warning(e)
-        return {"CANCELLED", False}
+        return ("CANCELLED", False)
 
     except Exception as e:
         log.error(f"FAIL {e}")
         traceback.print_tb(e.__traceback__)
         operator.report({"ERROR"}, str(e))
-        return {"FINISHED", False}
+        return ("FINISHED", False)
 
     coll = bpy.data.collections.get("RigidBodyWorld")
 
     if coll:
         bpy.data.collections.remove(coll)
 
-    return {"FINISHED", True}
+    return ("FINISHED", True)
 
 
 class CalculatePath(Operator, AsyncOperatorMixin):
