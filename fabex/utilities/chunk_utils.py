@@ -1309,9 +1309,12 @@ def chunks_to_mesh(chunks, o):
         except RuntimeError:
             pass
     else:
-        add_collections()
-        bpy.data.collections["Collection"].objects.unlink(ob)
-        collections["Paths"].objects.link(ob)
+        if "Paths" not in collections:
+            add_collections()
+        if ob.name in bpy.context.collection.objects:
+            bpy.context.collection.objects.unlink(ob)
+        if ob.name not in collections["Paths"].objects:
+            collections["Paths"].objects.link(ob)
 
     # parent the path object to source object if object mode
     if (o.geometry_source == "OBJECT") and o.parent_path_to_object:
