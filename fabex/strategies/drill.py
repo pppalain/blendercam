@@ -163,19 +163,6 @@ async def drill(o):
                     )
                 )
 
-            # chunks.extend(
-            #     CamPathChunk(
-            #         [
-            #             (
-            #                 vertex.co.x + object_location.x,
-            #                 vertex.co.y + object_location.y,
-            #                 vertex.co.z + object_location.z,
-            #             )
-            #         ]
-            #     )
-            #     for vertex in ob.data.vertices
-            # )
-
         # Delete temporary Object with applied transforms
         delete_object(ob)
 

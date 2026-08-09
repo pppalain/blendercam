@@ -181,7 +181,6 @@ async def cutout(o):
             for chunk in chunks_from_curve:
                 chunk_copies.append([chunk.copy(), layer])
 
-
     # Set Z for all Chunks
     for i, chunk_layer in enumerate(chunk_copies):
         chunk = chunk_layer[0]
@@ -254,6 +253,9 @@ async def cutout(o):
                     )
                     chunks.append(chunk)
     else:
-        chunks.extend(chunk_layer[0] for chunk_layer in chunk_copies)
+        for chunk_layer in chunk_copies:
+            chunks.append(chunk_layer[0])
+
+        # chunks.extend(chunk_layer[0] for chunk_layer in chunk_copies)
 
     chunks_to_mesh(chunks, o)
