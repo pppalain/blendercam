@@ -1306,7 +1306,7 @@ def chunks_to_mesh(chunks, o):
         try:
             bpy.data.collections["Collection"].objects.unlink(ob)
             collections["Paths"].objects.link(ob)
-        except RuntimeError:
+        except (KeyError, RuntimeError):
             pass
     else:
         if "Paths" not in collections:

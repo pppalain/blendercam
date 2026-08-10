@@ -188,6 +188,6 @@ def get_circle_binary(r):
         for b in range(res):
             v.y = b + 0.5 - m
             if v.length <= r:
-                car[a, b] = True
+                car[[a, b]] = True
                 # car.itemset((a, b), True)
     return car

@@ -161,9 +161,9 @@ async def _calc_path(operator, context):
 
     Returns:
         tuple: A tuple indicating the status of the operation.
-            Returns {'FINISHED', True} if successful,
-            {'FINISHED', False} if there was an error,
-            or {'CANCELLED', False} if the operation was cancelled.
+            Returns ('FINISHED', True) if successful,
+            ('FINISHED', False) if there was an error,
+            or ('CANCELLED', False) if the operation was cancelled.
     """
 
     s = bpy.context.scene
