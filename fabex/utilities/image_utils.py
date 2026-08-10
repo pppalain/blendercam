@@ -1078,7 +1078,7 @@ def image_to_chunks(o, image, with_border=False):
                         ):
                             # goes up
                             take = True
-                        if take:
+                        if take and v in verts:
                             ch.append(v)
                             verts.remove(v)
 
