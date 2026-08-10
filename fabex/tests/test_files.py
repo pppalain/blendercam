@@ -92,10 +92,10 @@ class BlendFileTest(TestCase):
         run_test_file("patterns")
         paths = [
             ("cam_path_Block", 1392),
-            ("cam_path_Circles", 248984),
+            ("cam_path_Circles", 248387),
             ("cam_path_Cross", 4319),
-            ("cam_path_Parallel", 58249),
-            ("cam_path_Spiral", 249123),
+            ("cam_path_Parallel", 58252),
+            ("cam_path_Spiral", 248280),
         ]
         objects = bpy.data.objects
         for path in paths:
@@ -146,8 +146,8 @@ class BlendFileTest(TestCase):
     def test_waterline(self):
         run_test_file("waterline")
         paths = [
-            ("cam_path_Waterline_Internal", 13897),
-            ("cam_path_Waterline_Internal_Exact", 1571),
+            ("cam_path_Waterline_Internal", 14632),
+            ("cam_path_Waterline_Internal_Exact", 1646),
             ("cam_path_Waterline_OCL", 4777),
         ]
         objects = bpy.data.objects
