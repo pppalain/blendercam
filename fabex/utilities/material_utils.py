@@ -54,6 +54,13 @@ def add_material_area_object():
     None
     """
 
+    if (
+        not hasattr(scene, "cam_operations")
+        or len(scene.cam_operations) == 0
+        or scene.cam_active_operation >= len(scene.cam_operations)
+    ):
+        return
+
     s = bpy.context.scene
     operation = s.cam_operations[s.cam_active_operation]
     get_operation_sources(operation)

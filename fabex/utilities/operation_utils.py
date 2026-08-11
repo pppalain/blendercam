@@ -516,7 +516,12 @@ def update_zbuffer_image(self, context):
     Args:
         context (bpy.context): The current Blender context.
     """
-
+    if (
+        not hasattr(scene, "cam_operations")
+        or len(scene.cam_operations) == 0
+        or scene.cam_active_operation >= len(scene.cam_operations)
+    ):
+        return
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     update_Z_buffer_image(active_op, bpy.context)
 
