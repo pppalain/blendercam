@@ -129,7 +129,7 @@ class CamCurveIntarsion(Operator):
     """Makes Curve Cuttable Both Inside and Outside, for Intarsion and Joints"""
 
     bl_idname = "object.curve_intarsion"
-    bl_label = "Intarsion"
+    bl_label = "Intarsia"
     bl_options: ClassVar = {"REGISTER", "UNDO", "PRESET"}
 
     diameter: FloatProperty(
@@ -388,107 +388,6 @@ class CamCurveIntarsion(Operator):
 
             intarsion_profile.select_set(True)
         o3.select_set(True)
-
-        if self.keep_outer:  # keep outer angles sharp.  Special case.
-            rename("intarsion_pocket", "_intarsion_pocket")
-            rename("intarsion_profile", "_intarsion_profile")
-            o3.select_set(True)
-            original_copy.select_set(True)
-            bpy.ops.object.curve_boolean(boolean_type="UNION")
-            intarsion_sharp = active_name("intarsion_sharp")
-            extrude_curve2mesh(self.intarsion_thickness)
-            move(z=-self.intarsion_thickness)
-            duplicate()
-            active_name("_intarsion_sharp")
-            silhouette_offset(context, (-self.tolerance / 2) - self.backlight)
-            _intarsion_backlight = active_name("_intarsion_backlight")
-            extrude_curve2mesh(self.base_thickness - self.backlight_depth_from_bottom)
-            move(z=-(self.base_thickness - self.backlight_depth_from_bottom))
-
-            if self.perimeter_cut > 0.0:
-                make_active("intarsion_sharp")
-                silhouette_offset(context, self.perimeter_cut)
-                active_name("intarsion_block")
-                extrude_curve2mesh(self.base_thickness)
-                move(z=-self.base_thickness)
-                mesh_difference(intarsion_sharp)
-                mesh_difference(_intarsion_backlight)
-
-            if self.includeBacklightInsert:
-                remove_multiple("_intartion_backlight")
-                make_active("intarsion_sharp")
-                silhouette_offset(context, -self.backlight / 2)
-                active_name("_insert_cavity")
-                _insert_cavity = extrude_curve2mesh(
-                    self.base_thickness - self.backlight_depth_from_bottom
-                )
-                move(z=-(self.base_thickness - self.backlight_depth_from_bottom))
-                make_active("intarsion_block")
-                mesh_difference(_insert_cavity)
-                make_active("_insert_cavity")
-                radius = 0.0003
-                tolerance = 0.0004
-                silhouette_offset(context, -tolerance, style=1)
-                active_name("_tmp")
-                simple_intarsion(context, radius)
-                extrude_curve2mesh(
-                    self.base_thickness
-                    - self.backlight_depth_from_bottom
-                    - self.intarsion_thickness
-                )
-                active_name("intarsion_insert")
-                silhouette_offset(context, -self.backlight / 2)
-                active_name("_intarsion_backlight")
-                _intarsion_backlight = extrude_curve2mesh(self.base_thickness)
-                move(z=(0.0006))
-                make_active("intarsion_insert")
-                mesh_difference(_intarsion_backlight)
-
-            deselect()
-
-            if self.includeDiffuser:
-                make_active("_intarsion_backlight")
-                radius = 0.0003
-                tolerance = 0.0002
-                silhouette_offset(context, -tolerance, style=1)
-                simple_intarsion(context, radius)
-                active_name("_diffuser_outer")
-                duplicate()
-                active_name("_copy_diffuser")
-
-                outerWallThickness = 0.00075  # 0.75 mm
-                silhouette_offset(context, -outerWallThickness)
-                if self.stripPerimetre:
-                    simple_intarsion(context, self.stripBendRadius)
-                active_name("_led_outer")
-
-                ledthickness = self.stripThickness + 0.0001
-
-                if self.stripPerimetre:
-                    silhouette_offset(context, -self.stripThickness)
-                    active_name("_led_inner")
-                    difference("_led", "_led_outer")
-                    ledthickness = self.stripWidth + 0.0001
-
-                diffuser_slot = extrude_curve2mesh(self.base_thickness)
-                move(z=0.0004)
-                active_name("_diffuser_slot")
-                make_active("_copy_diffuser")
-                diffuserThickness = self.base_thickness
-                diffuserThickness -= self.intarsion_thickness
-                diffuserThickness -= self.backlight_depth_from_bottom
-                diffuserThickness -= ledthickness
-                diffuserThickness -= 0.0006
-                extrude_curve2mesh(diffuserThickness)
-                mesh_difference(diffuser_slot)
-                active_name("finished_diffuser")
-
-                make_active("_diffuser_slot")
-                move(z=0.0004)
-                make_active("_diffuser_outer")
-                extrude_curve2mesh(ledthickness)
-                mesh_difference(diffuser_slot)
-                active_name("finished_LED-carrier")
 
         remove_multiple("_")
         return {"FINISHED"}
