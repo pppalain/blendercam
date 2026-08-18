@@ -33,15 +33,13 @@ class Creator(iso_modal.Creator):
             self.write(
                 "(Created with grbl post processor "
                 + str(now.strftime("%Y/%m/%d %H:%M"))
-                + ")"
-                + "\n"
+                + ")\n"
             )
         else:
             self.write(
                 "(Created with grbl Cutter Radius Compensation post processor "
                 + str(now.strftime("%Y/%m/%d %H:%M"))
-                + ")"
-                + "\n"
+                + ")\n"
             )
 
     ############################################################################

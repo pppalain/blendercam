@@ -415,6 +415,9 @@ def export_gcode_path(filename, vertslist, operations):
                         if job_start_pending:
                             # First rapid after job start height: move XY at clearance
                             # height first, then descend to free height separately.
+                            print(vx,vy,vz)
+                            if vx is None: vx=0
+                            if vy is None: vy=0
                             c.rapid(x=vx, y=vy)
                             c.rapid(z=vz)
                             job_start_pending = False

@@ -388,7 +388,7 @@ class CamCurveIntarsion(Operator):
 
             intarsion_profile.select_set(True)
         o3.select_set(True)
-
+###
         remove_multiple("_")
         return {"FINISHED"}
 
