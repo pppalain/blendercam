@@ -11,6 +11,7 @@ from math import (
     pi,
 )
 
+
 import bpy
 from mathutils import Euler, Vector
 
@@ -27,6 +28,7 @@ from ..utilities.simple_utils import (
     safe_filename,
     unit_value_to_string,
 )
+from ..utilities.version_utils import get_fabex_version
 
 
 def export_gcode_path(filename, vertslist, operations):
@@ -160,7 +162,12 @@ def export_gcode_path(filename, vertslist, operations):
         # start program
         c.program_begin(0, filename)
         c.flush_nc()
-        c.comment("G-code Generated with Fabex and NC library")
+        header_message="G-code Generated with Fabex V"
+        header_message += get_fabex_version()
+        header_message += " on Blender V"
+        header_message += bpy.app.version_string
+        header_message += " and NC"
+        c.comment(header_message)
         frf = round(m.feedrate_rapid * unitcorr, 2)
         c.comment(f"Rapids: {frf}/min")
         # absolute coordinates
