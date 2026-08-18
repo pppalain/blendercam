@@ -512,14 +512,14 @@ class Creator(nc.Creator):
             self.write(self.SPACE() + self.RAPID())
         self.write_preps()
         if x is not None:
-            dx = x - self.x
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             else:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
             self.x = x
         if y is not None:
-            dy = y - self.y
+            dy = y - self.y if self.y is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
             else:
@@ -527,7 +527,7 @@ class Creator(nc.Creator):
 
             self.y = y
         if z is not None:
-            dz = z - self.z
+            dz = z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
             else:
@@ -536,7 +536,7 @@ class Creator(nc.Creator):
             self.z = z
 
         if a is not None:
-            da = a - self.a
+            da = a - self.a if self.a is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.A() + (self.fmt.string(a)))
             else:
@@ -544,7 +544,7 @@ class Creator(nc.Creator):
             self.a = a
 
         if b is not None:
-            db = b - self.b
+            db = b - self.b if self.b is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.B() + (self.fmt.string(b)))
             else:
@@ -552,7 +552,7 @@ class Creator(nc.Creator):
             self.b = b
 
         if c is not None:
-            dc = c - self.c
+            dc = c - self.c if self.c is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.C() + (self.fmt.string(c)))
             else:
@@ -575,14 +575,14 @@ class Creator(nc.Creator):
         self.write_preps()
         dx = dy = dz = 0
         if x is not None:
-            dx = x - self.x
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             else:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
             self.x = x
         if y is not None:
-            dy = y - self.y
+            dy = y - self.y if self.y is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
             else:
@@ -590,7 +590,7 @@ class Creator(nc.Creator):
 
             self.y = y
         if z is not None:
-            dz = z - self.z
+            dz = z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
             else:
@@ -762,40 +762,40 @@ class Creator(nc.Creator):
             self.write(arc_g_code)
         self.write_preps()
         if x is not None:
-            dx = x - self.x
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             else:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
         if y is not None:
-            dy = y - self.y
+            dy = y - self.y if self.y is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
             else:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(dy)))
         if z is not None:
-            dz = z - self.z
+            dz = z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
             else:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(dz)))
         if i is not None:
             if not self.arc_centre_absolute:
-                i = i - self.x
+                i = i - self.x if self.x is not None else 0
             s = self.fmt.string(i)
             if self.arc_centre_positive and s[0] == "-":
                 s = s[1:]
             self.write(self.SPACE() + self.CENTRE_X() + s)
         if j is not None:
             if not self.arc_centre_absolute:
-                j = j - self.y
+                j = j - self.y if self.y is not None else 0
             s = self.fmt.string(j)
             if self.arc_centre_positive and s[0] == "-":
                 s = s[1:]
             self.write(self.SPACE() + self.CENTRE_Y() + s)
         if k is not None:
             if not self.arc_centre_absolute:
-                k = k - self.z
+                k = k - self.z if self.z is not None else 0
             s = self.fmt.string(k)
             if self.arc_centre_positive and s[0] == "-":
                 s = s[1:]
@@ -991,12 +991,12 @@ class Creator(nc.Creator):
         # Set the retraction point to the 'standoff' distance above the starting z height.
         retract_height = z + standoff
         if x is not None:
-            dx = x - self.x
+            dx = x - self.x if self.x is not None else 0
             self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             self.x = x
 
         if y is not None:
-            dy = y - self.y
+            dy = y - self.y if self.y is not None else 0
             self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
             self.y = y
 

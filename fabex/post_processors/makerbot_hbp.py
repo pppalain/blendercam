@@ -140,14 +140,14 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
             self.write(maker.codes.RAPID())
         self.write_preps()
         if x is not None:
-            dx = x - self.x
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(maker.codes.X() + (self.fmt % x))
             else:
                 self.write(maker.codes.X() + (self.fmt % dx))
             self.x = x
         if y is not None:
-            dy = y - self.y
+            dy = y - self.y if self.y is not None else 0
             if self.absolute_flag:
                 self.write(maker.codes.Y() + (self.fmt % y))
             else:
@@ -155,7 +155,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
 
             self.y = y
         if z is not None:
-            dz = z - self.z
+            dz = z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 self.write(maker.codes.Z() + (self.fmt % z))
             else:
@@ -164,7 +164,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
             self.z = z
 
         if a is not None:
-            da = a - self.a
+            da = a - self.a if self.a is not None else 0
             if self.absolute_flag:
                 self.write(maker.codes.A() + (self.fmt % a))
             else:
@@ -172,7 +172,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
             self.a = a
 
         if b is not None:
-            db = b - self.b
+            db = b - self.b if self.b is not None else 0
             if self.absolute_flag:
                 self.write(maker.codes.B() + (self.fmt % b))
             else:
@@ -180,7 +180,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
             self.b = b
 
         if c is not None:
-            dc = c - self.c
+            dc = c - self.c if self.c is not None else 0
             if self.absolute_flag:
                 self.write(maker.codes.C() + (self.fmt % c))
             else:
@@ -203,14 +203,14 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
         self.write_preps()
         dx = dy = dz = 0
         if x is not None:
-            dx = x - self.x
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(maker.codes.X() + (self.fmt % x))
             else:
                 self.write(maker.codes.X() + (self.fmt % dx))
             self.x = x
         if y is not None:
-            dy = y - self.y
+            dy = y - self.y if self.y is not None else 0
             if self.absolute_flag:
                 self.write(maker.codes.Y() + (self.fmt % y))
             else:
@@ -218,7 +218,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
 
             self.y = y
         if z is not None:
-            dz = z - self.z
+            dz = z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 self.write(maker.codes.Z() + (self.fmt % z))
             else:
@@ -256,21 +256,21 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
             self.write(arc_g_code)
         self.write_preps()
         if x is not None:
-            dx = x - self.x
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(maker.codes.X() + (self.fmt % x))
             else:
                 self.write(maker.codes.X() + (self.fmt % dx))
             self.x = x
         if y is not None:
-            dy = y - self.y
+            dy = y - self.y if self.y is not None else 0
             if self.absolute_flag:
                 self.write(maker.codes.Y() + (self.fmt % y))
             else:
                 self.write(maker.codes.Y() + (self.fmt % dy))
             self.y = y
         if z is not None:
-            dz = z - self.z
+            dz = z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 self.write(maker.codes.Z() + (self.fmt % z))
             else:

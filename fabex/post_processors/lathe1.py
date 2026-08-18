@@ -257,7 +257,7 @@ class CreatorIso(nc.Creator):
         self.write_preps()
 
         if y is not None:
-            dy = y - self.y
+            dy = y - self.y if self.y is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.X() + (self.fmt % (y * 2)))
             else:
@@ -266,7 +266,7 @@ class CreatorIso(nc.Creator):
             self.y = y
 
         if x is not None:
-            dx = x - self.x
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.Z() + (self.fmt % x))
             else:
@@ -274,7 +274,7 @@ class CreatorIso(nc.Creator):
             self.x = x
 
         if z is not None:
-            z - self.z
+            z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 pass
                 # self.write(iso.codes.Z() + (self.fmt % z))
@@ -285,7 +285,7 @@ class CreatorIso(nc.Creator):
             self.z = z
 
         if a is not None:
-            da = a - self.a
+            da = a - self.a if self.a is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.A() + (self.fmt % a))
             else:
@@ -293,7 +293,7 @@ class CreatorIso(nc.Creator):
             self.a = a
 
         if b is not None:
-            db = b - self.b
+            db = b - self.b if self.b is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.B() + (self.fmt % b))
             else:
@@ -301,7 +301,7 @@ class CreatorIso(nc.Creator):
             self.b = b
 
         if c is not None:
-            dc = c - self.c
+            dc = c - self.c if self.c is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.C() + (self.fmt % c))
             else:
@@ -325,7 +325,7 @@ class CreatorIso(nc.Creator):
         dx = dy = dz = 0
 
         if y is not None:
-            dy = y - self.y
+            dy = y - self.y if self.y is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.X() + (self.fmt % (y * 2)))
             else:
@@ -334,7 +334,7 @@ class CreatorIso(nc.Creator):
             self.y = y
 
         if x is not None:
-            dx = x - self.x
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.Z() + (self.fmt % x))
             else:
@@ -342,7 +342,7 @@ class CreatorIso(nc.Creator):
             self.x = x
 
         if z is not None:
-            dz = z - self.z
+            dz = z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 pass
                 # self.write(iso.codes.Z() + (self.fmt % z))
@@ -392,14 +392,14 @@ class CreatorIso(nc.Creator):
 
         # make Z take x values for lathe
         if x is not None:
-            dx = x - self.x
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(iso.codes.Z() + (self.fmt % x))
             else:
                 self.write(iso.codes.Z() + (self.fmt % dx))
             self.x = x
         if z is not None:
-            z - self.z
+            z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 pass
                 # self.write(iso.codes.X() + (self.fmt % z))
