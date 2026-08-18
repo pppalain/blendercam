@@ -155,7 +155,7 @@ class Creator(iso.Creator):
         self.write_preps()
 
         if x is not None:
-            dx = x - self.x
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             else:
@@ -163,7 +163,7 @@ class Creator(iso.Creator):
             self.x = x
 
         if y is not None:
-            dy = y - self.y
+            dy = y - self.y if self.y is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
             else:
@@ -171,7 +171,7 @@ class Creator(iso.Creator):
             self.y = y
 
         if z is not None:
-            dz = z - self.z
+            dz = z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
             else:
@@ -195,14 +195,14 @@ class Creator(iso.Creator):
         dx = dy = dz = 0
 
         if x is not None:
-            dx = x - self.x
+            dx = x - self.x if self.x is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             else:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
             self.x = x
         if y is not None:
-            dy = y - self.y
+            dy = y - self.y if self.y is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
             else:
@@ -210,7 +210,7 @@ class Creator(iso.Creator):
 
             self.y = y
         if z is not None:
-            dz = z - self.z
+            dz = z - self.z if self.z is not None else 0
             if self.absolute_flag:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
             else:
