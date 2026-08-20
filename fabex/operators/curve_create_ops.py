@@ -698,10 +698,13 @@ class CamCurvePlate(Operator):
             # Make the plate base active
             bpy.context.view_layer.objects.active = bpy.data.objects["plate_base"]
             # Remove holes from the base
-            polygon_boolean(context, "DIFFERENCE")
+            if self.hole_diameter > 0:  # only make holes if not 0
+                polygon_boolean(context, "DIFFERENCE")
+            else:
+                active_name("tmp")
             remove_multiple("plate_")  # Remove temporary base and holes
-            remove_multiple("_")
 
+        remove_multiple("_")
         active_name("plate")
         bpy.context.active_object.select_set(True)
         bpy.ops.object.curve_remove_doubles()
