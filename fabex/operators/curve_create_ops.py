@@ -702,8 +702,8 @@ class CamCurvePlate(Operator):
                 polygon_boolean(context, "DIFFERENCE")
             else:
                 active_name("tmp")
-            remove_multiple("plate_")  # Remove temporary base and holes
 
+        remove_multiple("plate_")  # Remove temporary base and holes
         remove_multiple("_")
         active_name("plate")
         bpy.context.active_object.select_set(True)
