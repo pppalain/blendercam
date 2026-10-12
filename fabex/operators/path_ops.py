@@ -510,16 +510,34 @@ class CalculatePath(Operator, AsyncOperatorMixin):
         log.info(f"Operation End: {operation.name}")
         log.info(heading("~"))
 
-        bpy.ops.text.open(filepath=basefilename)
+        # Reuse the Text already linked to this file instead of opening a new copy,
+        # otherwise every recalculation piles up name.001, name.002, ...
+        # Duplicates left by older versions are removed; large piles of them
+        # have crashed Blender 5.2 while saving.
+        target = os.path.normcase(os.path.abspath(bpy.path.abspath(basefilename)))
+        matches = [
+            t
+            for t in bpy.data.texts
+            if t.filepath
+            and os.path.normcase(os.path.abspath(bpy.path.abspath(t.filepath))) == target
+        ]
+        gcode_text = matches[0] if matches else None
+        for duplicate in matches[1:]:
+            bpy.data.texts.remove(duplicate)
+        if gcode_text is None:
+            gcode_text = bpy.data.texts.load(basefilename)
+        else:
+            with open(basefilename, encoding="utf-8", errors="replace") as f:
+                gcode_text.from_string(f.read())
 
         try:
             areas = bpy.data.workspaces["Scripting"].screens["Scripting"].areas
             text_editor = next(area.spaces[0] for area in areas if area.type == "TEXT_EDITOR")
 
             with context.temp_override(space=text_editor):
-                text_editor.text = bpy.data.texts[f"{name}{extension}"]
+                text_editor.text = gcode_text
 
-        except IndexError:
+        except (KeyError, StopIteration, IndexError):
             pass
 
         return retval
