@@ -343,7 +343,12 @@ def add_collections():
     simulation_prefix = cam_names.simulation_prefix
 
     scene_collection = context.scene.collection
-    default_collection = scene_collection
+
+    default_collection = collections.get("Collection")
+    if default_collection is None:
+        default_collection = collections.new("Collection")
+        scene_collection.children.link(default_collection)
+
     fabex_collections = [
         ("Bridges (Tabs)", "COLOR_06"),
         ("Paths", "COLOR_04"),
