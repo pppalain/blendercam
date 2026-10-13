@@ -60,6 +60,11 @@ class CAM_MACHINE_Properties(PropertyGroup):
         name="Post Processor",
         items=(
             (
+                "BIESSE_CIX",
+                "Biesse CIX",
+                "Biesse Rover CIX (CID3) - embedded ISO rows, TP=/M3 tool change",
+            ),
+            (
                 "ISO",
                 "Iso",
                 "Exports standardized gcode ISO 6983 (RS-274)",

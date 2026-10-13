@@ -343,7 +343,7 @@ def add_collections():
     simulation_prefix = cam_names.simulation_prefix
 
     scene_collection = context.scene.collection
-    default_collection = collections["Collection"]
+    default_collection = scene_collection
     fabex_collections = [
         ("Bridges (Tabs)", "COLOR_06"),
         ("Paths", "COLOR_04"),

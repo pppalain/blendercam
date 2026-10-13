@@ -86,6 +86,7 @@ def export_gcode_path(filename, vertslist, operations):
 
     processor_extension = {
         "ANILAM": ("anilam_crusader_m", ".tap"),
+        "BIESSE_CIX": ("biesse_cix", ".cix"),
         "CENTROID": ("centroid1", ".tap"),
         "EMC": ("emc2b", ".ngc"),
         "FADAL": ("fadal", ".tap"),
@@ -201,6 +202,12 @@ def export_gcode_path(filename, vertslist, operations):
 
         if o.machine_axes != "3":
             rots = mesh.shape_keys.key_blocks["rotations"].data
+            if hasattr(c, "write_wfl_macro") and len(rots) > 0:
+                # INDEXED (3+2) operation: the compound tilt is constant
+                # for the whole operation, so read it once from the first
+                # vertex's stored rotation rather than per-point.
+                cangle, tilt, _unused = rots[0].co
+                c.write_wfl_macro(cangle, tilt)
 
         # spindle rpm and direction
         spdir_clockwise = o.movement.spindle_rotation == "CW"
@@ -213,6 +220,7 @@ def export_gcode_path(filename, vertslist, operations):
             o.cutter_type,
             o.cutter_flutes,
         ]:
+            c.current_operation = o
             c.tool_change(o.cutter_id)
 
         if m.output_tool_definitions:
@@ -230,7 +238,7 @@ def export_gcode_path(filename, vertslist, operations):
 
             # Raise Z to job start height BEFORE spindle starts,
             # so the cutter clears toolsetters and fixtures
-            if m.use_job_start_height:
+            if m.use_job_start_height and not getattr(c, "_native_cutout_active", False):
                 jsh = round(m.job_start_height * unitcorr, 2)
                 c.write(f"G00 Z{jsh} F{frf}\n")
 
@@ -267,7 +275,11 @@ def export_gcode_path(filename, vertslist, operations):
 
         # Raise to free height. When job start height is active the first path
         # vertex already positions X, Y and Z, so this move is redundant.
-        if o.cutter_type not in ["LASER", "PLASMA"] and not m.use_job_start_height:
+        if (
+            o.cutter_type not in ["LASER", "PLASMA"]
+            and not m.use_job_start_height
+            and not getattr(c, "_native_cutout_active", False)
+        ):
             c.write(f"G00 Z{fmh} F{frf}\n")
 
         if o.enable_a_axis:
