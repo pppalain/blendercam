@@ -58,13 +58,13 @@ class CAM_OPTIMISATION_Panel(CAMParentPanel, Panel):
                     resolution = "Resolution: " + str(resx) + " x " + str(resy)
                     layout.label(text=resolution)
 
-            if self.exact_possible:
-                if self.op.optimisation.use_exact:
-                    # Simulation Detail
-                    col = layout.column(align=True)
-                    col.prop(self.op.optimisation, "simulation_detail", text="Sim Detail")
-                    col.prop(self.op.optimisation, "circle_detail", text="Offset Detail")
+            # Simulation Detail
+            col = layout.column(align=True)
+            col.prop(self.op.optimisation, "simulation_detail", text="Sim Detail")
+            col.prop(self.op.optimisation, "circle_detail", text="Offset Detail")
 
+            if self.exact_possible:
+                # if self.op.optimisation.use_exact:
                 layout.use_property_split = False
                 header, panel = layout.panel("exact", default_closed=True)
                 header.prop(self.op.optimisation, "use_exact", text="Exact Mode")

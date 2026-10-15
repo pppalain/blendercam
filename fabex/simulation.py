@@ -198,7 +198,7 @@ async def generate_simulation_image(operations, limits):
     resx = math.ceil(sx / simulation_detail) + 2 * borderwidth
     resy = math.ceil(sy / simulation_detail) + 2 * borderwidth
 
-    max_sim_pixels = 4000 * 4000  # ~128 MB limit for the simulation array
+    max_sim_pixels = 8096 * 8096  # ~128 MB limit for the simulation array, upped to 512 MB as test
     if resx * resy > max_sim_pixels:
         message = f"Simulation resolution {resx}×{resy} ({resx * resy / 1e6:.1f}M pixels) exceeds limit.\n"
         "Increase Simulation Detail or reduce the work area."
