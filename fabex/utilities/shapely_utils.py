@@ -265,7 +265,12 @@ def shapely_validate(chunks):
 # this does more cleve chunks to Poly with hierarchies... ;)
 def chunks_to_shapely(chunks):
 
-    shapely_validate(chunks)
+    validity_error = shapely_validate(chunks)
+
+    if validity_error != "Valid Geometry":
+        raise CamException(
+            f"Invalid curve geometry: {validity_error}"
+        )
 
     for ppart in chunks:  # then add hierarchy relations
         for ptest in chunks:
