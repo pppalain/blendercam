@@ -108,13 +108,13 @@ async def get_path(context, operation):
 
     if three_axis:
         if USE_PROFILER:  # profiler
-            path_profiler(get_path_3_axis(context, operation))
+            await path_profiler(get_path_3_axis(context, operation))
         else:
             await get_path_3_axis(context, operation)
 
-    elif four_axis:
+    elif four_axis and not indexed_four_axis:
         if USE_PROFILER:
-            path_profiler(get_path_4_axis(context, operation))
+            await path_profiler(get_path_4_axis(context, operation))
         else:
             await get_path_4_axis(context, operation)
 
