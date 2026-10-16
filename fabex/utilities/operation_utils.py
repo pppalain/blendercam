@@ -355,7 +355,7 @@ def update_chipload(self, context):
     Returns:
         None: This function does not return a value; it updates the chipload in place.
     """
-    log.info("~ Update Chipload ~")
+    log.info(heading("~ Update Chipload ~"))
     o = self
     # Old chipload
     o.info.chipload = o.feedrate / (o.spindle_rpm * o.cutter_flutes)
