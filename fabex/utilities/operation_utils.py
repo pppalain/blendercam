@@ -455,7 +455,7 @@ def update_rotation(o, context):
 
     log.info(heading("Update Rotation"))
     if o.enable_b_axis or o.enable_a_axis:
-        log.info(f"{o}, {o.rotation_a}")
+        log.info(f"{o.name}, {o.rotation_a}")
         ob = bpy.data.objects[o.object_name]
         ob.select_set(True)
         bpy.context.view_layer.objects.active = ob

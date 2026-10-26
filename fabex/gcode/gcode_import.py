@@ -88,9 +88,8 @@ def segments_to_meshdata(segments):
     verts = []
     edges = []
 
-    del_offset = (
-        0  # to travel segs in a row, one gets deleted, need to keep track of index for edges
-    )
+    # to travel segs in a row, one gets deleted, need to keep track of index for edges
+    del_offset = 0
 
     for i in range(len(segs)):
         if i >= len(segs) - 1:
