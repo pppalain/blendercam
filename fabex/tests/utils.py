@@ -1,3 +1,4 @@
+import os
 import shutil
 from pathlib import Path
 
@@ -122,6 +123,36 @@ def run_test_file(test):
         scene.cam_active_operation = i
         # Run the calculate_cam_path() operator
         bpy.ops.object.calculate_cam_path()
+
+
+def get_gcode_files(test, paths):
+    """Loads the generated and reference Gcode files from the test folder"""
+    path = str(Path(__file__).parent / "test_data" / test)
+    gcode_file_names = [path[0].replace("cam_path", "") for path in paths]
+    # gcode_files = [file.endswith(".gcode") for file in os.walk(path)]
+    return gcode_files
+
+
+def get_gcode_from_file(file):
+    """Opens and reads a Gcode file, removes comment lines and returns a list of lines"""
+    with open(file, "r") as f:
+        lines = f.readlines()
+        for line in lines:
+            if line.startswith("("):
+                lines.remove(line)
+        return "".join(lines)
+
+
+def compare_gcode_files(gcode_files):
+    """Compares coordinate and feedrate data from the supplied Gcode files"""
+    generated = get_gcode_from_file(gcode_files[1:])
+    expected = get_gcode_from_file(gcode_files)
+
+    pattern = re.compile(r"(?<!G)[+-]?\d+(?:\.\d+)?", re.IGNORECASE)
+    generated_stripped = [float(m.group(0)) for m in pattern.finditer(generated)]
+    expected_stripped = [float(m.group(0)) for m in pattern.finditer(expected)]
+
+    return generated_stripped, expected_stripped
 
 
 def build_extension(blender):

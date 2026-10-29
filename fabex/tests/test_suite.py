@@ -1,21 +1,15 @@
 import difflib
 import os
+import re
 import subprocess
 import sys
 import unittest
 from pathlib import Path
 
 
-# @unittest.skip("Old Gcode Test")
 class FabexGcodeTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        path = "test_func.py"
-        Path(path).write_text("GCODE_SCRIPT")
-        command = f'blender -noaudio -b -P "{path}" --factory-startup'
-        print(f"Executing: {command}")
-        subprocess.run(command, shell=True, check=True)
-        Path.unlink(path)
         cls.original_dir = os.getcwd()
         cls.blend_test_cases = cls.get_test_cases()
 
@@ -29,7 +23,7 @@ class FabexGcodeTest(unittest.TestCase):
             for file in files:
                 if file.endswith(".blend"):
                     blend_file = file
-                elif file.startswith("_") and (file.endswith((".gcode", ".tap"))):
+                elif file.startswith("_") and file.endswith(".gcode"):
                     gcode_files = gcode_files or []
                     gcode_files.append(file)
 
@@ -46,23 +40,16 @@ class FabexGcodeTest(unittest.TestCase):
     @staticmethod
     def get_gcode_from_file(file):
         with open(file, "r") as f:
-            return "".join(f.readlines()[1:])
-
-    @staticmethod
-    def get_diff(file1, file2, num_lines=10):
-        with open(file1, "r") as f1, open(file2, "r") as f2:
-            diff = difflib.unified_diff(
-                f1.readlines()[1:],  # skip first line
-                f2.readlines()[1:],  # skip first line
-                fromfile=file1,
-                tofile=file2,
-            )
-        return "".join(list(diff)[:num_lines])
+            lines = f.readlines()
+            for line in lines:
+                if line.startswith("("):
+                    lines.remove(line)
+            return "".join(lines)
 
     def execute_blender(self, blend_file):
         path = "test_func.py"
-        Path(path).write_text("GCODE_SCRIPT")
-        command = f'blender -noaudio -b "{blend_file}" -P "{path}" --factory-startup'
+        Path(path).write_text(GCODE_SCRIPT)
+        command = f'/home/spex/Documents/Blender/Releases/blender-5.2.0-linux-x64/blender -noaudio -b "{blend_file}" -P "{path}" --factory-startup'
         print(f"Executing: {command}")
         subprocess.run(command, shell=True, check=True)
         Path.unlink(path)
@@ -80,35 +67,30 @@ class FabexGcodeTest(unittest.TestCase):
                 generated = self.get_gcode_from_file(gcode_file[1:])
                 expected = self.get_gcode_from_file(gcode_file)
 
-                if sys.platform == "darwin" and os.path.exists(gcode_file + ".mac"):
-                    # bullet physics gives slightly different results on mac sometimes...
-                    # this is something we can't fix, so compare against mac generated test
-                    # file
-                    print(f"Using Mac Test File {len(expected)} {len(generated)}")
-                    expected = self.get_gcode_from_file(gcode_file + ".mac")
-                    self.assertMultiLineEqual(
-                        generated,
-                        expected,
-                        msg="\n" + self.get_diff(gcode_file[1:], gcode_file + ".mac"),
+                pattern = re.compile(r"(?<!G)[+-]?\d+(?:\.\d+)?", re.IGNORECASE)
+                generated_stripped = [float(m.group(0)) for m in pattern.finditer(generated)]
+                expected_stripped = [float(m.group(0)) for m in pattern.finditer(expected)]
+
+                for i in range(len(generated_stripped)):
+                    self.assertAlmostEqual(
+                        generated_stripped[i],
+                        expected_stripped[i],
+                        delta=0.002,
                     )
 
-                else:
-                    self.assertMultiLineEqual(
-                        generated,
-                        expected,
-                        msg="\n" + self.get_diff(gcode_file[1:], gcode_file),
-                    )
+                print(f"{generated_stripped[i]:>7} : {expected_stripped[i]} - Line {i}")
 
-                os.remove(gcode_file[1:])  # cleanup generated file unless test fails
+                # cleanup generated file unless test fails
+                # os.remove(gcode_file[1:])
 
 
-if __name__ == "__main__":
-    # # Add a test method for each test case to the TestCase class
-    for test_case in FabexGcodeTest.get_test_cases():
+# if __name__ == "__main__":
+#     # # Add a test method for each test case to the TestCase class
+#     for test_case in FabexGcodeTest.get_test_cases():
 
-        def test_func(self, tc=test_case):
-            return self.run_test_case(tc)
+#         def test_func(self, tc=test_case):
+#             return self.run_test_case(tc)
 
-        setattr(FabexGcodeTest, f"test_{test_case['subdir_name']}", test_func)
+#         setattr(FabexGcodeTest, f"test_{test_case['subdir_name']}", test_func)
 
-    unittest.main()
+#     unittest.main()

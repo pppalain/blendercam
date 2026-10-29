@@ -98,6 +98,7 @@ def export_gcode_path(filename, vertslist, operations):
         "ISO": ("iso", ".tap"),
         "LYNX_OTTER_O": ("lynx_otter_o", ".nc"),
         "MACH3": ("mach3", ".tap"),
+        "RTCNC_RTSX": {"rtcnc_rtsx.py", ".tap"},
         "SHOPBOT MTC": ("shopbot_mtc", ".sbp"),
         "SIEGKX1": ("siegkx1", ".tap"),
         "TNC151": ("tnc151", ".tap"),
@@ -113,9 +114,7 @@ def export_gcode_path(filename, vertslist, operations):
     unitcorr = (
         METRIC_CORRECTION
         if unit_system == "METRIC"
-        else IMPERIAL_CORRECTION
-        if unit_system == "IMPERIAL"
-        else 1
+        else IMPERIAL_CORRECTION if unit_system == "IMPERIAL" else 1
     )
 
     rotcorr = ROTATION_CORRECTION
@@ -163,7 +162,7 @@ def export_gcode_path(filename, vertslist, operations):
         # start program
         c.program_begin(0, filename)
         c.flush_nc()
-        header_message="G-code Generated with Fabex V"
+        header_message = "G-code Generated with Fabex V"
         header_message += get_fabex_version()
         header_message += " on Blender V"
         header_message += bpy.app.version_string
@@ -434,8 +433,10 @@ def export_gcode_path(filename, vertslist, operations):
                         if job_start_pending:
                             # First rapid after job start height: move XY at clearance
                             # height first, then descend to free height separately.
-                            if vx is None: vx=0
-                            if vy is None: vy=0
+                            if vx is None:
+                                vx = 0
+                            if vy is None:
+                                vy = 0
                             c.rapid(x=vx, y=vy)
                             c.rapid(z=vz)
                             job_start_pending = False

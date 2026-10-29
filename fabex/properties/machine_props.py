@@ -145,6 +145,11 @@ class CAM_MACHINE_Properties(PropertyGroup):
                 "Lynx Otter o",
             ),
             (
+                "RTCNC_RTSX",
+                "RealTime CNC RTS-X",
+                "RealTime CNC RTS-X Controllers",
+            ),
+            (
                 "USER",
                 "User Custom",
                 "Customizable User Post Processor (based on ISO)",

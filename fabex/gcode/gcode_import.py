@@ -15,7 +15,8 @@ import numpy as np
 from ..exception import CamException
 from ..utilities.logging_utils import log
 
-np.set_printoptions(suppress=True)  # suppress scientific notation in subdivide functions linspace
+# suppress scientific notation in subdivide functions linspace
+np.set_printoptions(suppress=True)
 
 
 def import_gcode(self, context, filepath):
@@ -268,7 +269,7 @@ class GcodeParser:
             s += a
             a_old = a
 
-        log.info(f"Command: {s}")
+        log.debug(f"Command: {s}")
         command = s
 
         # code is fist word, then args
@@ -437,6 +438,8 @@ class GcodeModel:
             "F": coords["F"],  # no feedrate offset
         }
 
+        print(absolute)
+
         # if gcode line has no E = travel move
         # but still add E = 0 to segment (so coords dictionaries have same shape for subdividing linspace function)
         if "E" not in args:  # "E" in coords:
@@ -517,15 +520,13 @@ class GcodeModel:
             None: This method does not return a value; it modifies the object's state.
         """
 
-        col = list(
-            self.color
-        )  # list() creates new list, otherwise you just change reference and all segs have same color
+        # list() creates new list, otherwise you just change reference and all segs have same color
+        col = list(self.color)
         extr_idx = int(args["S"])  # e.g. M163 S0 P1
         weight = args["P"]
         # change CMYKW
-        col[extr_idx + 3] = (
-            weight  # +3 weil ersten 3 stellen RGB sind, need only CMYKW values for extrude
-        )
+        # +3 weil ersten 3 stellen RGB sind, need only CMYKW values for extrude
+        col[extr_idx + 3] = weight
         self.color = col
         # take RGB values for seg from last comment (above first M163 statement)
         comment = eval(GcodeParser.comment)  # string comment to list
@@ -605,9 +606,8 @@ class GcodeModel:
                 self.segments[i].coords["Z"] != currentLayerZ
                 and self.segments[i + 1].coords["E"] > 0
             ):
-                self.layers.append(
-                    layer
-                )  # layer abschließen, add layer to list of Layers, used to later draw single layer objects
+                self.layers.append(layer)
+                # layer abschließen, add layer to list of Layers, used to later draw single layer objects
                 layer = []  # start new layer
                 currentLayerZ = seg.coords["Z"]
                 currentLayerIdx += 1
