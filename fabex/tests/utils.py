@@ -130,9 +130,9 @@ def run_test_file(test):
 
 
 def get_gcode_filepaths(test, paths):
-    """Loads the generated and reference Gcode files from the test folder"""
+    """Loads the generated and reference Gcode filepaths from the test folder"""
     path = str(Path(__file__).parent / "test_data" / test)
-    os.chdir(path)
+    # os.chdir(path)
     generated_files = [
         file
         for _root, _dir, files in os.walk(path)
@@ -201,8 +201,8 @@ def zip_extension():
         version = lines[0].split("(")[1].replace(",", "")
     major, minor, patch = version[0], version[1], version[2]
     extension_name = f"fabex-{major}.{minor}.{patch}"
-    path = Path(__file__).parent.parent
-    shutil.make_archive(extension_name, "zip", path)
+    fabex_path = Path(__file__).parent.parent
+    shutil.make_archive(extension_name, "zip", fabex_path)
 
 
 # import bpy
