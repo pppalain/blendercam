@@ -1,8 +1,12 @@
 import os
+import re
 import shutil
+import subprocess
 from pathlib import Path
 
 import bpy
+
+delta = 0.002
 
 
 def activate_dependencies(self):
@@ -125,12 +129,24 @@ def run_test_file(test):
         bpy.ops.object.calculate_cam_path()
 
 
-def get_gcode_files(test, paths):
+def get_gcode_filepaths(test, paths):
     """Loads the generated and reference Gcode files from the test folder"""
     path = str(Path(__file__).parent / "test_data" / test)
-    gcode_file_names = [path[0].replace("cam_path", "") for path in paths]
-    # gcode_files = [file.endswith(".gcode") for file in os.walk(path)]
-    return gcode_files
+    os.chdir(path)
+    generated_files = [
+        file
+        for _root, _dir, files in os.walk(path)
+        for file in files
+        if (file.startswith("_") and (file.endswith(".gcode") or file.endswith(".tap")))
+    ]
+    expected_files = [
+        file
+        for _root, _dir, files in os.walk(path)
+        for file in files
+        if (not file.startswith("_") and (file.endswith(".gcode") or file.endswith(".tap")))
+    ]
+
+    return generated_files, expected_files
 
 
 def get_gcode_from_file(file):
@@ -143,10 +159,10 @@ def get_gcode_from_file(file):
         return "".join(lines)
 
 
-def compare_gcode_files(gcode_files):
+def compare_gcode_files(generated_file, expected_file):
     """Compares coordinate and feedrate data from the supplied Gcode files"""
-    generated = get_gcode_from_file(gcode_files[1:])
-    expected = get_gcode_from_file(gcode_files)
+    generated = get_gcode_from_file(generated_file)
+    expected = get_gcode_from_file(expected_file)
 
     pattern = re.compile(r"(?<!G)[+-]?\d+(?:\.\d+)?", re.IGNORECASE)
     generated_stripped = [float(m.group(0)) for m in pattern.finditer(generated)]
@@ -159,7 +175,6 @@ def build_extension(blender):
     """Build the Extension using the Blender executable specified"""
     source_dir = str(Path(__file__).parent.parent)
     output_dir = str(Path(__file__).parent.parent.parent)
-    import subprocess
 
     subprocess.run(
         [
@@ -173,7 +188,6 @@ def build_extension(blender):
             source_dir,
             "--output-dir",
             output_dir,
-            # "--split-platforms",
         ],
         check=False,
     )
