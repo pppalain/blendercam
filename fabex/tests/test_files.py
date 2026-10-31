@@ -1,3 +1,4 @@
+from platform import system
 from unittest import TestCase
 
 import bpy
@@ -36,7 +37,10 @@ class BlendFileTest(TestCase):
                 objects,
                 msg=f"{path} not found!",
             )
-            self.assertEqual(vertices, len(objects[name].data.vertices))
+            if system() in ["Darwin", "Linux"]:
+                self.assertEqual(vertices, len(objects[name].data.vertices))
+            else:
+                self.assertAlmostEqual(vertices, len(objects[name].data.vertices), 2)
 
     @staticmethod
     def assert_almost_equal_gcode(self, paths, test):
