@@ -1,7 +1,12 @@
+import os
+import re
 import shutil
+import subprocess
 from pathlib import Path
 
 import bpy
+
+delta = 0.002
 
 
 def activate_dependencies(self):
@@ -124,11 +129,52 @@ def run_test_file(test):
         bpy.ops.object.calculate_cam_path()
 
 
+def get_gcode_filepaths(test, paths):
+    """Loads the generated and reference Gcode filepaths from the test folder"""
+    path = str(Path(__file__).parent / "test_data" / test)
+    # os.chdir(path)
+    generated_files = [
+        file
+        for _root, _dir, files in os.walk(path)
+        for file in files
+        if (file.startswith("_") and (file.endswith(".gcode") or file.endswith(".tap")))
+    ]
+    expected_files = [
+        file
+        for _root, _dir, files in os.walk(path)
+        for file in files
+        if (not file.startswith("_") and (file.endswith(".gcode") or file.endswith(".tap")))
+    ]
+
+    return generated_files, expected_files
+
+
+def get_gcode_from_file(file):
+    """Opens and reads a Gcode file, removes comment lines and returns a list of lines"""
+    with open(file, "r") as f:
+        lines = f.readlines()
+        for line in lines:
+            if line.startswith("("):
+                lines.remove(line)
+        return "".join(lines)
+
+
+def compare_gcode_files(generated_file, expected_file):
+    """Compares coordinate and feedrate data from the supplied Gcode files"""
+    generated = get_gcode_from_file(generated_file)
+    expected = get_gcode_from_file(expected_file)
+
+    pattern = re.compile(r"(?<!G)[+-]?\d+(?:\.\d+)?", re.IGNORECASE)
+    generated_stripped = [float(m.group(0)) for m in pattern.finditer(generated)]
+    expected_stripped = [float(m.group(0)) for m in pattern.finditer(expected)]
+
+    return generated_stripped, expected_stripped
+
+
 def build_extension(blender):
     """Build the Extension using the Blender executable specified"""
     source_dir = str(Path(__file__).parent.parent)
     output_dir = str(Path(__file__).parent.parent.parent)
-    import subprocess
 
     subprocess.run(
         [
@@ -142,7 +188,6 @@ def build_extension(blender):
             source_dir,
             "--output-dir",
             output_dir,
-            # "--split-platforms",
         ],
         check=False,
     )
@@ -156,8 +201,8 @@ def zip_extension():
         version = lines[0].split("(")[1].replace(",", "")
     major, minor, patch = version[0], version[1], version[2]
     extension_name = f"fabex-{major}.{minor}.{patch}"
-    path = Path(__file__).parent.parent
-    shutil.make_archive(extension_name, "zip", path)
+    fabex_path = Path(__file__).parent.parent
+    shutil.make_archive(extension_name, "zip", fabex_path)
 
 
 # import bpy

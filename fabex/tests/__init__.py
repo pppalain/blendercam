@@ -3,6 +3,8 @@ from pathlib import Path
 
 import bpy
 
+# from .test_suite import FabexGcodeTest
+
 # Path to tests
 test_path = str(Path(__file__).parent)
 

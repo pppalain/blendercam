@@ -68,7 +68,10 @@ class CAM_MOVEMENT_Panel(CAMParentPanel, Panel):
         row.prop(self.op.movement, "stay_low", text="Stay Low (if possible)")
         row.prop(self.op.movement, "merge_distance")
 
-        if self.level >= 2 and context.scene.cam_machine.post_processor not in ["GRBL"]:
+        if self.level >= 2 and context.scene.cam_machine.post_processor not in [
+            "GRBL",
+            "RTCNC_RTSX",
+        ]:
             # Use G64
             # Currently checking against a hard-coded value here,
             # Consider moving this to a scene property

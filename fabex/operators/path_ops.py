@@ -472,6 +472,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
 
         processor_extension = {
             "ANILAM": ("anilam_crusader_m", ".tap"),
+            "BIESSE_CIX": ("biesse_cix", ".cix"),
             "CENTROID": ("centroid1", ".tap"),
             "EMC": ("emc2b", ".ngc"),
             "FADAL": ("fadal", ".tap"),
@@ -483,6 +484,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
             "ISO": ("iso", ".tap"),
             "LYNX_OTTER_O": ("lynx_otter_o", ".nc"),
             "MACH3": ("mach3", ".tap"),
+            "RTCNC_RTSX": ("rtcnc_rtsx.py", ".nc"),
             "SHOPBOT MTC": ("shopbot_mtc", ".sbp"),
             "SIEGKX1": ("siegkx1", ".tap"),
             "TNC151": ("tnc151", ".tap"),
