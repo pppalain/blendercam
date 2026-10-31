@@ -1,4 +1,3 @@
-from platform import system
 from unittest import TestCase
 
 import bpy
