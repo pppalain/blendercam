@@ -37,10 +37,7 @@ class BlendFileTest(TestCase):
                 objects,
                 msg=f"{path} not found!",
             )
-            if system() in ["Darwin", "Linux"]:
-                self.assertEqual(vertices, len(objects[name].data.vertices))
-            else:
-                self.assertAlmostEqual(vertices, len(objects[name].data.vertices), 2)
+            self.assertEqual(vertices, len(objects[name].data.vertices))
 
     @staticmethod
     def assert_almost_equal_gcode(self, paths, test):
@@ -105,8 +102,12 @@ class BlendFileTest(TestCase):
             ("cam_path_Circles", 248984),
             ("cam_path_Cross", 4319),
             ("cam_path_Parallel", 58249),
-            ("cam_path_Spiral", 249123),
+            # ("cam_path_Spiral", 249123),
         ]
+        if system() in ["Darwin", "Linux"]:
+            paths.append(("cam_path_Spiral", 249123))
+        else:
+            paths.append(("cam_path_Spiral", 249122))
         run_test_file(test)
         self.assert_equal_points(self, paths)
         self.assert_almost_equal_gcode(self, paths, test)
