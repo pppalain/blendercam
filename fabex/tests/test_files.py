@@ -46,7 +46,7 @@ class BlendFileTest(TestCase):
                 generated_stripped, expected_stripped = compare_gcode_files(
                     generated_files[i], expected_files[i]
                 )
-                for i in range(len(generated_stripped)):
+                for i in range(len(expected_stripped)):
                     self.assertAlmostEqual(
                         generated_stripped[i],
                         expected_stripped[i],

@@ -98,7 +98,7 @@ def export_gcode_path(filename, vertslist, operations):
         "ISO": ("iso", ".tap"),
         "LYNX_OTTER_O": ("lynx_otter_o", ".nc"),
         "MACH3": ("mach3", ".tap"),
-        "RTCNC_RTSX": {"rtcnc_rtsx.py", ".nc"},
+        "RTCNC_RTSX": ("rtcnc_rtsx.py", ".nc"),
         "SHOPBOT MTC": ("shopbot_mtc", ".sbp"),
         "SIEGKX1": ("siegkx1", ".tap"),
         "TNC151": ("tnc151", ".tap"),
