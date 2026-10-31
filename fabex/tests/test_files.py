@@ -1,3 +1,4 @@
+from platform import system
 from unittest import TestCase
 
 import bpy
@@ -96,6 +97,7 @@ class BlendFileTest(TestCase):
 
     def test_patterns(self):
         test = "patterns"
+        spiral_count = 249122 if system() == "Windows" else 249123
         paths = [
             ("cam_path_Block", 1392),
             ("cam_path_Circles", 248984),
