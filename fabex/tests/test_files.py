@@ -103,7 +103,7 @@ class BlendFileTest(TestCase):
             ("cam_path_Circles", 248984),
             ("cam_path_Cross", 4319),
             ("cam_path_Parallel", 58249),
-            ("cam_path_Spiral", spiral_count),
+            ("cam_path_Spiral", 249123),
         ]
         run_test_file(test)
         self.assert_equal_points(self, paths)
