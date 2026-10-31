@@ -97,17 +97,14 @@ class BlendFileTest(TestCase):
 
     def test_patterns(self):
         test = "patterns"
+        spiral_count = 249122 if system() == "Windows" else 249123
         paths = [
             ("cam_path_Block", 1392),
             ("cam_path_Circles", 248984),
             ("cam_path_Cross", 4319),
             ("cam_path_Parallel", 58249),
-            # ("cam_path_Spiral", 249123),
+            ("cam_path_Spiral", spiral_count),
         ]
-        if system() in ["Darwin", "Linux"]:
-            paths.append(("cam_path_Spiral", 249123))
-        else:
-            paths.append(("cam_path_Spiral", 249122))
         run_test_file(test)
         self.assert_equal_points(self, paths)
         self.assert_almost_equal_gcode(self, paths, test)
