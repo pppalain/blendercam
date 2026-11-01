@@ -44,7 +44,7 @@ opencamlib = [
     { marker = "platform_machine == 'arm64' and sys_platform == 'darwin'", path = "fabex/wheels/opencamlib-2026.3.5.dev92-cp313-cp313-macosx_15_0_arm64.whl" },
     { marker = "platform_machine == 'aarch64' and sys_platform == 'linux'", path = "fabex/wheels/opencamlib-2026.3.3.dev27-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl" },
     { marker = "platform_machine == 'x86_64' and sys_platform == 'linux'", path = "fabex/wheels/opencamlib-2026.3.3.dev27-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl" },
-    { marker = "platform_machine == 'AMD64' and sys_platform == 'win32'", path = "fabex/wheels/opencamlib-2026.3.3.dev27-cp313-cp313-win_amd64.whl" },
+    { marker = "platform_machine == 'AMD64' and sys_platform == 'win32'", path = "fabex/wheels/opencamlib-2026.10.16.dev335-cp313-cp313-win_amd64.whl" },
 ]
 shapely = [
     { marker = "platform_machine == 'arm64' and sys_platform == 'darwin'", path = "fabex/wheels/shapely-2.1.2-cp313-cp313-macosx_11_0_arm64.whl" },
@@ -74,6 +74,7 @@ environments = [
 required-environments = [
     "sys_platform == 'darwin' and platform_machine == 'arm64'",
     "sys_platform == 'linux' and platform_machine == 'x86_64'",
+    # "sys_platform == 'linux' and platform_machine == 'aarch64'",
     "sys_platform == 'win32' and platform_machine == 'AMD64'",
 ]
 # uv sync fails for the following:
