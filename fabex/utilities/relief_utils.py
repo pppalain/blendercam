@@ -821,7 +821,7 @@ def render_scene(width, height, bit_diameter, passes_per_radius, make_nodes, vie
     if bpy.context.active_object:
         bpy.ops.object.mode_set(mode="OBJECT")
 
-    # scene.render.engine = "CYCLES"
+    scene.render.engine = "CYCLES"
     scene.view_layers[view_layer].use_pass_z = True
 
     our_viewer = None
