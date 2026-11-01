@@ -1,4 +1,3 @@
-# from platform import system
 from unittest import TestCase
 
 import bpy
@@ -10,11 +9,10 @@ from .utils import (
     get_gcode_filepaths,
     get_gcode_from_file,
     install_extension,
+    remove_test_images,
     run_test_file,
     zip_extension,
 )
-
-# (?<!G)[+-]?\d+(?:\.\d+)? # regex to extract only coordinates and feedrates from gcode files
 
 
 class BlendFileTest(TestCase):
@@ -94,10 +92,10 @@ class BlendFileTest(TestCase):
         run_test_file(test)
         self.assert_equal_points(self, paths)
         self.assert_almost_equal_gcode(self, paths, test)
+        remove_test_images(test)
 
     def test_patterns(self):
         test = "patterns"
-        # spiral_count = 249122 if system() == "Windows" else 249123
         paths = [
             ("cam_path_Block", 1392),
             ("cam_path_Circles", 248984),
@@ -108,6 +106,7 @@ class BlendFileTest(TestCase):
         run_test_file(test)
         self.assert_equal_points(self, paths)
         self.assert_almost_equal_gcode(self, paths, test)
+        remove_test_images(test)
 
     def test_ramps(self):
         test = "ramps"
@@ -139,6 +138,7 @@ class BlendFileTest(TestCase):
         run_test_file(test)
         self.assert_equal_points(self, paths)
         self.assert_almost_equal_gcode(self, paths, test)
+        remove_test_images(test)
 
     def test_four_axis(self):
         test = "4axistest"
