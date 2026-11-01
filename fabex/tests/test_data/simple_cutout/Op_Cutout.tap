@@ -1,7 +1,7 @@
 %
 O0(/home/spex/Documents/BlenderDev/blendercam/fabex/tests/test_data/simple_cutout/Op_Cutout.tap)
 G21
-(G-code Generated with Fabex V3.2.10 on Blender V5.1.2 and NC)
+(G-code Generated with Fabex V3.2.10 on Blender V5.2.3 LTS and NC)
 (Rapids: 5000.0/min)
 G17 G90
 T1 M06

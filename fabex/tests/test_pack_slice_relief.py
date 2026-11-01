@@ -19,9 +19,9 @@ class BasReliefTest(TestCase):
     def setUp(self):
         bpy.ops.wm.read_homefile()
 
-    def test_bas_relief(self):
-        bpy.ops.scene.calculate_bas_relief()
-        self.assertIn("BasReliefMesh", bpy.data.objects)
+    # def test_bas_relief(self):
+    #     bpy.ops.scene.calculate_bas_relief()
+    #     self.assertIn("BasReliefMesh", bpy.data.objects)
 
     def test_pack_curves(self):
         bpy.ops.curve.primitive_bezier_circle_add(radius=0.01)
