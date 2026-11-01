@@ -151,17 +151,14 @@ class BlendFileTest(TestCase):
 
     # Medial fails due to invalid curve
 
-    #     def test_medial(self):
-
-    #         run_test_file("medial")
-
-    #         paths = [
-    #             "cam_path_fern",
-    #             "cam_path_fern_curve",
-    #             "cam_path_MedialPocket",
-    #             "cam_path_Text_MedialPocket",
-    #             "cam_path_Text",
-    #         ]
-
-    #         for path in paths:
-    #             self.assertIn(path, bpy.data.objects, msg=f"Could not calculate {path}")
+    def test_medial(self):
+        test = "medial"
+        paths = [
+            ("cam_path_fern", 8532),
+            ("cam_path_MedialPocket", 1751),
+            # ("cam_path_Text_MedialPocket", 1572),
+            ("cam_path_text", 4340),
+        ]
+        run_test_file(test)
+        self.assert_equal_points(self, paths)
+        self.assert_almost_equal_gcode(self, paths, test)
