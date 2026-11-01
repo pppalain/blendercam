@@ -67,7 +67,7 @@ addopts = [
 
 [tool.uv]
 environments = [
-    "sys_platform == 'linux'",
+    "sys_platform == 'linux' and platform_machine != 'aarch64'",
     "sys_platform == 'darwin'",
     "sys_platform == 'win32'"
 ]
