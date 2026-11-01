@@ -116,6 +116,12 @@ def add_collections():
             default_collection.objects.unlink(obj)
 
 
+# def remove_test_images(test):
+#     """Loads a Test Blend file and calculates all operations in order"""
+#     path = str(Path(__file__).parent / "test_data" / test / "temp_cam")
+#     [os.remove(file) for _root, _dir, files in os.walk(path) for file in files]
+
+
 def run_test_file(test):
     """Loads a Test Blend file and calculates all operations in order"""
     path = str(Path(__file__).parent / "test_data" / test / f"{test}.blend")

@@ -20,6 +20,7 @@ class BasReliefTest(TestCase):
         bpy.ops.wm.read_homefile()
 
     def test_bas_relief(self):
+        bpy.context.scene.render.compositor_device = "CPU"
         bpy.ops.scene.calculate_bas_relief()
         self.assertIn("BasReliefMesh", bpy.data.objects)
 
